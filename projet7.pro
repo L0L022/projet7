@@ -34,3 +34,6 @@ HEADERS += \
     playermodel.hpp \
     propertyitem.hpp \
     playeradditionmodel.hpp
+
+DISTFILES += \
+    players.json

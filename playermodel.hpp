@@ -22,11 +22,7 @@ public:
             _properties[nb] = 0;
     }
 
-    QObject *getAdditions() {
-        return &_additions;
-    }
-
-    const QObject *getAdditions() const {
+    Q_INVOKABLE PlayerAdditionModel *getAdditions() {
         return &_additions;
     }
 };
@@ -41,20 +37,23 @@ public:
         PropertiesRole,
         AdditionsRole
     };
+    Q_ENUM(PlayerRoles)
 
     PlayerModel(QObject *parent = nullptr);
-    Q_INVOKABLE PlayerItem* addPlayer();
-    Q_INVOKABLE bool removePlayer(const int id);
-    Q_INVOKABLE PlayerItem *getPlayer(const int id);
-    //Q_INVOKABLE void addProperty(const int id, const QString &key, const QVariant &value);
-    //Q_INVOKABLE void removeProperty(const int id, const QString &key);
+    Q_INVOKABLE PlayerItem* addPlayer(const int proposed_id = 0);
+    Q_INVOKABLE bool removePlayerId(const int id);
+    Q_INVOKABLE bool removePlayerIndex(const int index);
+    Q_INVOKABLE PlayerItem *getPlayerId(const int id);
+    Q_INVOKABLE PlayerItem *getPlayerIndex(const int index);
 
     int playerIdToIndex(const int id) const;
     QModelIndex playerIdToQIndex(const int id) const;
 
     int rowCount(const QModelIndex & parent = QModelIndex()) const;
     QVariant data(const QModelIndex & index, int role = Qt::DisplayRole) const;
-    //bool setData(const QModelIndex &index, const QVariant &value, int role = Qt::EditRole);
+
+    void fromJson(const QJsonArray &json);
+    QJsonArray toJson() const;
 
 protected:
     QHash<int, QByteArray> roleNames() const;

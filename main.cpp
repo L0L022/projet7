@@ -5,6 +5,8 @@
 #include "playermodel.hpp"
 #include "playeradditionmodel.hpp"
 #include <QJsonArray>
+#include <QFile>
+#include <QTextStream>
 
 #include <iostream>
 using namespace std;
@@ -19,7 +21,29 @@ int main(int argc, char *argv[])
     qmlRegisterType<PlayerAdditionItem>("me", 1, 0, "PlayerAdditionItem");
     qmlRegisterType<QSortFilterProxyModel>("me", 1, 0, "QSortFilterProxyModel");
 
+    QString val;
+    QFile file;
+    file.setFileName("../projet7/players.json");
+    file.open(QIODevice::ReadOnly | QIODevice::Text);
+    val = file.readAll();
+    file.close();
+
+    QJsonDocument doc = QJsonDocument::fromJson(val.toUtf8());
+
     PlayerModel model;
+    model.fromJson(doc.array());
+
+    app.connect(&app, &QGuiApplication::aboutToQuit, [&model](){
+        QJsonDocument doc(model.toJson());
+        QFile file;
+        file.setFileName("../projet7/players.json");
+        file.open(QIODevice::WriteOnly | QIODevice::Text);
+        QTextStream data(&file);
+        data << doc.toJson();
+        file.close();
+    });
+
+    /*
     PlayerItem * loic = model.addPlayer(),
                * alex = model.addPlayer(),
                * hugo = model.addPlayer();
@@ -27,7 +51,7 @@ int main(int argc, char *argv[])
     loic->setProperty("name", "Loïc");
     loic->setProperty("age", 32);
     loic->setProperty("job", "Charboonneur");
-    PlayerAdditionModel* loic_add = qobject_cast<PlayerAdditionModel*>(loic->getAdditions());
+    PlayerAdditionModel* loic_add = loic->getAdditions();
     PlayerAdditionItem* loic_add_1 = loic_add->addAddition();
     loic_add_1->setProperty("name", "peluche");
     loic_add_1->setProperty("description", "fait jolie");
@@ -41,7 +65,7 @@ int main(int argc, char *argv[])
     alex->setProperty("name", "Alexandre");
     alex->setProperty("age", 20);
     alex->setProperty("job", "Dancer");
-    PlayerAdditionModel* alex_add = qobject_cast<PlayerAdditionModel*>(alex->getAdditions());
+    PlayerAdditionModel* alex_add = alex->getAdditions();
     for(int i = 0; i < 10; ++i) {
         PlayerAdditionItem * alex_add_item = alex_add->addAddition();
         alex_add_item->setProperty("name", "Nom !!!");
@@ -55,38 +79,11 @@ int main(int argc, char *argv[])
     hugo->setProperty("name", "Hugo");
     hugo->setProperty("age", 7);
     hugo->setProperty("job", "Singer");
-/*
-    model.addProperty(0, "name", "Loïc");
-    model.addProperty(0, "age", 10);
-    model.addProperty(1, "name", "Alexandre");
-    model.addProperty(1, "age", 30);
-    model.addProperty(2, "name", "Hugo");
-    model.addProperty(2, "age", 30);
 */
-    QJsonArray players;
-    for(int i = 0; i<10; ++i) {
-        QJsonObject player;
-        for(const QString &str : {"name", "calling"})
-            player[str] = "player_name";
-        for(const QString &nb : {"age", "height", "CC", "CT", "F", "B", "A", "I", "Desc", "Int", "Soc", "FM"})
-            player[nb] = 10;
-        QJsonArray additions;
-        for(int i = 0; i<10; ++i) {
-            QJsonObject addition;
-            for(const QString &str : {"name", "description", "category"})
-                addition[str] = "add_name";
-            for(const QString &nb : {"CC", "CT", "F", "B", "A", "I", "Desc", "Int", "Soc", "FM"})
-                addition[nb] = 50;
-            additions.append(addition);
-        }
-        player["additions"] = additions;
-        players.append(player);
-        //cout << QJsonDocument(player).toJson().toStdString() << endl;
-    }
+    //cout << QJsonDocument(model.toJson()).toJson().toStdString() << endl;
 
     QQmlApplicationEngine engine;
     engine.rootContext()->setContextProperty("players", &model);
-    engine.rootContext()->setContextProperty("myjson", players);
     engine.load(QUrl(QLatin1String("qrc:/main.qml")));
 
     return app.exec();

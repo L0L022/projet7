@@ -2,7 +2,6 @@
     <qresource prefix="/">
         <file>main.qml</file>
         <file>qtquickcontrols2.conf</file>
-        <file>PlayerView.qml</file>
         <file>NewPlayerView.qml</file>
     </qresource>
 </RCC>

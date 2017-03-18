@@ -3,8 +3,8 @@
 PlayerAdditionModel::PlayerAdditionModel(QObject *parent) : QAbstractListModel(parent)
 {}
 
-PlayerAdditionItem* PlayerAdditionModel::addAddition() {
-    int id = 0;
+PlayerAdditionItem* PlayerAdditionModel::addAddition(const int proposed_id) {
+    int id = proposed_id;
     for(int i = 0; i < _additions.size(); ++i) {
         if(id == _additions[i]->getId()) {
             ++id;
@@ -50,23 +50,7 @@ int PlayerAdditionModel::additionIdToIndex(const int id) const {
 QModelIndex PlayerAdditionModel::additionIdToQIndex(const int id) const {
     return createIndex(additionIdToIndex(id), 0);
 }
-/*
-void PlayerAdditionModel::addProperty(const int id, const QString &key, const QVariant &value) {
-    QModelIndex index = createIndex(additionIdToIndex(id), 0);
-    if(index.isValid()) {
-        _additions[index.row()]->setProperty(key, value);
-        emit dataChanged(index, index, {PropertiesRole});
-    }
-}
 
-void PlayerAdditionModel::removeProperty(const int id, const QString &key) {
-    QModelIndex index = createIndex(additionIdToIndex(id), 0);
-    if(index.isValid()) {
-        _additions[index.row()]->removeProperty(key);
-        emit dataChanged(index, index, {PropertiesRole});
-    }
-}
-*/
 int PlayerAdditionModel::rowCount(const QModelIndex &parent) const {
     Q_UNUSED(parent);
     return _additions.count();
@@ -88,23 +72,25 @@ QVariant PlayerAdditionModel::data(const QModelIndex &index, int role) const {
 
     return QVariant();
 }
-/*
-bool PlayerAdditionModel::setData(const QModelIndex &index, const QVariant &value, int role) {
-    if (!index.isValid() || index.row() >= _additions.count())
-        return false;
 
-    PlayerAdditionItem &addition = _additions[index.row()];
-    if (role == PropertiesRole && value.isValid()) {
-        addition.setProperties(value.toJsonObject());
-        emit dataChanged(index, index, {PropertiesRole});
-        return true;
+void PlayerAdditionModel::fromJson(const QJsonArray &json) {
+    _additions.clear();
+    for(const QJsonValue &value : json) {
+        if(value.isObject()) {
+            QJsonObject addition = value.toObject();
+            if(addition.contains("id")) {
+                PlayerAdditionItem * item = addAddition(addition["id"].toInt());
+                item->setProperties(addition.toVariantMap());
+            }
+        }
     }
-
-    return false;
 }
-*/
-void PlayerAdditionModel::copy(const PlayerAdditionModel &src) {
-    _additions = src._additions;
+
+QJsonArray PlayerAdditionModel::toJson() const {
+    QJsonArray model;
+    for(const QSharedPointer<PlayerAdditionItem> pt : _additions)
+        model.append(QJsonObject::fromVariantMap(pt->getProperties()));
+    return model;
 }
 
 QHash<int, QByteArray> PlayerAdditionModel::roleNames() const {

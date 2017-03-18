@@ -4,8 +4,8 @@ PlayerModel::PlayerModel(QObject *parent) : QAbstractListModel(parent)
 {
 }
 
-PlayerItem* PlayerModel::addPlayer() {
-    int id = 0;
+PlayerItem* PlayerModel::addPlayer(const int proposed_id) {
+    int id = proposed_id;
     for(int i = 0; i < _players.size(); ++i) {
         if(id == _players[i]->getId()) {
             ++id;
@@ -27,8 +27,11 @@ PlayerItem* PlayerModel::addPlayer() {
     return player.data();
 }
 
-bool PlayerModel::removePlayer(const int id) {
-    int index = playerIdToIndex(id);
+bool PlayerModel::removePlayerId(const int id) {
+    return removePlayerIndex(playerIdToIndex(id));
+}
+
+bool PlayerModel::removePlayerIndex(const int index) {
     if(index < 0)
         return false;
 
@@ -39,8 +42,12 @@ bool PlayerModel::removePlayer(const int id) {
     return true;
 }
 
-PlayerItem *PlayerModel::getPlayer(const int id) {
-    return _players[playerIdToIndex(id)].data();
+PlayerItem *PlayerModel::getPlayerId(const int id) {
+    return getPlayerIndex(playerIdToIndex(id));
+}
+
+PlayerItem *PlayerModel::getPlayerIndex(const int index) {
+    return _players[index].data();
 }
 
 int PlayerModel::playerIdToIndex(const int id) const {
@@ -55,23 +62,7 @@ int PlayerModel::playerIdToIndex(const int id) const {
 QModelIndex PlayerModel::playerIdToQIndex(const int id) const {
     return createIndex(playerIdToIndex(id), 0);
 }
-/*
-void PlayerModel::addProperty(const int id, const QString &key, const QVariant &value) {
-    QModelIndex index = createIndex(playerIdToIndex(id), 0);
-    if(index.isValid()) {
-        _players[index.row()].setProperty(key, value);
-        emit dataChanged(index, index, {PropertiesRole});
-    }
-}
 
-void PlayerModel::removeProperty(const int id, const QString &key) {
-    QModelIndex index = createIndex(playerIdToIndex(id), 0);
-    if(index.isValid()) {
-        _players[index.row()].removeProperty(key);
-        emit dataChanged(index, index, {PropertiesRole});
-    }
-}
-*/
 int PlayerModel::rowCount(const QModelIndex &parent) const {
     Q_UNUSED(parent);
     return _players.count();
@@ -93,23 +84,32 @@ QVariant PlayerModel::data(const QModelIndex &index, int role) const {
 
     return QVariant();
 }
-/*
-bool PlayerModel::setData(const QModelIndex &index, const QVariant &value, int role) {
-    if (!index.isValid() || index.row() >= _players.count())
-        return false;
 
-    PlayerItem &player = _players[index.row()];
-    if (role == PropertiesRole && value.isValid()) {
-        player.setProperties(value.toJsonObject());
-        emit dataChanged(index, index, {PropertiesRole});
-        return true;
+void PlayerModel::fromJson(const QJsonArray &json) {
+    _players.clear();
+    for(const QJsonValue &value : json) {
+        if(value.isObject()) {
+            QJsonObject player = value.toObject();
+            if(player.contains("id")) {
+                PlayerItem * item = addPlayer(player["id"].toInt());
+                item->setProperties(player.toVariantMap());
+                item->getAdditions()->fromJson(player["additions"].toArray());
+            }
+        }
     }
-
-    return false;
 }
-*/
+
+QJsonArray PlayerModel::toJson() const {
+    QJsonArray model;
+    for(const QSharedPointer<PlayerItem> pt : _players) {
+        QJsonObject player = QJsonObject::fromVariantMap(pt->getProperties());
+        player["additions"] = pt->getAdditions()->toJson();
+        model.append(player);
+    }
+    return model;
+}
+
 QHash<int, QByteArray> PlayerModel::roleNames() const {
-    qDebug("salut les gens");
     QHash<int, QByteArray> roles;
     roles[PlayerRole] = "player";
     roles[IdRole] = "id";

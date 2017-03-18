@@ -5,6 +5,7 @@
 #include <QAbstractListModel>
 #include <QSortFilterProxyModel>
 #include <QSharedPointer>
+#include <QJsonArray>
 
 #include "propertyitem.hpp"
 
@@ -44,19 +45,17 @@ public:
     Q_ENUM(AdditionRoles)
 
     PlayerAdditionModel(QObject *parent = nullptr);
-    Q_INVOKABLE PlayerAdditionItem* addAddition();
+    Q_INVOKABLE PlayerAdditionItem* addAddition(const int proposed_id = 0);
     Q_INVOKABLE bool removeAddition(const int id);
-    //Q_INVOKABLE void addProperty(const int id, const QString &key, const QVariant &value);
-    //Q_INVOKABLE void removeProperty(const int id, const QString &key);
 
     int additionIdToIndex(const int id) const;
     QModelIndex additionIdToQIndex(const int id) const;
 
     int rowCount(const QModelIndex & parent = QModelIndex()) const;
     QVariant data(const QModelIndex & index, int role = Qt::DisplayRole) const;
-    //bool setData(const QModelIndex &index, const QVariant &value, int role = Qt::EditRole);
 
-    void copy(const PlayerAdditionModel &src);
+    void fromJson(const QJsonArray &json);
+    QJsonArray toJson() const;
 
 protected:
     QHash<int, QByteArray> roleNames() const;
@@ -64,12 +63,5 @@ protected:
 private:
     QList<QSharedPointer<PlayerAdditionItem>> _additions;
 };
-/*
-class PlayerAdditionFilterModel : public QSortFilterProxyModel {
-    Q_OBJECT
-    Q_PROPERTY(QObject* model READ model WRITE setSourceModel NOTIFY modelChanged)
-    QString _role;
 
-};
-*/
 #endif // PLAYERADDITION_HPP
