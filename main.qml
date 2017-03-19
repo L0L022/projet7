@@ -45,7 +45,7 @@ ApplicationWindow {
             Repeater {
                 model: players
                 delegate: TabButton {
-                    text: properties.name
+                    text: properties_role.name
                 }
             }
         }
@@ -61,6 +61,5 @@ ApplicationWindow {
             text: qsTr("Remove player")
             onClicked: players.removePlayerIndex(view.currentIndex)
         }
-
     }
 }

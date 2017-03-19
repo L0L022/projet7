@@ -31,13 +31,13 @@ class PlayerModel : public QAbstractListModel
 {
     Q_OBJECT
 public:
-    enum PlayerRoles {
-        PlayerRole = Qt::UserRole + 1,
+    enum ItemRoles {
+        ItemRole = Qt::UserRole + 1,
         IdRole,
         PropertiesRole,
         AdditionsRole
     };
-    Q_ENUM(PlayerRoles)
+    Q_ENUM(ItemRoles)
 
     PlayerModel(QObject *parent = nullptr);
     Q_INVOKABLE PlayerItem* addPlayer(const int proposed_id = 0);

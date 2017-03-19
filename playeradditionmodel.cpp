@@ -95,9 +95,9 @@ QJsonArray PlayerAdditionModel::toJson() const {
 
 QHash<int, QByteArray> PlayerAdditionModel::roleNames() const {
     QHash<int, QByteArray> roles;
-    roles[ItemRole] = "addition";
-    roles[IdRole] = "id";
-    roles[CategoryRole] = "category";
-    roles[PropertiesRole] = "properties";
+    roles[ItemRole] = "item_role";
+    roles[IdRole] = "id_role";
+    roles[CategoryRole] = "category_role";
+    roles[PropertiesRole] = "properties_role";
     return roles;
 }

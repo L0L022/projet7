@@ -3,5 +3,6 @@
         <file>main.qml</file>
         <file>qtquickcontrols2.conf</file>
         <file>NewPlayerView.qml</file>
+        <file>SuperSaisi.qml</file>
     </qresource>
 </RCC>

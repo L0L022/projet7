@@ -2,7 +2,7 @@
     {
         "A": 0,
         "B": 0,
-        "CC": 0,
+        "CC": "35",
         "CT": 0,
         "Desc": 0,
         "F": 0,
@@ -13,11 +13,11 @@
         "additions": [
             {
                 "A": 0,
-                "B": 0,
-                "CC": 10,
-                "CT": 0,
+                "B": "36",
+                "CC": "35",
+                "CT": "32",
                 "Desc": 0,
-                "F": 0,
+                "F": "8",
                 "FM": 0,
                 "I": 0,
                 "Int": 0,
@@ -77,11 +77,11 @@
             }
         ],
         "age": "32",
-        "calling": "Faire du code !",
+        "calling": "Initie",
         "edit": false,
-        "height": "1m50",
+        "height": "1m80",
         "id": 0,
-        "name": "Loïc"
+        "name": "Viktor"
     },
     {
         "A": 0,
@@ -192,7 +192,7 @@
                 "name": "des jambes"
             }
         ],
-        "age": 20,
+        "age": "20",
         "calling": "Noter tout ce que dit chika",
         "edit": false,
         "height": "1m60",
@@ -426,5 +426,25 @@
         "height": "3m",
         "id": 6,
         "name": "Killian"
+    },
+    {
+        "A": 0,
+        "B": 0,
+        "CC": 0,
+        "CT": 0,
+        "Desc": 0,
+        "F": 0,
+        "FM": 0,
+        "I": 0,
+        "Int": 0,
+        "Soc": 0,
+        "additions": [
+        ],
+        "age": "38",
+        "calling": "Fait des trucs !",
+        "edit": false,
+        "height": "30m",
+        "id": 7,
+        "name": "Un autre gen !"
     }
 ]

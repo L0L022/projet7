@@ -6,6 +6,7 @@ import me 1.0
 
 Item {
     id: item1
+
     ColumnLayout {
         id: superColumn
         anchors.top: parent.top
@@ -16,91 +17,26 @@ Item {
         anchors.leftMargin: 8
         RowLayout {
             Layout.fillWidth: true
-            Rectangle {
-                id: rectangle
-                width: 275
-                height: 53
-                Layout.fillWidth: true
 
-                RowLayout {
-                    anchors.fill: parent
-                    anchors.margins: 6
-
-                    Label {
-                        text: qsTr("Nom :")
-                    }
-
-                    TextField {
-                        text: properties.name
-                        onAccepted: player.setProperty("name", text)
-                        Layout.fillWidth: true
-                    }
-                }
-
+            SuperSaisi {
+                key: "name"
+                key_name: "Nom"
             }
-            Rectangle {
-                id: rectangle1
-                width: 275
-                height: 53
-                Layout.fillWidth: true
-
-                RowLayout {
-                    anchors.fill: parent
-                    anchors.margins: 6
-
-                    Label {
-                        text: qsTr("Age :")
-                    }
-
-                    TextField {
-                        text: properties.age
-                        onAccepted: player.setProperty("age", text)
-                        Layout.fillWidth: true
-                    }
-                }
+            SuperSaisi {
+                key: "age"
+                key_name: "Age"
             }
         }
         RowLayout {
             Layout.fillWidth: true
-            Rectangle {
-                width: 275
-                height: 53
-                Layout.fillWidth: true
-                RowLayout {
-                    anchors.fill: parent
-                    anchors.margins: 6
 
-                    Label {
-                        text: qsTr("Vocation :")
-                    }
-
-                    TextField {
-                        text: properties.calling
-                        onAccepted: player.setProperty("calling", text)
-                        Layout.fillWidth: true
-                    }
-                }
+            SuperSaisi {
+                key: "calling"
+                key_name: "Vocation"
             }
-
-            Rectangle {
-                width: 275
-                height: 53
-                Layout.fillWidth: true
-
-                RowLayout {
-                    anchors.fill: parent
-                    anchors.margins: 6
-
-                    Label {
-                        text: qsTr("Taille :")
-                    }
-
-                    TextField {
-                        text: properties.height
-                        onAccepted: player.setProperty("height", text)
-                        Layout.fillWidth: true
-                    }
-                }
+            SuperSaisi {
+                key: "height"
+                key_name: "Taille"
             }
         }
     }
@@ -139,7 +75,7 @@ Item {
             anchors.left: parent.left
             anchors.top: rowText.bottom
             model: QSortFilterProxyModel {
-                sourceModel: additions
+                sourceModel: additions_role
                 filterRole: PlayerAdditionModel.CategoryRole
                 filterRegExp: /characteristic/i
             }
@@ -147,7 +83,20 @@ Item {
             delegate: Row {
                 Repeater {
                     model: ["CC", "CT", "F", "B", "A", "I", "Desc", "Int", "Soc", "FM"]
-                    delegate: TextField {
+                    delegate: SuperSaisi {
+                        id: salut
+
+                        key: modelData
+                        key_name: modelData
+
+                        ToolTip {
+                            parent: salut
+                            visible: salut.activeFocus
+                            text: "Nom : " + properties_role.name + "\nDescription : " + properties_role.description
+                        }
+                    }
+
+                        /*TextField {
                         id: superTextField
                         text: properties[modelData]
                         onAccepted: {
@@ -161,7 +110,7 @@ Item {
                             visible: superTextField.activeFocus
                             text: "Nom : " + properties.name + "\nDescription : " + properties.description
                         }
-                    }
+                    }*/
                 }
             }
         }
@@ -182,12 +131,12 @@ Item {
         ListView {
             clip: true
             anchors.fill: parent
-            model: additions
+            model: additions_role
             delegate: Row {
                 Repeater {
                     model: ["id", "name", "description"]
                     delegate: TextField {
-                        text: properties[modelData]
+                        text: properties_role[modelData]
                         onAccepted: addition.setProperty(modelData, text)
                         ToolTip.text: modelData
                     }

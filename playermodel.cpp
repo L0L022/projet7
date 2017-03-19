@@ -73,7 +73,7 @@ QVariant PlayerModel::data(const QModelIndex &index, int role) const {
         return QVariant();
 
     PlayerItem *player = _players[index.row()].data();
-    if (role == PlayerRole)
+    if (role == ItemRole)
         return QVariant::fromValue(player);
     else if (role == IdRole)
         return player->getId();
@@ -111,9 +111,9 @@ QJsonArray PlayerModel::toJson() const {
 
 QHash<int, QByteArray> PlayerModel::roleNames() const {
     QHash<int, QByteArray> roles;
-    roles[PlayerRole] = "player";
-    roles[IdRole] = "id";
-    roles[PropertiesRole] = "properties";
-    roles[AdditionsRole] = "additions";
+    roles[ItemRole] = "item_role";
+    roles[IdRole] = "id_role";
+    roles[PropertiesRole] = "properties_role";
+    roles[AdditionsRole] = "additions_role";
     return roles;
 }
