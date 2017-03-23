@@ -4,56 +4,63 @@ import QtQuick.Controls 2.1
 import QtQuick.Layouts 1.0
 import me 1.0
 
-Dialog {
-    title: "edit property : " + id_role
-    x: (parent.width - width) / 2
-    y: (parent.height - height) / 2
-    width: 400
-    height: 400
+Item {
+    readonly property string title: "Édition de : " + properties_role.name
+    property var item_role
+    property var properties_role
+    property var additions_role
 
     ColumnLayout {
         anchors.fill: parent
-    ListView {
-        Layout.fillHeight: true
-        Layout.fillWidth: true
-        model: Object.keys(properties_role)
-        delegate: RowLayout {
-            Label {
-                text: modelData
-            }
 
-            HelpProperties {
-                id: superhelp
-                propertyKey: modelData
-            }
+        ListView {
+            clip: true
+            Layout.fillHeight: true
+            Layout.fillWidth: true
+            model: Object.keys(properties_role)
+            delegate: RowLayout {
+                width: parent.width
 
+                Label {
+                    text: modelData
+                    Layout.fillWidth: true
+                }
+
+                HelpProperties {
+                    id: superhelp
+                    propertyKey: modelData
+                }
+
+                TextField {
+                    text: superhelp.inputValue
+                    onTextChanged: superhelp.inputValue = text
+                    color: text === superhelp.propertyValue ? "green" : "orange"
+                    onAccepted: superhelp.set()
+                }
+
+                Button {
+                    text: "Réinitialisation"
+                    onClicked: superhelp.reset()
+                }
+
+                Button {
+                    text: "Supprimer"
+                    onClicked: item_role.removeProperty(modelData)
+                }
+            }
+        }
+
+        RowLayout {
             TextField {
-                text: superhelp.inputValue
-                onTextChanged: superhelp.inputValue = text
-                color: text === superhelp.propertyValue ? "green" : "orange"
-                onAccepted: superhelp.set()
+                id: new_key_field
+                placeholderText: "Nom de la proriété"
+                Layout.fillWidth: true
             }
 
             Button {
-                text: "reset"
-                onClicked: superhelp.reset()
-            }
-
-            Button {
-                text: "remove"
-                onClicked: item_role.removeProperty(modelData)
+                text: "Ajouter une propriété"
+                onClicked: item_role.setProperty(new_key_field.text, "")
             }
         }
     }
-    RowLayout {
-        TextField {
-            id: new_key_field
-            placeholderText: "new key name"
-        }
-        Button {
-            text: "add key"
-            onClicked: item_role.setProperty(new_key_field.text, "")
-        }
-    }
-}
 }

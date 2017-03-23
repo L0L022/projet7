@@ -46,12 +46,10 @@ Rectangle {
             color: text === right_value ? "green" : "orange"
 
             property string right_value: ""
-
-            //Component.onCompleted: update()
         }
 
         Button {
-            text: "reset"
+            text: "Réinitialisation"
             onClicked: superText.text = properties_role[key]
         }
     }
