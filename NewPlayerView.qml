@@ -7,6 +7,10 @@ import me 1.0
 Item {
     id: item1
 
+    EditProperties {
+        id: superedit
+    }
+
     ColumnLayout {
         id: superColumn
         anchors.top: parent.top
@@ -83,11 +87,19 @@ Item {
             delegate: Row {
                 Repeater {
                     model: ["CC", "CT", "F", "B", "A", "I", "Desc", "Int", "Soc", "FM"]
-                    delegate: SuperSaisi {
+                    delegate: TextField {
                         id: salut
 
-                        key: modelData
-                        key_name: modelData
+                        HelpProperties {
+                            id: superhelp1
+                            propertyKey: modelData
+                        }
+
+                        text: superhelp1.inputValue
+                        onTextChanged: superhelp1.inputValue = text
+                        color: text === superhelp1.propertyValue ? "green" : "orange"
+                        onAccepted: superhelp1.set()
+                        ToolTip.text: modelData
 
                         ToolTip {
                             parent: salut
@@ -136,9 +148,23 @@ Item {
                 Repeater {
                     model: ["id", "name", "description"]
                     delegate: TextField {
-                        text: properties_role[modelData]
-                        onAccepted: addition.setProperty(modelData, text)
+
+                        HelpProperties {
+                            id: superhelp
+                            propertyKey: modelData
+                        }
+
+                        text: superhelp.inputValue
+                        onTextChanged: superhelp.inputValue = text
+                        color: text === superhelp.propertyValue ? "green" : "orange"
+                        onAccepted: superhelp.set()
                         ToolTip.text: modelData
+
+                        Button {
+                            text: "reset"
+                            onClicked: superhelp.reset()
+                        }
+
                     }
                 }
             }
@@ -157,14 +183,8 @@ Item {
         anchors.rightMargin: 8
 
         Button {
-            id: button
-            text: qsTr("Add Addition")
-            onClicked: additions.addAddition()
-        }
-
-        Button {
-            id: button1
-            text: qsTr("Remove Addition")
+            text: "edit"
+            onClicked: superedit.open()
         }
     }
 

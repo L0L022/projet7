@@ -49,7 +49,7 @@ public:
     }
 
     Q_INVOKABLE void setProperty(const QString &key, const QVariant &value) {
-        if(value.isValid() && key != "id" && _properties.contains(key)) {
+        if(value.isValid() && key != "id") {
             _properties[key] = value;
             emit propertyChanged(key);
             emit propertiesChanged();

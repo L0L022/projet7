@@ -4,5 +4,8 @@
         <file>qtquickcontrols2.conf</file>
         <file>NewPlayerView.qml</file>
         <file>SuperSaisi.qml</file>
+        <file>HelpProperties.qml</file>
+        <file>EditProperties.qml</file>
+        <file>EditProperty.qml</file>
     </qresource>
 </RCC>
