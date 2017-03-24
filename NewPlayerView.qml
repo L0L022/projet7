@@ -7,10 +7,6 @@ import me 1.0
 Item {
     id: item1
 
-//    EditProperties {
-//        id: superedit
-//    }
-
     ColumnLayout {
         id: superColumn
         anchors.fill: parent
@@ -70,11 +66,12 @@ Item {
                     Layout.fillWidth: true
                     clip: true
 
-                    model: QSortFilterProxyModel {
+                    model: item_role.additions()
+                    /*QSortFilterProxyModel {
                         sourceModel: additions_role
                         filterRole: PlayerAdditionModel.CategoryRole
                         filterRegExp: /characteristic/i
-                    }
+                    }*/
 
                     delegate: Row {
                         width: parent.width
@@ -117,7 +114,7 @@ Item {
             ListView {
                 clip: true
                 anchors.fill: parent
-                model: additions_role
+                model: item_role.additions()
                 delegate: Row {
                     width: parent.width
                     Repeater {
@@ -143,7 +140,7 @@ Item {
         Button {
             Layout.alignment: Qt.AlignRight
             text: "Éditer les stats"
-            onClicked: stack.push("qrc:///EditProperties.qml", {"item_role": item_role, "properties_role": properties_role, "additions_role": additions_role})
+            onClicked: stack.push("qrc:///EditProperties.qml", {"item_role": item_role, "properties_role": properties_role, "additions_role": item_role.additions()})
         }
     }
 }

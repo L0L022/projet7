@@ -1,20 +1,16 @@
 #ifndef PLAYERMODEL_HPP
 #define PLAYERMODEL_HPP
 
-#include <QJsonObject>
-#include <QAbstractListModel>
-#include <QSharedPointer>
-#include <QObject>
-
-#include "propertyitem.hpp"
+#include "propertymodel.hpp"
 #include "playeradditionmodel.hpp"
 
 class PlayerItem : public PropertyItem {
     Q_OBJECT
+
     PlayerAdditionModel _additions;
 
 public:
-    PlayerItem(const int id = 0, QObject *parent = nullptr) : PropertyItem(id, parent) {
+    PlayerItem(const int id = 0, QObject *parent = nullptr) : PropertyItem(id, parent), _additions(this) {
         _properties["edit"] = false;
         for(const QString &str : {"name", "calling"})
             _properties[str] = "";
@@ -22,44 +18,34 @@ public:
             _properties[nb] = 0;
     }
 
-    Q_INVOKABLE PlayerAdditionModel *getAdditions() {
+    Q_INVOKABLE PlayerAdditionModel *additions() {
         return &_additions;
+    }
+
+    QJsonObject toJson() const {
+        QJsonObject object = QJsonObject::fromVariantMap(_properties);
+        object["additions"] = _additions.toJson();
+        return object;
+    }
+
+    void fromJson(const QJsonObject &json) {
+        if(json["additions"].isArray()) {
+            setProperties(json.toVariantMap());
+            _additions.fromJson(json["additions"].toArray());
+        }
     }
 };
 
-class PlayerModel : public QAbstractListModel
+class PlayerModel : public PropertyModel
 {
     Q_OBJECT
 public:
-    enum ItemRoles {
-        ItemRole = Qt::UserRole + 1,
-        IdRole,
-        PropertiesRole,
-        AdditionsRole
-    };
-    Q_ENUM(ItemRoles)
-
-    PlayerModel(QObject *parent = nullptr);
-    Q_INVOKABLE PlayerItem* addPlayer(const int proposed_id = 0);
-    Q_INVOKABLE bool removePlayerId(const int id);
-    Q_INVOKABLE bool removePlayerIndex(const int index);
-    Q_INVOKABLE PlayerItem *getPlayerId(const int id);
-    Q_INVOKABLE PlayerItem *getPlayerIndex(const int index);
-
-    int playerIdToIndex(const int id) const;
-    QModelIndex playerIdToQIndex(const int id) const;
-
-    int rowCount(const QModelIndex & parent = QModelIndex()) const;
-    QVariant data(const QModelIndex & index, int role = Qt::DisplayRole) const;
-
-    void fromJson(const QJsonArray &json);
-    QJsonArray toJson() const;
+    PlayerModel(QObject *parent = nullptr) : PropertyModel(parent) {}
 
 protected:
-    QHash<int, QByteArray> roleNames() const;
-
-private:
-    QList<QSharedPointer<PlayerItem>> _players;
+    PropertyItem *makeProperty(const int id) {
+        return new PlayerItem(id, this);
+    }
 };
 
 #endif // PLAYERMODEL_HPP

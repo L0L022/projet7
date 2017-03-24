@@ -33,7 +33,7 @@ Item {
 
                 Button {
                     text: "Supprimer"
-                    onClicked: additions_role.removeAddition(id_role)
+                    onClicked: additions_role.removeOne(id_role)
                 }
             }
         }
@@ -50,7 +50,7 @@ Item {
                 text: "Ajouter"
                 onClicked: {
                     if(textFieldNom.text !== "") {
-                        var addition = additions_role.addAddition()
+                        var addition = additions_role.append()
                         addition.setProperty("name", textFieldNom.text)
                     }
                 }

@@ -3,8 +3,7 @@ QT += qml quick
 CONFIG += c++11
 
 SOURCES += main.cpp \
-    playermodel.cpp \
-    playeradditionmodel.cpp
+    propertymodel.cpp
 
 RESOURCES += qml.qrc
 
@@ -32,8 +31,8 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 
 HEADERS += \
     playermodel.hpp \
-    propertyitem.hpp \
-    playeradditionmodel.hpp
+    playeradditionmodel.hpp \
+    propertymodel.hpp
 
 DISTFILES += \
     players.json

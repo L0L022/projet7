@@ -83,12 +83,12 @@ ApplicationWindow {
 
                 Button {
                     text: qsTr("Ajouter un joueur")
-                    onClicked: players.addPlayer()
+                    onClicked: players.append()
                 }
 
                 Button {
                     text: qsTr("Supprimer un joueur")
-                    onClicked: players.removePlayerIndex(view.currentIndex)
+                    onClicked: players.removeAt(view.currentIndex)
                 }
             }
         }

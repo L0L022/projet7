@@ -7,5 +7,6 @@
         <file>HelpProperties.qml</file>
         <file>EditProperties.qml</file>
         <file>EditProperty.qml</file>
+        <file>players.json</file>
     </qresource>
 </RCC>
