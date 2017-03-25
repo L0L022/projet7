@@ -4,34 +4,34 @@ import QtQuick.Controls 2.1
 import QtQuick.Layouts 1.0
 import me 1.0
 
-Item {
+Flickable {
     id: item1
+    contentHeight: superColumn.implicitHeight
+    clip: true
 
     ColumnLayout {
         id: superColumn
         anchors.fill: parent
-        anchors.margins: 6
 
-        RowLayout {
+        GridLayout {
             Layout.fillWidth: true
+            columns: item1.width > item1.height ? 2 : 1
 
             SuperSaisi {
                 key: "name"
                 key_name: "Nom"
             }
+
             SuperSaisi {
                 key: "age"
                 key_name: "Age"
             }
-        }
-
-        RowLayout {
-            Layout.fillWidth: true
 
             SuperSaisi {
                 key: "calling"
                 key_name: "Vocation"
             }
+
             SuperSaisi {
                 key: "height"
                 key_name: "Taille"
@@ -43,6 +43,7 @@ Item {
             title: qsTr("Caractéristiques")
             Layout.fillHeight: true
             Layout.fillWidth: true
+            Layout.minimumHeight: 200
 
             ColumnLayout {
                 anchors.fill: parent
@@ -66,12 +67,11 @@ Item {
                     Layout.fillWidth: true
                     clip: true
 
-                    model: item_role.additions()
-                    /*QSortFilterProxyModel {
-                        sourceModel: additions_role
-                        filterRole: PlayerAdditionModel.CategoryRole
-                        filterRegExp: /characteristic/i
-                    }*/
+                    model: PropertyFilterModel {
+                        sourceModel: item_role.additions()
+                        filterKey: "category"
+                        filterValue: "characteristic"
+                    }
 
                     delegate: Row {
                         width: parent.width
@@ -105,21 +105,41 @@ Item {
             }
         }
 
-        GroupBox {
-            id: groupBox1
-            title: qsTr("Toutes les stats")
+        RowLayout {
+
+            ComboBox {
+                id: superCombo
+                Layout.fillWidth: true
+                model: ["skill", "equipment", "weapon", "armor", "characteristic"]
+            }
+
+            Button {
+                Layout.alignment: Qt.AlignRight
+                text: "Éditer les stats"
+                onClicked: stack.push("qrc:///EditProperties.qml", {"item_role": item_role, "additions_role": item_role.additions()})
+            }
+        }
+
+        Frame {
             Layout.fillHeight: true
             Layout.fillWidth: true
+            Layout.minimumHeight: 200
 
             ListView {
                 clip: true
                 anchors.fill: parent
-                model: item_role.additions()
-                delegate: Row {
+                model: PropertyFilterModel {
+                    sourceModel: item_role.additions()
+                    filterKey: "category"
+                    filterValue: superCombo.currentText
+                    onFilterValueChanged: console.log(filterValue)
+                }
+                delegate: RowLayout {
                     width: parent.width
                     Repeater {
                         model: ["name", "description"]
                         delegate: TextField {
+                            Layout.fillWidth: true
 
                             HelpProperties {
                                 id: superhelp
@@ -135,12 +155,6 @@ Item {
                     }
                 }
             }
-        }
-
-        Button {
-            Layout.alignment: Qt.AlignRight
-            text: "Éditer les stats"
-            onClicked: stack.push("qrc:///EditProperties.qml", {"item_role": item_role, "properties_role": properties_role, "additions_role": item_role.additions()})
         }
     }
 }

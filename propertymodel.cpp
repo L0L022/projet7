@@ -101,6 +101,12 @@ bool PropertyModel::removeOne(const int id) {
     return false;
 }
 
+void PropertyModel::clear() {
+    beginResetModel();
+    _properties.clear();
+    endResetModel();
+}
+
 int PropertyModel::indexOf(const int id) const {
     int index = -1;
     for(int i = 0; i < _properties.size(); ++i)
@@ -139,7 +145,7 @@ QJsonArray PropertyModel::toJson() const {
 }
 
 void PropertyModel::fromJson(const QJsonArray &json) {
-    _properties.clear();
+    clear();
     for(const QJsonValue &value : json) {
         if(value.isObject()) {
             QJsonObject property = value.toObject();

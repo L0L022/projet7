@@ -2,9 +2,12 @@
 #define PROPERTYMODEL_HPP
 
 #include <QAbstractListModel>
+#include <QSortFilterProxyModel>
 #include <QSharedPointer>
 #include <QJsonObject>
 #include <QJsonArray>
+
+#include <QDebug>
 
 class PropertyItem : public QObject {
     Q_OBJECT
@@ -52,6 +55,7 @@ public:
     Q_INVOKABLE PropertyItem *at(const int index) const;
     Q_INVOKABLE void removeAt(const int index);
     Q_INVOKABLE bool removeOne(const int id);
+    Q_INVOKABLE void clear();
 
     Q_INVOKABLE int indexOf(const int id) const;
 
@@ -67,6 +71,45 @@ protected:
 
 private:
     QList<QSharedPointer<PropertyItem>> _properties;
+};
+
+class PropertyFilterModel : public QSortFilterProxyModel {
+    Q_OBJECT
+    Q_PROPERTY(QString filterKey READ filterKey WRITE setFilterKey NOTIFY filterKeyChanged)
+    Q_PROPERTY(QVariant filterValue READ filterValue WRITE setFilterValue NOTIFY filterValueChanged)
+    QString _filterKey;
+    QVariant _filterValue;
+
+signals:
+    void filterKeyChanged();
+    void filterValueChanged();
+
+public:
+    PropertyFilterModel(QObject *parent = nullptr) : QSortFilterProxyModel(parent) {}
+
+    QString filterKey() const {
+        return _filterKey;
+    }
+    void setFilterKey(const QString &key) {
+        emit beginResetModel();
+        _filterKey = key;
+        emit endResetModel();
+    }
+
+    QVariant filterValue() const {
+        return _filterValue;
+    }
+    void setFilterValue(const QVariant &value) {
+        emit beginResetModel();
+        _filterValue = value;
+        emit endResetModel();
+    }
+
+protected:
+    bool filterAcceptsRow(int sourceRow, const QModelIndex &sourceParent) const override {
+        return sourceModel()->data(sourceModel()->index(sourceRow, 0, sourceParent),
+                                   PropertyModel::PropertiesRole).toMap().value(_filterKey) == _filterValue;
+    }
 };
 
 #endif // PROPERTYMODEL_HPP

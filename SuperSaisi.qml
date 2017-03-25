@@ -4,7 +4,7 @@ import QtQuick.Controls 2.1
 import QtQuick.Layouts 1.0
 import me 1.0
 
-Rectangle {
+Item {
     id: rectangle
     width: 275
     height: 53

@@ -1,9 +1,14 @@
-QT += qml quick
+QT += qml quick network
 
 CONFIG += c++11
 
 SOURCES += main.cpp \
-    propertymodel.cpp
+    propertymodel.cpp \
+    application.cpp \
+    game.cpp \
+    gameclient.cpp \
+    gameserver.cpp \
+    gamemodel.cpp
 
 RESOURCES += qml.qrc
 
@@ -32,7 +37,12 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 HEADERS += \
     playermodel.hpp \
     playeradditionmodel.hpp \
-    propertymodel.hpp
+    propertymodel.hpp \
+    application.hpp \
+    game.hpp \
+    gameclient.hpp \
+    gameserver.hpp \
+    gamemodel.hpp
 
 DISTFILES += \
     players.json

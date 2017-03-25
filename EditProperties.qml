@@ -8,11 +8,11 @@ Item {
     id: moidialog
     readonly property string title: "Édition des stats"
     property var item_role
-    property var properties_role
     property var additions_role
 
     ColumnLayout {
         anchors.fill: parent
+        anchors.margins: 6
 
         ListView {
             clip: true
@@ -28,7 +28,7 @@ Item {
 
                 Button {
                     text: "Éditer"
-                    onClicked: stack.push("qrc:///EditProperty.qml", {"item_role": item_role, "properties_role": properties_role, "additions_role": additions_role})
+                    onClicked: stack.push("qrc:///EditProperty.qml", {"item_role": item_role, "additions_role": additions_role})
                 }
 
                 Button {
@@ -40,20 +40,25 @@ Item {
 
         RowLayout {
 
+            function addProperty() {
+                if(textFieldNom.text !== "") {
+                    var addition = additions_role.append()
+                    addition.setProperty("name", textFieldNom.text)
+                    textFieldNom.text = ""
+                }
+            }
+
             TextField {
                 id: textFieldNom
                 Layout.fillWidth: true
-                placeholderText: "Nom de la statistique"
+                placeholderText: "Nom de la nouvelle statistique"
+                onAccepted: parent.addProperty()
             }
 
             Button {
+                id: superButon
                 text: "Ajouter"
-                onClicked: {
-                    if(textFieldNom.text !== "") {
-                        var addition = additions_role.append()
-                        addition.setProperty("name", textFieldNom.text)
-                    }
-                }
+                onClicked: parent.addProperty()
             }
         }
     }

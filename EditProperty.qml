@@ -5,21 +5,23 @@ import QtQuick.Layouts 1.0
 import me 1.0
 
 Item {
-    readonly property string title: "Édition de : " + properties_role.name
+    id: item
     property var item_role
-    property var properties_role
     property var additions_role
+    readonly property string title: "Édition de : " + item_role.properties.name
 
     ColumnLayout {
         anchors.fill: parent
+        anchors.margins: 6
 
         ListView {
             clip: true
             Layout.fillHeight: true
             Layout.fillWidth: true
-            model: Object.keys(properties_role)
-            delegate: RowLayout {
+            model: Object.keys(item_role.properties)
+            delegate: GridLayout {
                 width: parent.width
+                columns: item.width > item.height ? 4 : 2
 
                 Label {
                     text: modelData
@@ -51,15 +53,23 @@ Item {
         }
 
         RowLayout {
+
+            function addKey() {
+                if(new_key_field.text !== "") {
+                    item_role.setProperty(new_key_field.text, "")
+                }
+            }
+
             TextField {
                 id: new_key_field
-                placeholderText: "Nom de la proriété"
+                placeholderText: "Nom de la nouvelle proriété"
                 Layout.fillWidth: true
+                onAccepted: parent.addKey()
             }
 
             Button {
                 text: "Ajouter une propriété"
-                onClicked: item_role.setProperty(new_key_field.text, "")
+                onClicked: parent.addKey()
             }
         }
     }

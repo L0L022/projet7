@@ -33,62 +33,41 @@ ApplicationWindow {
 
     StackView {
         id: stack
-        initialItem: mainView
+        initialItem: "qrc:///Players.qml"
         anchors.fill: parent
+        Keys.onBackPressed: {
+            if(depth > 1)
+                pop()
+            else
+                applicationWindow.close()
+        }
     }
 
     Component {
         id: mainView
-
         Item {
             readonly property string title: "Projet7"
-            StackLayout {
-                id: view
-                anchors.bottom: rowLayout.top
-                anchors.right: parent.right
-                anchors.left: parent.left
-                anchors.top: parent.top
-                currentIndex: bar.currentIndex
 
-                Repeater {
-                    model: players
-                    delegate: NewPlayerView {
-                        height: view.height
-                        width: view.width
-                    }
-                }
-            }
+            ColumnLayout {
+                anchors.fill: parent
 
-            RowLayout {
-                id: rowLayout
-                anchors.leftMargin: 6
-                anchors.bottomMargin: 6
-                anchors.bottom: parent.bottom
-                anchors.left: parent.left
-                anchors.right: parent.right
-                anchors.rightMargin: 6
-
-                TabBar {
-                    id: bar
+                Button {
                     Layout.fillWidth: true
-
-                    Repeater {
-                        model: players
-                        delegate: TabButton {
-                            width: 100
-                            text: properties_role.name
-                        }
-                    }
+                    Layout.alignment: Qt.AlignHCenter
+                    text: "Commencer une nouvelle partie"
                 }
 
                 Button {
-                    text: qsTr("Ajouter un joueur")
-                    onClicked: players.append()
+                    Layout.fillWidth: true
+                    Layout.alignment: Qt.AlignHCenter
+                    text: "Charger une partie sauvegardée"
+                    onClicked: app.refreshSavedGame()
                 }
 
                 Button {
-                    text: qsTr("Supprimer un joueur")
-                    onClicked: players.removeAt(view.currentIndex)
+                    Layout.fillWidth: true
+                    Layout.alignment: Qt.AlignHCenter
+                    text: "Se connecter à une partie"
                 }
             }
         }
