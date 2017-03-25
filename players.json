@@ -474,25 +474,5 @@
         "height": "1m40",
         "id": 7,
         "name": "Pierrot"
-    },
-    {
-        "A": 0,
-        "B": 0,
-        "CC": 0,
-        "CT": 0,
-        "Desc": 0,
-        "F": 0,
-        "FM": 0,
-        "I": 0,
-        "Int": 0,
-        "Soc": 0,
-        "additions": [
-        ],
-        "age": 0,
-        "calling": "",
-        "edit": false,
-        "height": 0,
-        "id": 2,
-        "name": ""
     }
 ]

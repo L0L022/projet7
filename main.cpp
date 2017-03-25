@@ -28,8 +28,11 @@ int main(int argc, char *argv[])
 
     QString val;
     QFile file;
-    file.setFileName("../projet7/players.json");
-    //file.setFileName(":/players.json");
+#ifdef Q_OS_ANDROID
+        file.setFileName(":/players.json");
+#else
+        file.setFileName("../projet7/players.json");
+#endif
     file.open(QIODevice::ReadOnly | QIODevice::Text);
     val = file.readAll();
     file.close();
@@ -42,8 +45,11 @@ int main(int argc, char *argv[])
     app.connect(&app, &QGuiApplication::aboutToQuit, [&model](){
         QJsonDocument doc(model.toJson());
         QFile file;
+#ifdef Q_OS_ANDROID
+        file.setFileName(":/players.json");
+#else
         file.setFileName("../projet7/players.json");
-        //file.setFileName(":/players.json");
+#endif
         file.open(QIODevice::WriteOnly | QIODevice::Text);
         QTextStream data(&file);
         data << doc.toJson();
