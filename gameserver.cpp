@@ -2,61 +2,78 @@
 #include <QFile>
 #include <QJsonDocument>
 
-GameServer::GameServer(const QString &fileName, QObject *parent) : Game(parent), _fileName(fileName), _server(this), _sockets() {
-    connect(&_server, &QTcpServer::acceptError, this, [this](){
-        emit error(_server.errorString());
+GameServer::GameServer(const QString &fileName, QObject *parent)
+    : Game(parent),
+      m_fileName(fileName),
+      m_server(this),
+      m_sockets()
+{
+    connect(&m_server, &QTcpServer::acceptError, this, [this](){
+        emit error(m_server.errorString());
     });
-    connect(&_server, &QTcpServer::newConnection, this, &GameServer::newConnection);
+
+    connect(&m_server, &QTcpServer::newConnection, this, &GameServer::newConnection);
 
     openFromFile();
     openServer();
 }
 
-GameServer::~GameServer() {
+GameServer::~GameServer()
+{
     closeServer();
     saveToFile();
 }
 
-QString GameServer::ipAddress() const {
-    return _server.serverAddress().toString();
+QString GameServer::ipAddress() const
+{
+    return m_server.serverAddress().toString();
 }
 
-quint16 GameServer::port() const {
-    return _server.serverPort();
+quint16 GameServer::port() const
+{
+    return m_server.serverPort();
 }
 
-void GameServer::openServer() {
-    _server.listen();
+void GameServer::openServer()
+{
+    m_server.listen();
     emit ipAddressChanged();
     emit portChanged();
 }
 
-void GameServer::closeServer() {
-    _server.close();
+void GameServer::closeServer()
+{
+    m_server.close();
     emit ipAddressChanged();
     emit portChanged();
-    for(QTcpSocket *socket : _sockets)
+
+    for (QTcpSocket *socket : m_sockets)
         socket->disconnectFromHost();
 }
 
-void GameServer::newConnection() {
-    while(_server.hasPendingConnections()) {
-        QTcpSocket *socket = _server.nextPendingConnection();
-        connect(socket, &QTcpSocket::disconnected, this, [this](){
-            _sockets.removeAll(qobject_cast<QTcpSocket*>(sender()));
+void GameServer::newConnection()
+{
+    while (m_server.hasPendingConnections()) {
+        QTcpSocket *socket = m_server.nextPendingConnection();
+
+        connect(socket, &QTcpSocket::disconnected, this, [this, socket](){
+            m_sockets.removeOne(socket);
         });
-        connect(socket, &QTcpSocket::readyRead, this, [this](){
-            readData(qobject_cast<QTcpSocket*>(sender())->readAll());
+
+        connect(socket, &QTcpSocket::readyRead, this, [this, socket](){
+            readData(socket->readAll());
         });
-        _sockets.append(socket);
+
+        m_sockets.append(socket);
     }
 }
 
-void GameServer::openFromFile() {
+void GameServer::openFromFile()
+{
     QFile file;
-    file.setFileName(_fileName);
-    if(file.exists()) {
-        if(file.open(QIODevice::ReadOnly | QIODevice::Text)) {
+    file.setFileName(m_fileName);
+    if (file.exists()) {
+        if (file.open(QIODevice::ReadOnly | QIODevice::Text)) {
             QJsonDocument doc = QJsonDocument::fromJson(file.readAll());
             if(doc.isObject())
                 fromJson(doc.object());
@@ -64,18 +81,20 @@ void GameServer::openFromFile() {
     }
 }
 
-void GameServer::saveToFile() {
+void GameServer::saveToFile()
+{
     QFile file;
-    file.setFileName(_fileName);
-    if(file.open(QIODevice::WriteOnly | QIODevice::Text)) {
+    file.setFileName(m_fileName);
+    if (file.open(QIODevice::WriteOnly | QIODevice::Text)) {
         QJsonDocument doc(toJson());
         QTextStream stream(&file);
         stream << doc.toJson();
     }
 }
 
-void GameServer::writeData(const QByteArray &data) {
-    for(QTcpSocket *socket : _sockets) {
+void GameServer::writeData(const QByteArray &data)
+{
+    for (QTcpSocket *socket : m_sockets) {
         QTextStream stream(socket);
         stream << data;
     }

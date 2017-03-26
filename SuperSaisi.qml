@@ -12,22 +12,20 @@ Item {
 
     property string key: ""
     property string key_name: ""
-    //property QtObject name: value
 
     onKeyChanged: update()
 
     function update() {
-        if (superText.text === superText.right_value || superText.txt === "")
-            superText.text = properties_role[key]
-        superText.right_value = properties_role[key]
+        if (superText.right_value !== properties_role[key]) {
+            if (superText.text === superText.right_value || superText.txt === "")
+                superText.text = properties_role[key]
+            superText.right_value = properties_role[key]
+        }
     }
 
     Connections {
         target: item_role
-        onPropertyChanged: {
-            if(key === rectangle.key)
-                update()
-        }
+        onPropertiesChanged: update()
     }
 
     RowLayout {

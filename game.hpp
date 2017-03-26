@@ -11,13 +11,11 @@ class Game : public QObject
     Q_PROPERTY(QString ipAddress READ ipAddress NOTIFY ipAddressChanged)
     Q_PROPERTY(quint16 port READ port NOTIFY portChanged)
 
-    QString _name;
-    PlayerModel _players;
 public:
     explicit Game(QObject *parent = nullptr);
 
     QString name() const;
-    void setName(const QString &new_name);
+    void setName(const QString &name);
 
     virtual QString ipAddress() const = 0;
     virtual quint16 port() const = 0;
@@ -39,7 +37,10 @@ signals:
     void error(const QString &errorString);
 
 private:
-    void load(const QByteArray &data);
+    //void load(const QByteArray &data);
+
+    QString m_name;
+    PlayerModel m_players;
 };
 
 #endif // GAME_HPP

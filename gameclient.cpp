@@ -2,37 +2,48 @@
 #include <QTextStream>
 #include <QHostAddress>
 
-GameClient::GameClient(const QString &address, quint16 port, QObject *parent) : Game(parent), _socket(this) {
-    connect(&_socket, &QTcpSocket::connected, this, [this]{
+GameClient::GameClient(const QString &address, quint16 port, QObject *parent)
+    : Game(parent),
+      m_socket(this)
+{
+    connect(&m_socket, &QTcpSocket::connected, this, [this]{
         emit ipAddressChanged();
         emit portChanged();
     });
-    connect(&_socket, &QTcpSocket::disconnected, this, [this]{
+
+    connect(&m_socket, &QTcpSocket::disconnected, this, [this]{
         emit ipAddressChanged();
         emit portChanged();
     });
-    connect(&_socket, &QTcpSocket::readyRead, this, [this](){
-        readData(_socket.readAll());
+
+    connect(&m_socket, &QTcpSocket::readyRead, this, [this](){
+        readData(m_socket.readAll());
     });
-    connect(&_socket, static_cast<void (QTcpSocket::*)(QAbstractSocket::SocketError)>(&QAbstractSocket::error), this, [this](){
-        emit error(_socket.errorString());
+
+    connect(&m_socket, static_cast<void (QTcpSocket::*)(QAbstractSocket::SocketError)>(&QAbstractSocket::error), this, [this](){
+        emit error(m_socket.errorString());
     });
-    _socket.connectToHost(address, port);
+
+    m_socket.connectToHost(address, port);
 }
 
-GameClient::~GameClient() {
-    _socket.disconnectFromHost();
+GameClient::~GameClient()
+{
+    m_socket.disconnectFromHost();
 }
 
-QString GameClient::ipAddress() const {
-    return _socket.peerAddress().toString();
+QString GameClient::ipAddress() const
+{
+    return m_socket.peerAddress().toString();
 }
 
-quint16 GameClient::port() const {
-    return _socket.peerPort();
+quint16 GameClient::port() const
+{
+    return m_socket.peerPort();
 }
 
-void GameClient::writeData(const QByteArray &data) {
-    QTextStream stream(&_socket);
+void GameClient::writeData(const QByteArray &data)
+{
+    QTextStream stream(&m_socket);
     stream << data;
 }

@@ -60,12 +60,23 @@ ApplicationWindow {
                 anchors.fill: parent
                 anchors.margins: 6
 
+                ListView {
+                    Layout.fillWidth: true
+                    Layout.fillHeight: true
+                    model: app.availableGames()
+                    Component.onCompleted: app.refreshAvailableGames()
+                    delegate: ItemDelegate {
+                        width: parent.width
+                        text: NameRole + " at " + LocationRole
+                        onClicked: app.startGame(index)
+                    }
+                }
+
                 TextField {
                     id: nameField
-                    placeholderText: "fileName or ip"
+                    placeholderText: "fichier ou ip"
                     Layout.fillWidth: true
                     Layout.alignment: Qt.AlignHCenter
-                    text: "/tmp/test.json"
                 }
 
                 TextField {

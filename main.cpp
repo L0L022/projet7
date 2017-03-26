@@ -25,6 +25,8 @@ int main(int argc, char *argv[])
 
     qmlRegisterType<Application>("me", 1, 0, "Application");
 
+    qmlRegisterType<GameModel>("me", 1, 0, "GameModel");
+
     qmlRegisterUncreatableType<Game>("me", 1, 0, "Game", "Use Application");
     qmlRegisterUncreatableType<GameClient>("me", 1, 0, "GameClient", "Use Application");
     qmlRegisterUncreatableType<GameServer>("me", 1, 0, "GameServer", "Use Application");

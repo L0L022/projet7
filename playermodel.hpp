@@ -4,36 +4,44 @@
 #include "propertymodel.hpp"
 #include "playeradditionmodel.hpp"
 
-class PlayerItem : public PropertyItem {
+class PlayerItem : public PropertyItem
+{
     Q_OBJECT
 
-    PlayerAdditionModel _additions;
-
 public:
-    PlayerItem(const int id = 0, QObject *parent = nullptr) : PropertyItem(id, parent), _additions(this) {
-        _properties["edit"] = false;
-        for(const QString &str : {"name", "calling"})
-            _properties[str] = "";
-        for(const QString &nb : {"age", "height", "CC", "CT", "F", "B", "A", "I", "Desc", "Int", "Soc", "FM"})
-            _properties[nb] = 0;
+    PlayerItem(const int id = 0, QObject *parent = nullptr)
+        : PropertyItem(id, parent),
+          m_additions(this)
+    {
+        for (const QString &str : {"name", "calling"})
+            setProperty(str, "");
+
+        for (const QString &nb : {"age", "height", "CC", "CT", "F", "B", "A", "I", "Desc", "Int", "Soc", "FM"})
+            setProperty(nb, 0);
     }
 
-    Q_INVOKABLE PlayerAdditionModel *additions() {
-        return &_additions;
+    Q_INVOKABLE PlayerAdditionModel *additions()
+    {
+        return &m_additions;
     }
 
-    QJsonObject toJson() const {
-        QJsonObject object = QJsonObject::fromVariantMap(_properties);
-        object["additions"] = _additions.toJson();
+    QJsonObject toJson() const
+    {
+        QJsonObject object = PropertyItem::toJson();
+        object["additions"] = m_additions.toJson();
         return object;
     }
 
-    void fromJson(const QJsonObject &json) {
-        if(json["additions"].isArray()) {
+    void fromJson(const QJsonObject &json)
+    {
+        if (json["additions"].isArray()) {
             setProperties(json.toVariantMap());
-            _additions.fromJson(json["additions"].toArray());
+            m_additions.fromJson(json["additions"].toArray());
         }
     }
+
+private:
+    PlayerAdditionModel m_additions;
 };
 
 class PlayerModel : public PropertyModel

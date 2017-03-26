@@ -3,64 +3,84 @@
 #include <QDebug>
 #include <QJsonDocument>
 
-Application::Application(QObject *parent) : QObject(parent), _currentGame(nullptr)
+Application::Application(QObject *parent)
+    : QObject(parent),
+      m_currentGame(nullptr),
+      m_availableGames(this)
 {
 }
 
-void Application::startNewGame(const QString &fileName) {
+Game *Application::currentGame()
+{
+    return m_currentGame;
+}
+
+void Application::startNewGame(const QString &fileName)
+{
     closeGame();
     GameServer *game = new GameServer(fileName, this);
     setCurrentGame(game);
 }
 
-void Application::loadExistGame(const QString &address, quint16 port) {
+void Application::loadExistGame(const QString &address, quint16 port)
+{
     closeGame();
     GameClient *game = new GameClient(address, port, this);
     setCurrentGame(game);
 }
 
-void Application::closeGame() {
+void Application::startGame(const int index)
+{
+    const GameItem &game = m_availableGames.at(index);
+    if (game.type() == GameItem::FileGame)
+        startNewGame(game.fileName());
+    else if (game.type() == GameItem::NetworkGame)
+        loadExistGame(game.address(), game.port());
+}
+
+void Application::closeGame()
+{
     setCurrentGame();
 }
 
-Game *Application::currentGame() {
-    return _currentGame;
+GameModel *Application::availableGames()
+{
+    return &m_availableGames;
 }
 
-GameModel *Application::savedGame() {
-    return &_savedGame;
-}
+void Application::refreshAvailableGames()
+{
+    //à tester
+    for (int i = 0; i < m_availableGames.rowCount(); ++i)
+        while (m_availableGames.at(i).type() == GameItem::FileGame && i < m_availableGames.rowCount())
+            m_availableGames.removeAt(i);
 
-void Application::refreshSavedGame() {
-    _savedGame.clear();
-    QDir dir("../projet7");
-    for(QFileInfo info : dir.entryInfoList({"*.game"})) {
-        QString val;
+    QDir dir("/tmp");
+    for (QFileInfo info : dir.entryInfoList({"*.json"})) {
         QFile file;
         file.setFileName(info.absoluteFilePath());
         file.open(QIODevice::ReadOnly | QIODevice::Text);
-        val = file.readAll();
-        file.close();
 
-        QJsonDocument doc = QJsonDocument::fromJson(val.toUtf8());
+        QJsonDocument doc = QJsonDocument::fromJson(file.readAll());
 
-        if(doc.isObject()) {
+        if (doc.isObject()) {
             QJsonObject obj = doc.object();
-            PropertyItem * item = _savedGame.append();
-            item->setProperty("name", obj["name"].toVariant());
-            item->setProperty("location", info.fileName());
+            GameItem game(info.absoluteFilePath(), obj["name"].toString());
+            m_availableGames.append(game);
         }
     }
 }
 
-void Application::say_something(QString blabla) {
-    if(currentGame() != nullptr) {
+void Application::say_something(QString blabla)
+{
+    if (currentGame() != nullptr) {
         currentGame()->writeData(blabla.toUtf8());
     }
 }
 
-void Application::setCurrentGame(Game *game) {
-    delete _currentGame;
-    _currentGame = game;
+void Application::setCurrentGame(Game *game)
+{
+    delete m_currentGame;
+    m_currentGame = game;
     emit currentGameChanged();
 }

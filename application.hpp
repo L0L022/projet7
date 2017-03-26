@@ -13,14 +13,14 @@ class Application : public QObject
 public:
     explicit Application(QObject *parent = nullptr);
 
+    Game *currentGame();
     Q_INVOKABLE void startNewGame(const QString &fileName);
     Q_INVOKABLE void loadExistGame(const QString &address, quint16 port);
+    Q_INVOKABLE void startGame(const int index);
     Q_INVOKABLE void closeGame();
 
-    Game *currentGame();
-
-    Q_INVOKABLE GameModel *savedGame();
-    Q_INVOKABLE void refreshSavedGame();
+    Q_INVOKABLE GameModel *availableGames();
+    Q_INVOKABLE void refreshAvailableGames();
 
     Q_INVOKABLE void say_something(QString blabla); // juste pour le test
 
@@ -30,8 +30,8 @@ signals:
 private:
     void setCurrentGame(Game *game = nullptr);
 
-    Game *_currentGame;
-    GameModel _savedGame;
+    Game *m_currentGame;
+    GameModel m_availableGames;
 };
 
 #endif // APPLICATION_HPP

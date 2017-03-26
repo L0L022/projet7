@@ -2,41 +2,52 @@
 #include <QDebug>
 #include <QJsonDocument>
 
-Game::Game(QObject *parent) : QObject(parent), _name(""), _players(this)
+Game::Game(QObject *parent)
+    : QObject(parent),
+      m_name(""),
+      m_players(this)
 {
 }
 
-QString Game::name() const {
-    return _name;
+QString Game::name() const
+{
+    return m_name;
 }
 
-void Game::setName(const QString &new_name) {
-    _name = new_name;
+void Game::setName(const QString &name)
+{
+    m_name = name;
     emit nameChanged();
 }
 
-PlayerModel *Game::players() {
-    return &_players;
+PlayerModel *Game::players()
+{
+    return &m_players;
 }
 
-void Game::readData(const QByteArray &data) {
+void Game::readData(const QByteArray &data)
+{
     qDebug() << "Game::readData() :" << data;
 }
 
-QJsonObject Game::toJson() const {
+QJsonObject Game::toJson() const
+{
     QJsonObject obj;
-    obj["name"] = _name;
-    obj["players"] = _players.toJson();
+    obj["name"] = m_name;
+    obj["players"] = m_players.toJson();
     return obj;
 }
 
-void Game::fromJson(const QJsonObject &json) {
+void Game::fromJson(const QJsonObject &json)
+{
     setName(json["name"].toString());
-    players()->fromJson(json["players"].toArray());
+    m_players.fromJson(json["players"].toArray());
 }
-
-void Game::load(const QByteArray &data) {
+/*
+void Game::load(const QByteArray &data)
+{
     QJsonDocument doc = QJsonDocument::fromJson(data);
     if(doc.isArray())
-        _players.fromJson(doc.array());
+        m_players.fromJson(doc.array());
 }
+*/

@@ -10,9 +10,6 @@ class GameServer : public Game
 {
     Q_OBJECT
 
-    QString _fileName;
-    QTcpServer _server;
-    QList<QTcpSocket*> _sockets;
 public:
     explicit GameServer(const QString &fileName, QObject *parent = nullptr);
     ~GameServer();
@@ -29,6 +26,10 @@ private:
     void saveToFile();
 
     void writeData(const QByteArray &data);
+
+    QString m_fileName;
+    QTcpServer m_server;
+    QList<QTcpSocket*> m_sockets;
 };
 
 #endif // GAMESERVER_HPP

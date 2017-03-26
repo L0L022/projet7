@@ -9,21 +9,14 @@
 
 #include <QDebug>
 
-class PropertyItem : public QObject {
+class PropertyItem : public QObject
+{
     Q_OBJECT
     Q_PROPERTY(int id READ id CONSTANT)
     Q_PROPERTY(QVariantMap properties READ properties WRITE setProperties NOTIFY propertiesChanged)
 
-protected:
-    QVariantMap _properties;
-
-signals:
-    void propertiesChanged();
-    void propertyChanged(const QString &key);
-    void propertyRemoved(const QString &key);
-
 public:
-    PropertyItem(const int _id = 0, QObject *parent = nullptr);
+    PropertyItem(const int id = 0, QObject *parent = nullptr);
 
     int id() const;
     const QVariantMap &properties() const;
@@ -36,11 +29,18 @@ public:
 
     virtual QJsonObject toJson() const;
     virtual void fromJson(const QJsonObject &json);
+
+signals:
+    void propertiesChanged();
+
+private:
+    QVariantMap m_properties;
 };
 
 class PropertyModel : public QAbstractListModel
 {
     Q_OBJECT
+
 public:
     enum PropertyRoles {
         ItemRole = Qt::UserRole + 1,
@@ -70,46 +70,59 @@ protected:
     QHash<int, QByteArray> roleNames() const;
 
 private:
-    QList<QSharedPointer<PropertyItem>> _properties;
+    QList<QSharedPointer<PropertyItem>> m_properties;
 };
 
-class PropertyFilterModel : public QSortFilterProxyModel {
+class PropertyFilterModel : public QSortFilterProxyModel
+{
     Q_OBJECT
     Q_PROPERTY(QString filterKey READ filterKey WRITE setFilterKey NOTIFY filterKeyChanged)
     Q_PROPERTY(QVariant filterValue READ filterValue WRITE setFilterValue NOTIFY filterValueChanged)
-    QString _filterKey;
-    QVariant _filterValue;
 
 signals:
     void filterKeyChanged();
     void filterValueChanged();
 
 public:
-    PropertyFilterModel(QObject *parent = nullptr) : QSortFilterProxyModel(parent) {}
-
-    QString filterKey() const {
-        return _filterKey;
+    PropertyFilterModel(QObject *parent = nullptr)
+        : QSortFilterProxyModel(parent)
+    {
     }
-    void setFilterKey(const QString &key) {
+
+    QString filterKey() const
+    {
+        return m_filterKey;
+    }
+
+    void setFilterKey(const QString &key)
+    {
         emit beginResetModel();
-        _filterKey = key;
+        m_filterKey = key;
         emit endResetModel();
     }
 
-    QVariant filterValue() const {
-        return _filterValue;
+    QVariant filterValue() const
+    {
+        return m_filterValue;
     }
-    void setFilterValue(const QVariant &value) {
+
+    void setFilterValue(const QVariant &value)
+    {
         emit beginResetModel();
-        _filterValue = value;
+        m_filterValue = value;
         emit endResetModel();
     }
 
 protected:
-    bool filterAcceptsRow(int sourceRow, const QModelIndex &sourceParent) const override {
+    bool filterAcceptsRow(int sourceRow, const QModelIndex &sourceParent) const override
+    {
         return sourceModel()->data(sourceModel()->index(sourceRow, 0, sourceParent),
-                                   PropertyModel::PropertiesRole).toMap().value(_filterKey) == _filterValue;
+                                   PropertyModel::PropertiesRole).toMap().value(m_filterKey) == m_filterValue;
     }
+
+private:
+    QString m_filterKey;
+    QVariant m_filterValue;
 };
 
 #endif // PROPERTYMODEL_HPP

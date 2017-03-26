@@ -9,7 +9,6 @@ class GameClient : public Game
 {
     Q_OBJECT
 
-    QTcpSocket _socket;
 public:
     explicit GameClient(const QString &address, quint16 port, QObject *parent = nullptr);
     ~GameClient();
@@ -19,6 +18,9 @@ public:
 
 protected:
     void writeData(const QByteArray &data);
+
+private:
+    QTcpSocket m_socket;
 };
 
 #endif // GAMECLIENT_HPP
