@@ -1,11 +1,10 @@
 #include "game.hpp"
+#include <QDebug>
 #include <QJsonDocument>
 
-Game::Game(QObject *parent) : QObject(parent)
+Game::Game(QObject *parent) : QObject(parent), _name(""), _players(this)
 {
 }
-
-Game::~Game() {}
 
 QString Game::name() const {
     return _name;
@@ -16,12 +15,12 @@ void Game::setName(const QString &new_name) {
     emit nameChanged();
 }
 
-QString Game::location() const {
-    return "";
-}
-
 PlayerModel *Game::players() {
     return &_players;
+}
+
+void Game::readData(const QByteArray &data) {
+    qDebug() << "Game::readData() :" << data;
 }
 
 QJsonObject Game::toJson() const {

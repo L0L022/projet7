@@ -11,13 +11,14 @@ class GameClient : public Game
 
     QTcpSocket _socket;
 public:
-    explicit GameClient(const QHostAddress &address, quint16 port, QObject *parent = nullptr);
+    explicit GameClient(const QString &address, quint16 port, QObject *parent = nullptr);
     ~GameClient();
 
-    QString location() const;
+    QString ipAddress() const;
+    quint16 port() const;
 
-private:
-    void disconnect();
+protected:
+    void writeData(const QByteArray &data);
 };
 
 #endif // GAMECLIENT_HPP

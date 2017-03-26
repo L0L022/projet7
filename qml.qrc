@@ -9,5 +9,6 @@
         <file>EditProperty.qml</file>
         <file>players.json</file>
         <file>Players.qml</file>
+        <file>Game.qml</file>
     </qresource>
 </RCC>

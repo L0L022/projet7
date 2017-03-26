@@ -1,9 +1,6 @@
 #ifndef APPLICATION_HPP
 #define APPLICATION_HPP
 
-#include <QObject>
-#include <QHostAddress>
-
 #include "gamemodel.hpp"
 #include "gameclient.hpp"
 #include "gameserver.hpp"
@@ -16,8 +13,8 @@ class Application : public QObject
 public:
     explicit Application(QObject *parent = nullptr);
 
-    Q_INVOKABLE void startNewGame(const QString &name);
-    Q_INVOKABLE void loadExistGame(const QHostAddress &address, quint16 port);
+    Q_INVOKABLE void startNewGame(const QString &fileName);
+    Q_INVOKABLE void loadExistGame(const QString &address, quint16 port);
     Q_INVOKABLE void closeGame();
 
     Game *currentGame();
@@ -25,10 +22,14 @@ public:
     Q_INVOKABLE GameModel *savedGame();
     Q_INVOKABLE void refreshSavedGame();
 
+    Q_INVOKABLE void say_something(QString blabla); // juste pour le test
+
 signals:
     void currentGameChanged();
 
 private:
+    void setCurrentGame(Game *game = nullptr);
+
     Game *_currentGame;
     GameModel _savedGame;
 };

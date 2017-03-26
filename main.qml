@@ -33,13 +33,21 @@ ApplicationWindow {
 
     StackView {
         id: stack
-        initialItem: "qrc:///Players.qml"
+        initialItem: mainView
         anchors.fill: parent
         Keys.onBackPressed: {
             if(depth > 1)
                 pop()
             else
                 applicationWindow.close()
+        }
+    }
+
+    Connections {
+        target: app
+        onCurrentGameChanged: {
+            if(app.currentGame !== null)
+                stack.push("qrc:///Game.qml")
         }
     }
 
@@ -50,24 +58,41 @@ ApplicationWindow {
 
             ColumnLayout {
                 anchors.fill: parent
+                anchors.margins: 6
 
-                Button {
+                TextField {
+                    id: nameField
+                    placeholderText: "fileName or ip"
                     Layout.fillWidth: true
                     Layout.alignment: Qt.AlignHCenter
-                    text: "Commencer une nouvelle partie"
+                    text: "/tmp/test.json"
+                }
+
+                TextField {
+                    id: portFiel
+                    placeholderText: "port"
+                    Layout.fillWidth: true
+                    Layout.alignment: Qt.AlignHCenter
+                }
+
+                Button {
+                    text: "Ouvre la partie en cour"
+                    visible: app.currentGame !== null
+                    onClicked: stack.push("qrc:///Game.qml")
                 }
 
                 Button {
                     Layout.fillWidth: true
                     Layout.alignment: Qt.AlignHCenter
-                    text: "Charger une partie sauvegardée"
-                    onClicked: app.refreshSavedGame()
+                    text: "Commencer une nouvelle partie ou charger une partie existante"
+                    onClicked: app.startNewGame(nameField.text)
                 }
 
                 Button {
                     Layout.fillWidth: true
                     Layout.alignment: Qt.AlignHCenter
                     text: "Se connecter à une partie"
+                    onClicked: app.loadExistGame(nameField.text, portFiel.text)
                 }
             }
         }

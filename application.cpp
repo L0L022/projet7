@@ -7,24 +7,20 @@ Application::Application(QObject *parent) : QObject(parent), _currentGame(nullpt
 {
 }
 
-void Application::startNewGame(const QString &name) {
+void Application::startNewGame(const QString &fileName) {
     closeGame();
-    GameServer *game = new GameServer(this);
-    _currentGame = game;
-    emit currentGameChanged();
+    GameServer *game = new GameServer(fileName, this);
+    setCurrentGame(game);
 }
 
-void Application::loadExistGame(const QHostAddress &address, quint16 port) {
+void Application::loadExistGame(const QString &address, quint16 port) {
     closeGame();
     GameClient *game = new GameClient(address, port, this);
-    _currentGame = game;
-    emit currentGameChanged();
+    setCurrentGame(game);
 }
 
 void Application::closeGame() {
-    delete _currentGame;
-    _currentGame = nullptr;
-    emit currentGameChanged();
+    setCurrentGame();
 }
 
 Game *Application::currentGame() {
@@ -55,4 +51,16 @@ void Application::refreshSavedGame() {
             item->setProperty("location", info.fileName());
         }
     }
+}
+
+void Application::say_something(QString blabla) {
+    if(currentGame() != nullptr) {
+        currentGame()->writeData(blabla.toUtf8());
+    }
+}
+
+void Application::setCurrentGame(Game *game) {
+    delete _currentGame;
+    _currentGame = game;
+    emit currentGameChanged();
 }

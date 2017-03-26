@@ -19,7 +19,7 @@ Item {
             Layout.fillWidth: true
 
             Repeater {
-                model: players
+                model: app.currentGame.players()
                 delegate: NewPlayerView {
                     height: view.height
                     width: view.width
@@ -35,7 +35,7 @@ Item {
                 clip: true
 
                 Repeater {
-                    model: players
+                    model: app.currentGame.players()
                     delegate: TabButton {
                         width: 100
                         text: properties_role.name
@@ -47,7 +47,7 @@ Item {
                 Layout.fillWidth: parent.flow === GridLayout.TopToBottom
                 text: qsTr("Ajouter un joueur")
                 onClicked: {
-                    players.append()
+                    app.currentGame.players().append()
                     bar.currentIndex = view.count - 1
                 }
             }
@@ -55,7 +55,7 @@ Item {
             Button {
                 Layout.fillWidth: parent.flow === GridLayout.TopToBottom
                 text: qsTr("Supprimer un joueur")
-                onClicked: players.removeAt(view.currentIndex)
+                onClicked: app.currentGame.players().removeAt(view.currentIndex)
             }
         }
     }
