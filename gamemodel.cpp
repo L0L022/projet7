@@ -57,6 +57,31 @@ QString GameItem::location() const
     return "";
 }
 
+QJsonObject GameItem::toJson() const
+{
+    QJsonObject object;
+    object["type"] = m_type;
+    object["name"] = m_name;
+    object["location"] = m_location;
+    object["port"] = m_port;
+    return object;
+}
+
+GameItem GameItem::fromJson(const QJsonObject &object)
+{
+    if (object["type"] == FileGame) {
+        return GameItem(object["location"].toString(), object["name"].toString());
+    } else if (object["type"] == NetworkGame) {
+        return GameItem(object["location"].toString(), object["port"].toInt(), object["name"].toString());
+    }
+    return GameItem("", "unknown type");
+}
+
+bool operator==(const GameItem &l, const GameItem &r)
+{
+    return l.m_type == r.m_type && l.m_name == r.m_name && l.m_location == r.m_location && l.m_port == r.m_port;
+}
+
 GameModel::GameModel(QObject *parent)
     : QAbstractListModel(parent)
 {

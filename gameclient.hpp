@@ -13,8 +13,12 @@ public:
     explicit GameClient(const QString &address, quint16 port, QObject *parent = nullptr);
     ~GameClient();
 
+    GameType type() const;
+
     QString ipAddress() const;
     quint16 port() const;
+
+    //GameItem toGameItem() const;
 
 protected:
     void writeData(const QByteArray &data);

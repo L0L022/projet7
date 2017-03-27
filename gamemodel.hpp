@@ -2,6 +2,7 @@
 #define GAMEMODEL_HPP
 
 #include <QAbstractListModel>
+#include <QJsonObject>
 
 class GameItem
 {
@@ -24,8 +25,13 @@ public:
     quint16 port() const;
     QString fileName() const;
 
+    QJsonObject toJson() const;
+    static GameItem fromJson(const QJsonObject &object);
+
+    friend bool operator==(const GameItem &l, const GameItem &r);
+
 private:
-    const GameType m_type;
+    GameType m_type;
     QString m_name;
     QString m_location;
     quint16 m_port;

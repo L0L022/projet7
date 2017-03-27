@@ -31,6 +31,14 @@ ApplicationWindow {
       }
     }
 
+    Connections {
+        target: app
+        onCurrentGameChanged: {
+            app.refreshNetworkGames()
+            app.refreshFileGames()
+        }
+    }
+
     StackView {
         id: stack
         initialItem: mainView
@@ -43,18 +51,75 @@ ApplicationWindow {
         }
     }
 
-    Connections {
-        target: app
-        onCurrentGameChanged: {
-            if(app.currentGame !== null)
-                stack.push("qrc:///Game.qml")
-        }
-    }
-
     Component {
         id: mainView
         Item {
             readonly property string title: "Projet7"
+
+            Component {
+                id: fileGame
+
+                ColumnLayout {
+                    readonly property string title: "Nouvelle partie"
+
+                    TextField {
+                        Layout.fillWidth: true
+                        id: newGameName
+                        placeholderText: "Nom de la nouvelle partie"
+                    }
+
+                    Button {
+                        Layout.fillWidth: true
+                        text: "Créer la partie"
+                        onClicked: {
+                            if(newGameName.text !== "") {
+                                app.newFileGame(newGameName.text)
+                                stack.replace("qrc:///Game.qml")
+                            }
+                        }
+                    }
+                }
+            }
+
+            Component {
+                id: networkGame
+
+                ColumnLayout {
+                    readonly property string title: "Se connecter"
+
+                    TextField {
+                        id: ipField
+                        placeholderText: "Addresse ip"
+                        Layout.fillWidth: true
+                    }
+
+                    RowLayout {
+
+                        Label {
+                            Layout.fillWidth: true
+                            text: "Port"
+                        }
+
+                        SpinBox {
+                            Layout.fillWidth: true
+                            id: portSpin
+                            editable: true
+                            to: 9999
+                        }
+                    }
+
+                    Button {
+                        Layout.fillWidth: true
+                        text: "Connection"
+                        onClicked: {
+                            if(ipField.text !== "" && portSpin.value !== 0) {
+                                app.loadNetworkGame(ipField.text, portSpin.value)
+                                stack.replace("qrc:///Game.qml")
+                            }
+                        }
+                    }
+                }
+            }
 
             ColumnLayout {
                 anchors.fill: parent
@@ -64,46 +129,41 @@ ApplicationWindow {
                     Layout.fillWidth: true
                     Layout.fillHeight: true
                     model: app.availableGames()
-                    Component.onCompleted: app.refreshAvailableGames()
+                    Component.onCompleted: {
+                        app.refreshNetworkGames()
+                        app.refreshFileGames()
+                    }
+
+
                     delegate: ItemDelegate {
                         width: parent.width
                         text: NameRole + " at " + LocationRole
-                        onClicked: app.startGame(index)
+                        onClicked: {
+                            app.loadAvailableGame(index)
+                            stack.push("qrc:///Game.qml")
+                        }
                     }
                 }
 
-                TextField {
-                    id: nameField
-                    placeholderText: "fichier ou ip"
-                    Layout.fillWidth: true
-                    Layout.alignment: Qt.AlignHCenter
-                }
-
-                TextField {
-                    id: portFiel
-                    placeholderText: "port"
-                    Layout.fillWidth: true
-                    Layout.alignment: Qt.AlignHCenter
-                }
-
                 Button {
-                    text: "Ouvre la partie en cour"
+                    text: "Ouvrir la partie en cours"
                     visible: app.currentGame !== null
                     onClicked: stack.push("qrc:///Game.qml")
+                    Layout.fillWidth: true
                 }
 
                 Button {
                     Layout.fillWidth: true
-                    Layout.alignment: Qt.AlignHCenter
-                    text: "Commencer une nouvelle partie ou charger une partie existante"
-                    onClicked: app.startNewGame(nameField.text)
+                    text: "Commencer une nouvelle partie"
+                    onClicked: stack.push(fileGame)
+
                 }
 
                 Button {
                     Layout.fillWidth: true
                     Layout.alignment: Qt.AlignHCenter
                     text: "Se connecter à une partie"
-                    onClicked: app.loadExistGame(nameField.text, portFiel.text)
+                    onClicked: stack.push(networkGame)
                 }
             }
         }

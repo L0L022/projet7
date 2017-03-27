@@ -32,6 +32,11 @@ GameClient::~GameClient()
     m_socket.disconnectFromHost();
 }
 
+Game::GameType GameClient::type() const
+{
+    return ClientGame;
+}
+
 QString GameClient::ipAddress() const
 {
     return m_socket.peerAddress().toString();
@@ -41,7 +46,12 @@ quint16 GameClient::port() const
 {
     return m_socket.peerPort();
 }
-
+/*
+GameItem GameClient::toGameItem() const
+{
+    return GameItem(ipAddress(), port(), name());
+}
+*/
 void GameClient::writeData(const QByteArray &data)
 {
     QTextStream stream(&m_socket);

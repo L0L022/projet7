@@ -14,8 +14,12 @@ public:
     explicit GameServer(const QString &fileName, QObject *parent = nullptr);
     ~GameServer();
 
+    GameType type() const;
+
     QString ipAddress() const;
     quint16 port() const;
+
+    //GameItem toGameItem() const;
 
 private:
     void openServer();

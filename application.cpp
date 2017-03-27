@@ -2,12 +2,18 @@
 #include <QDir>
 #include <QDebug>
 #include <QJsonDocument>
+#include <QStandardPaths>
+#include <QHostInfo>
 
 Application::Application(QObject *parent)
     : QObject(parent),
       m_currentGame(nullptr),
-      m_availableGames(this)
+      m_availableGames(this),
+      m_hostFinder(8888, this),
+      m_fileGameDir(QStandardPaths::writableLocation(QStandardPaths::AppDataLocation))
 {
+    connect(&m_hostFinder, &HostFinder::hostFound, this, &Application::hostFound);
+    QDir("/").mkpath(m_fileGameDir);
 }
 
 Game *Application::currentGame()
@@ -15,30 +21,38 @@ Game *Application::currentGame()
     return m_currentGame;
 }
 
-void Application::startNewGame(const QString &fileName)
+void Application::newFileGame(const QString &gameName)
 {
-    closeGame();
+    qDebug() << m_fileGameDir;
+    loadFileGame(m_fileGameDir + "/" + gameName + ".json");
+    if (m_currentGame)
+        m_currentGame->setName(gameName);
+}
+
+void Application::loadFileGame(const QString &fileName)
+{
+    closeCurrentGame();
     GameServer *game = new GameServer(fileName, this);
     setCurrentGame(game);
 }
 
-void Application::loadExistGame(const QString &address, quint16 port)
+void Application::loadNetworkGame(const QString &address, quint16 port)
 {
-    closeGame();
+    closeCurrentGame();
     GameClient *game = new GameClient(address, port, this);
     setCurrentGame(game);
 }
 
-void Application::startGame(const int index)
+void Application::loadAvailableGame(const int index)
 {
     const GameItem &game = m_availableGames.at(index);
     if (game.type() == GameItem::FileGame)
-        startNewGame(game.fileName());
+        loadFileGame(game.fileName());
     else if (game.type() == GameItem::NetworkGame)
-        loadExistGame(game.address(), game.port());
+        loadNetworkGame(game.address(), game.port());
 }
 
-void Application::closeGame()
+void Application::closeCurrentGame()
 {
     setCurrentGame();
 }
@@ -48,14 +62,13 @@ GameModel *Application::availableGames()
     return &m_availableGames;
 }
 
-void Application::refreshAvailableGames()
+void Application::refreshFileGames()
 {
-    //à tester
     for (int i = 0; i < m_availableGames.rowCount(); ++i)
-        while (m_availableGames.at(i).type() == GameItem::FileGame && i < m_availableGames.rowCount())
+        while (i < m_availableGames.rowCount() && m_availableGames.at(i).type() == GameItem::FileGame)
             m_availableGames.removeAt(i);
 
-    QDir dir("/tmp");
+    QDir dir(m_fileGameDir);
     for (QFileInfo info : dir.entryInfoList({"*.json"})) {
         QFile file;
         file.setFileName(info.absoluteFilePath());
@@ -71,6 +84,15 @@ void Application::refreshAvailableGames()
     }
 }
 
+void Application::refreshNetworkGames()
+{
+    for (int i = 0; i < m_availableGames.rowCount(); ++i)
+        while (i < m_availableGames.rowCount() && m_availableGames.at(i).type() == GameItem::NetworkGame)
+            m_availableGames.removeAt(i);
+
+    sendPresenceMessage();
+}
+
 void Application::say_something(QString blabla)
 {
     if (currentGame() != nullptr) {
@@ -83,4 +105,44 @@ void Application::setCurrentGame(Game *game)
     delete m_currentGame;
     m_currentGame = game;
     emit currentGameChanged();
+    sendPresenceMessage();
+}
+
+void Application::sendPresenceMessage()
+{
+    QJsonObject object;
+    if (m_currentGame && m_currentGame->type() == Game::ServerGame) {
+        GameItem server(m_currentGame->ipAddress(), m_currentGame->port(), m_currentGame->name());
+        object = server.toJson();
+        object["game"] = "server";
+    } else {
+        object["game"] = "client";
+        // mettre son IP locale
+    }
+    QJsonDocument document(object);
+    m_hostFinder.sendMessage(document.toJson());
+}
+
+void Application::hostFound(const QHostAddress &hostAddress, const QByteArray &message)
+{
+    Q_UNUSED(hostAddress)
+    QJsonDocument document = QJsonDocument::fromJson(message);
+    if (document.isObject()) {
+        QJsonObject object(document.object());
+        GameItem gameMessage = GameItem::fromJson(object);
+
+        for (int i = 0; i < m_availableGames.rowCount(); ++i) {
+            const GameItem &game = m_availableGames.at(i);
+            if (game.type() == GameItem::NetworkGame && game.address() == gameMessage.address()) {
+                m_availableGames.removeAt(i);
+            }
+        }
+
+        if (object["game"].toString() == "client") {
+            if (m_currentGame && m_currentGame->type() == Game::ServerGame)
+                sendPresenceMessage();
+        } else if (object["game"].toString() == "server") {
+            m_availableGames.append(gameMessage);
+        }
+    }
 }

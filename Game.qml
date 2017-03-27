@@ -25,7 +25,7 @@ Item {
             y: (item.height - height) / 2
             title: "Une erreur est survenue"
             standardButtons: Dialog.Ok
-            onClosed: app.closeGame()
+            onClosed: app.closeCurrentGame()
 
             Label {
                 id: labelError
@@ -61,7 +61,7 @@ Item {
 
         Button {
             text: "Termine la partie"
-            onClicked: app.closeGame()
+            onClicked: app.closeCurrentGame()
         }
     }
 }

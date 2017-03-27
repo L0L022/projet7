@@ -24,6 +24,11 @@ GameServer::~GameServer()
     saveToFile();
 }
 
+Game::GameType GameServer::type() const
+{
+    return ServerGame;
+}
+
 QString GameServer::ipAddress() const
 {
     return m_server.serverAddress().toString();
@@ -33,7 +38,12 @@ quint16 GameServer::port() const
 {
     return m_server.serverPort();
 }
-
+/*
+GameItem GameServer::toGameItem() const
+{
+    return GameItem()
+}
+*/
 void GameServer::openServer()
 {
     m_server.listen();
