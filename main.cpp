@@ -23,23 +23,23 @@ int main(int argc, char *argv[])
     QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
     QGuiApplication app(argc, argv);
 
-    qmlRegisterType<Application>("me", 1, 0, "Application");
+    qmlRegisterType<Application>("Projet7", 1, 0, "Application");
 
-    qmlRegisterType<GameModel>("me", 1, 0, "GameModel");
+    qmlRegisterType<GameModel>("Projet7", 1, 0, "GameModel");
 
-    qmlRegisterUncreatableType<Game>("me", 1, 0, "Game", "Use Application");
-    qmlRegisterUncreatableType<GameClient>("me", 1, 0, "GameClient", "Use Application");
-    qmlRegisterUncreatableType<GameServer>("me", 1, 0, "GameServer", "Use Application");
+    qmlRegisterUncreatableType<Game>("Projet7", 1, 0, "Game", "Use Application");
+    qmlRegisterUncreatableType<GameClient>("Projet7", 1, 0, "GameClient", "Use Application");
+    qmlRegisterUncreatableType<GameServer>("Projet7", 1, 0, "GameServer", "Use Application");
 
-    qmlRegisterType<PropertyItem>("me", 1, 0, "PropertyItem");
-    qmlRegisterType<PropertyModel>("me", 1, 0, "PropertyModel");
-    qmlRegisterType<PropertyFilterModel>("me", 1, 0, "PropertyFilterModel");
+    qmlRegisterType<PropertyItem>("Projet7", 1, 0, "PropertyItem");
+    qmlRegisterType<PropertyModel>("Projet7", 1, 0, "PropertyModel");
+    qmlRegisterType<PropertyFilterModel>("Projet7", 1, 0, "PropertyFilterModel");
 
-    qmlRegisterType<PlayerItem>("me", 1, 0, "PlayerItem");
-    qmlRegisterType<PlayerModel>("me", 1, 0, "PlayerModel");
+    qmlRegisterType<PlayerItem>("Projet7", 1, 0, "PlayerItem");
+    qmlRegisterType<PlayerModel>("Projet7", 1, 0, "PlayerModel");
 
-    qmlRegisterType<PlayerAdditionItem>("me", 1, 0, "PlayerAdditionItem");
-    qmlRegisterType<PlayerAdditionModel>("me", 1, 0, "PlayerAdditionModel"); 
+    qmlRegisterType<PlayerAdditionItem>("Projet7", 1, 0, "PlayerAdditionItem");
+    qmlRegisterType<PlayerAdditionModel>("Projet7", 1, 0, "PlayerAdditionModel");
 
     Application mon_app;
     QQmlApplicationEngine engine;

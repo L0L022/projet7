@@ -95,9 +95,8 @@ void Application::refreshNetworkGames()
 
 void Application::say_something(QString blabla)
 {
-    if (currentGame() != nullptr) {
-        currentGame()->writeData(blabla.toUtf8());
-    }
+    if (m_currentGame)
+        m_currentGame->writeData(blabla.toUtf8());
 }
 
 void Application::setCurrentGame(Game *game)
@@ -112,10 +111,10 @@ void Application::sendPresenceMessage()
 {
     QJsonObject object;
     if (m_currentGame && m_currentGame->type() == Game::ServerGame) {
-        object = GameItem(getMyIp(), m_currentGame->port(), m_currentGame->name()).toJson();
+        object = GameItem(myIp(), m_currentGame->port(), m_currentGame->name()).toJson();
         object["game"] = "server";
     } else {
-        object = GameItem(getMyIp(), 0, "").toJson();
+        object = GameItem(myIp(), 0, "").toJson();
         object["game"] = "client";
     }
     QJsonDocument document(object);
@@ -128,8 +127,6 @@ void Application::hostFound(const QHostAddress &hostAddress, const QByteArray &m
     QJsonDocument document = QJsonDocument::fromJson(message);
     if (document.isObject()) {
         QJsonObject object(document.object());
-        //vraiment null
-        //object["location"] = hostAddress.toString();
         GameItem gameMessage = GameItem::fromJson(object);
 
         for (int i = 0; i < m_availableGames.rowCount(); ++i) {
@@ -143,22 +140,23 @@ void Application::hostFound(const QHostAddress &hostAddress, const QByteArray &m
             if (m_currentGame && m_currentGame->type() == Game::ServerGame)
                 sendPresenceMessage();
         } else if (object["game"].toString() == "server") {
-            m_availableGames.append(gameMessage);
+            if (gameMessage.address() != myIp())
+                m_availableGames.append(gameMessage);
         }
     }
 }
 
-QString Application::getMyIp() const
+QString Application::myIp() const
 {
-    QString myIp = QHostAddress(QHostAddress::Any).toString();
+    QString ip = QHostAddress(QHostAddress::Any).toString();
     QList<QNetworkInterface> interfaces = QNetworkInterface::allInterfaces();
     for (int i = 0; i < interfaces.count(); ++i)
     {
         if (interfaces.at(i).flags() != (QNetworkInterface::IsUp | QNetworkInterface::IsRunning | QNetworkInterface::IsLoopBack)) {
         QList<QNetworkAddressEntry> entries = interfaces.at(i).addressEntries();
             for (int j = 0; j < entries.count(); ++j)
-                    myIp = entries.at(j).ip().toString();
+                    ip = entries.at(j).ip().toString();
         }
     }
-    return myIp;
+    return ip;
 }

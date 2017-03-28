@@ -1,11 +1,11 @@
 import QtQuick 2.7
 import QtQuick.Controls 2.1
 import QtQuick.Layouts 1.0
-import me 1.0
+import Projet7 1.0
 
 Item {
     id: item
-    readonly property string title: app.currentGame.name
+    readonly property string title: app.currentGame !== null ? app.currentGame.name : ""
 
     Connections {
         target: app
@@ -41,26 +41,31 @@ Item {
         }
 
         TextField {
-            text: app.currentGame.name
+            Layout.fillWidth: true
+            text: app.currentGame !== null ? app.currentGame.name : ""
             onAccepted: app.currentGame.name = text
         }
 
         Label {
-            text: "Ip address : " + app.currentGame.ipAddress + ":" + app.currentGame.port
+            Layout.fillWidth: true
+            text: app.currentGame !== null ? "Adresse ip : " + app.currentGame.ipAddress + ":" + app.currentGame.port : ""
         }
 
         TextField {
+            Layout.fillWidth: true
             placeholderText: "envoi un truc sur le réseau"
             onAccepted: app.say_something(text)
         }
 
         Button {
-            text: "Open players"
+            Layout.fillWidth: true
+            text: "Ouvrir la liste des joueurs"
             onClicked: stack.push("qrc:///Players.qml")
         }
 
         Button {
-            text: "Termine la partie"
+            Layout.fillWidth: true
+            text: "Terminer la partie"
             onClicked: app.closeCurrentGame()
         }
     }

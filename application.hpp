@@ -34,7 +34,7 @@ private:
     void setCurrentGame(Game *game = nullptr);
     void sendPresenceMessage();
     void hostFound(const QHostAddress &hostAddress, const QByteArray &message);
-    QString getMyIp() const;
+    QString myIp() const;
 
     Game *m_currentGame;
     GameModel m_availableGames;
