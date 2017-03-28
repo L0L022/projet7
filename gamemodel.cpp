@@ -153,11 +153,11 @@ int GameModel::rowCount(const QModelIndex &parent) const
 QHash<int, QByteArray> GameModel::roleNames() const
 {
     QHash<int, QByteArray> roles;
-    roles[TypeRole] = "TypeRole";
-    roles[NameRole] = "NameRole";
-    roles[LocationRole] = "LocationRole";
-    roles[FileNameRole] = "FileNameRole";
-    roles[AddressRole] = "AddressRole";
-    roles[PortRole] = "PortRole";
+    roles[TypeRole] = "typeRole";
+    roles[NameRole] = "nameRole";
+    roles[LocationRole] = "locationRole";
+    roles[FileNameRole] = "fileNameRole";
+    roles[AddressRole] = "addressRole";
+    roles[PortRole] = "portRole";
     return roles;
 }

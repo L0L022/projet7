@@ -156,7 +156,7 @@ QVariant PropertyModel::data(const QModelIndex &index, int role) const
 
     PropertyItem *property = at(index.row());
 
-    if (role == ItemRole)
+    if (role == PropertyRole)
         return QVariant::fromValue(property);
     else if (role == IdRole)
         return property->id();
@@ -200,8 +200,8 @@ PropertyItem *PropertyModel::makeProperty(const int id)
 QHash<int, QByteArray> PropertyModel::roleNames() const
 {
     QHash<int, QByteArray> roles;
-    roles[ItemRole] = "ItemRole";
-    roles[IdRole] = "IdRole";
-    roles[PropertiesRole] = "PropertiesRole";
+    roles[PropertyRole] = "propertyRole";
+    roles[IdRole] = "idRole";
+    roles[PropertiesRole] = "propertiesRole";
     return roles;
 }

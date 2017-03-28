@@ -2,7 +2,6 @@
 #define PLAYERMODEL_HPP
 
 #include "propertymodel.hpp"
-#include "playeradditionmodel.hpp"
 
 class PlayerItem : public PropertyItem
 {
@@ -11,37 +10,43 @@ class PlayerItem : public PropertyItem
 public:
     explicit PlayerItem(const int id = 0, QObject *parent = nullptr)
         : PropertyItem(id, parent),
-          m_additions(this)
+          m_subProperties(this)
     {
-        for (const QString &str : {"name", "calling"})
+        for (const QString &str : {"name", "calling", "age", "height"})
             setProperty(str, "");
-
-        for (const QString &nb : {"age", "height", "CC", "CT", "F", "B", "A", "I", "Desc", "Int", "Soc", "FM"})
-            setProperty(nb, 0);
     }
 
-    Q_INVOKABLE PlayerAdditionModel *additions()
+    Q_INVOKABLE PropertyModel *subProperties()
     {
-        return &m_additions;
+        return &m_subProperties;
+    }
+
+    Q_INVOKABLE PropertyItem* append(const int proposed_id = 0)
+    {
+        PropertyItem * property = m_subProperties.append(proposed_id);
+        for (const QString &str : {"name", "description", "category", "CC", "CT", "F", "B", "A", "I", "Desc", "Int", "Soc", "FM"})
+            property->setProperty(str, "");
+
+        return property;
     }
 
     QJsonObject toJson() const
     {
         QJsonObject object = PropertyItem::toJson();
-        object["additions"] = m_additions.toJson();
+        object["subProperties"] = m_subProperties.toJson();
         return object;
     }
 
     void fromJson(const QJsonObject &json)
     {
-        if (json["additions"].isArray()) {
+        if (json["subProperties"].isArray()) {
             setProperties(json.toVariantMap());
-            m_additions.fromJson(json["additions"].toArray());
+            m_subProperties.fromJson(json["subProperties"].toArray());
         }
     }
 
 private:
-    PlayerAdditionModel m_additions;
+    PropertyModel m_subProperties;
 };
 
 class PlayerModel : public PropertyModel

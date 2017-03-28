@@ -60,7 +60,7 @@ Item {
         Button {
             Layout.fillWidth: true
             text: "Ouvrir la liste des joueurs"
-            onClicked: stack.push("qrc:///Players.qml")
+            onClicked: stack.push("qrc:///PlayersView.qml")
         }
 
         Button {

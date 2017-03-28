@@ -5,41 +5,31 @@ import QtQuick.Layouts 1.0
 import Projet7 1.0
 
 Flickable {
-    id: item1
-    contentHeight: superColumn.implicitHeight
+    id: item
+    contentHeight: columnLayout.implicitHeight
     clip: true
 
     ColumnLayout {
-        id: superColumn
+        id: columnLayout
         anchors.fill: parent
 
         GridLayout {
             Layout.fillWidth: true
-            columns: item1.width > item1.height ? 2 : 1
+            columns: item.width > item.height ? 2 : 1
 
-            SuperSaisi {
-                key: "name"
-                key_name: "Nom"
-            }
-
-            SuperSaisi {
-                key: "age"
-                key_name: "Age"
-            }
-
-            SuperSaisi {
-                key: "calling"
-                key_name: "Vocation"
-            }
-
-            SuperSaisi {
-                key: "height"
-                key_name: "Taille"
+            Repeater {
+                model: ["name", "age", "calling", "height"]
+                delegate: RowLayout {
+                    PropertyField {
+                        Layout.fillWidth: true
+                        key: modelData
+                        placeholderText: modelData
+                    }
+                }
             }
         }
 
         GroupBox {
-            id: groupBox
             title: qsTr("Caractéristiques")
             Layout.fillHeight: true
             Layout.fillWidth: true
@@ -49,8 +39,6 @@ Flickable {
                 anchors.fill: parent
 
                 Row {
-                    id: rowText
-
                     Repeater {
                         model: ["CC", "CT", "F", "B", "A", "I", "Desc", "Int", "Soc", "FM"]
                         delegate: Text {
@@ -59,7 +47,6 @@ Flickable {
                             width: 50
                         }
                     }
-
                 }
 
                 ListView {
@@ -68,7 +55,7 @@ Flickable {
                     clip: true
 
                     model: PropertyFilterModel {
-                        sourceModel: ItemRole.additions()
+                        sourceModel: propertyRole.subProperties()
                         filterKey: "category"
                         filterValue: "characteristic"
                     }
@@ -78,25 +65,15 @@ Flickable {
 
                         Repeater {
                             model: ["CC", "CT", "F", "B", "A", "I", "Desc", "Int", "Soc", "FM"]
-                            delegate: TextField {
-                                id: salut
-
-                                HelpProperties {
-                                    id: superhelp1
-                                    propertyKey: modelData
-                                }
-
-                                text: superhelp1.inputValue
-                                onTextChanged: superhelp1.inputValue = text
-                                color: text === superhelp1.propertyValue ? "green" : "orange"
-                                onAccepted: superhelp1.set()
-                                ToolTip.text: modelData
+                            delegate: PropertyField {
+                                id: supertruc
+                                key: modelData
                                 width: 50
+                                showResetButton: false
 
                                 ToolTip {
-                                    parent: salut
-                                    visible: salut.activeFocus
-                                    text: "Nom : " + PropertiesRole.name + "\nDescription : " + PropertiesRole.description
+                                    visible: parent.inTextField
+                                    text: "Nom : " + propertiesRole.name + "\nDescription : " + propertiesRole.description
                                 }
                             }
                         }
@@ -110,13 +87,14 @@ Flickable {
             ComboBox {
                 id: superCombo
                 Layout.fillWidth: true
+                //AAAH C'EST PAS BIEN
                 model: ["skill", "equipment", "weapon", "armor", "characteristic"]
             }
 
             Button {
                 Layout.alignment: Qt.AlignRight
-                text: "Éditer les stats"
-                onClicked: stack.push("qrc:///EditProperties.qml", {"ItemRole": ItemRole, "additionsRole": ItemRole.additions()})
+                text: "Éditer les sous propriétées"
+                onClicked: stack.push("qrc:///PropertyView.qml", {"propertyRole": propertyRole})
             }
         }
 
@@ -129,7 +107,7 @@ Flickable {
                 clip: true
                 anchors.fill: parent
                 model: PropertyFilterModel {
-                    sourceModel: ItemRole.additions()
+                    sourceModel: propertyRole.subProperties()
                     filterKey: "category"
                     filterValue: superCombo.currentText
                     onFilterValueChanged: console.log(filterValue)
@@ -138,19 +116,9 @@ Flickable {
                     width: parent.width
                     Repeater {
                         model: ["name", "description"]
-                        delegate: TextField {
+                        delegate: PropertyField {
+                            key: modelData
                             Layout.fillWidth: true
-
-                            HelpProperties {
-                                id: superhelp
-                                propertyKey: modelData
-                            }
-
-                            text: superhelp.inputValue
-                            onTextChanged: superhelp.inputValue = text
-                            color: text === superhelp.propertyValue ? "green" : "orange"
-                            onAccepted: superhelp.set()
-                            ToolTip.text: modelData
                         }
                     }
                 }

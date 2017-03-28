@@ -4,7 +4,6 @@
 
 #include "application.hpp"
 #include "playermodel.hpp"
-#include "playeradditionmodel.hpp"
 
 #include "game.hpp"
 #include "gameclient.hpp"
@@ -37,9 +36,6 @@ int main(int argc, char *argv[])
 
     qmlRegisterType<PlayerItem>("Projet7", 1, 0, "PlayerItem");
     qmlRegisterType<PlayerModel>("Projet7", 1, 0, "PlayerModel");
-
-    qmlRegisterType<PlayerAdditionItem>("Projet7", 1, 0, "PlayerAdditionItem");
-    qmlRegisterType<PlayerAdditionModel>("Projet7", 1, 0, "PlayerAdditionModel");
 
     Application mon_app;
     QQmlApplicationEngine engine;

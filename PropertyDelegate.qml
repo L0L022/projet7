@@ -6,9 +6,8 @@ import Projet7 1.0
 
 Item {
     id: item
-    property var itemRole
-    property var additionsRole
-    readonly property string title: "Édition de : " + itemRole.properties.name
+    property var propertyRole
+    readonly property string title: "Édition de : " + propertyRole.properties.name
 
     ColumnLayout {
         anchors.fill: parent
@@ -18,7 +17,8 @@ Item {
             clip: true
             Layout.fillHeight: true
             Layout.fillWidth: true
-            model: Object.keys(itemRole.properties)
+            spacing: 3
+            model: Object.keys(propertyRole.properties)
             delegate: GridLayout {
                 width: parent.width
                 columns: item.width > item.height ? 4 : 2
@@ -28,26 +28,14 @@ Item {
                     Layout.fillWidth: true
                 }
 
-                HelpProperties {
-                    id: superhelp
-                    propertyKey: modelData
-                }
-
-                TextField {
-                    text: superhelp.inputValue
-                    onTextChanged: superhelp.inputValue = text
-                    color: text === superhelp.propertyValue ? "green" : "orange"
-                    onAccepted: superhelp.set()
-                }
-
-                Button {
-                    text: "Réinitialisation"
-                    onClicked: superhelp.reset()
+                PropertyField {
+                    key: modelData
+                    property var propertiesRole: propertyRole.properties
                 }
 
                 Button {
                     text: "Supprimer"
-                    onClicked: itemRole.removeProperty(modelData)
+                    onClicked: propertyRole.removeProperty(modelData)
                 }
             }
         }
@@ -56,7 +44,7 @@ Item {
 
             function addKey() {
                 if(new_key_field.text !== "") {
-                    itemRole.setProperty(new_key_field.text, "")
+                    propertyRole.setProperty(new_key_field.text, "")
                 }
             }
 

@@ -2,12 +2,11 @@
     <qresource prefix="/">
         <file>main.qml</file>
         <file>qtquickcontrols2.conf</file>
-        <file>NewPlayerView.qml</file>
-        <file>SuperSaisi.qml</file>
-        <file>HelpProperties.qml</file>
-        <file>EditProperties.qml</file>
-        <file>EditProperty.qml</file>
-        <file>Players.qml</file>
-        <file>Game.qml</file>
+        <file>PlayerDelegate.qml</file>
+        <file>PropertyView.qml</file>
+        <file>PropertyDelegate.qml</file>
+        <file>PlayersView.qml</file>
+        <file>GameView.qml</file>
+        <file>PropertyField.qml</file>
     </qresource>
 </RCC>

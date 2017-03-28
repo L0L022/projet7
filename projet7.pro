@@ -37,7 +37,6 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 
 HEADERS += \
     playermodel.hpp \
-    playeradditionmodel.hpp \
     propertymodel.hpp \
     application.hpp \
     game.hpp \

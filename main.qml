@@ -13,22 +13,21 @@ ApplicationWindow {
     title: qsTr("Projet7")
 
     header: ToolBar {
+        Label {
+            anchors.centerIn: parent
+            text: stack.currentItem.title
+            elide: Label.ElideRight
+        }
+
         RowLayout {
-          anchors.fill: parent
-          ToolButton {
+            anchors.fill: parent
+            ToolButton {
               text: qsTr("‹")
               onClicked: stack.pop()
               visible: stack.depth > 1
 
-          }
-          Label {
-              text: stack.currentItem.title
-              elide: Label.ElideRight
-              horizontalAlignment: Qt.AlignHCenter
-              verticalAlignment: Qt.AlignVCenter
-              Layout.fillWidth: true
-          }
-      }
+            }
+        }
     }
 
     Connections {
@@ -59,22 +58,27 @@ ApplicationWindow {
             Component {
                 id: fileGame
 
-                ColumnLayout {
+                Item {
                     readonly property string title: "Nouvelle partie"
 
-                    TextField {
-                        Layout.fillWidth: true
-                        id: newGameName
-                        placeholderText: "Nom de la nouvelle partie"
-                    }
+                    ColumnLayout {
+                        anchors.fill: parent
+                        anchors.margins: 6
 
-                    Button {
-                        Layout.fillWidth: true
-                        text: "Créer la partie"
-                        onClicked: {
-                            if(newGameName.text !== "") {
-                                app.newFileGame(newGameName.text)
-                                stack.replace("qrc:///Game.qml")
+                        TextField {
+                            Layout.fillWidth: true
+                            id: newGameName
+                            placeholderText: "Nom de la nouvelle partie"
+                        }
+
+                        Button {
+                            Layout.fillWidth: true
+                            text: "Créer la partie"
+                            onClicked: {
+                                if(newGameName.text !== "") {
+                                    app.newFileGame(newGameName.text)
+                                    stack.replace("qrc:///GameView.qml")
+                                }
                             }
                         }
                     }
@@ -84,27 +88,32 @@ ApplicationWindow {
             Component {
                 id: networkGame
 
-                ColumnLayout {
+                Item {
                     readonly property string title: "Se connecter"
 
-                    TextField {
-                        id: ipField
-                        placeholderText: "Addresse ip"
-                        Layout.fillWidth: true
-                    }
+                ColumnLayout {
+                        anchors.fill: parent
+                        anchors.margins: 6
 
-                    RowLayout {
-
-                        Label {
+                        TextField {
+                            id: ipField
+                            placeholderText: "Addresse ip"
                             Layout.fillWidth: true
-                            text: "Port"
                         }
 
-                        SpinBox {
-                            Layout.fillWidth: true
-                            id: portSpin
-                            editable: true
-                            to: 9999
+                        RowLayout {
+
+                            Label {
+                                Layout.fillWidth: true
+                                text: "Port"
+                            }
+
+                            SpinBox {
+                                Layout.fillWidth: true
+                                id: portSpin
+                                editable: true
+                                to: 9999
+                            }
                         }
                     }
 
@@ -114,7 +123,7 @@ ApplicationWindow {
                         onClicked: {
                             if(ipField.text !== "" && portSpin.value !== 0) {
                                 app.loadNetworkGame(ipField.text, portSpin.value)
-                                stack.replace("qrc:///Game.qml")
+                                stack.replace("qrc:///GameView.qml")
                             }
                         }
                     }
@@ -137,10 +146,10 @@ ApplicationWindow {
 
                     delegate: ItemDelegate {
                         width: parent.width
-                        text: NameRole + " at " + LocationRole
+                        text: nameRole + " at " + locationRole
                         onClicked: {
                             app.loadAvailableGame(index)
-                            stack.push("qrc:///Game.qml")
+                            stack.push("qrc:///GameView.qml")
                         }
                     }
                 }
@@ -148,7 +157,7 @@ ApplicationWindow {
                 Button {
                     text: "Ouvrir la partie en cours"
                     visible: app.currentGame !== null
-                    onClicked: stack.push("qrc:///Game.qml")
+                    onClicked: stack.push("qrc:///GameView.qml")
                     Layout.fillWidth: true
                 }
 

@@ -1,5 +1,4 @@
 import QtQuick 2.7
-import QtQuick.Controls 1.4
 import QtQuick.Controls 2.1
 import QtQuick.Layouts 1.3
 
@@ -20,7 +19,7 @@ Item {
 
             Repeater {
                 model: app.currentGame.players()
-                delegate: NewPlayerView {
+                delegate: PlayerDelegate {
                     height: view.height
                     width: view.width
                 }
@@ -38,7 +37,7 @@ Item {
                     model: app.currentGame.players()
                     delegate: TabButton {
                         width: 100
-                        text: PropertiesRole.name
+                        text: propertiesRole.name
                     }
                 }
             }

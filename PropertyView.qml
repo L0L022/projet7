@@ -5,10 +5,8 @@ import Projet7 1.0
 
 
 Item {
-    id: moidialog
-    readonly property string title: "Édition des stats"
-    property var itemRole
-    property var additionsRole
+    readonly property string title: "Édition des sous propriétées"
+    property var propertyRole
 
     ColumnLayout {
         anchors.fill: parent
@@ -18,22 +16,23 @@ Item {
             clip: true
             Layout.fillHeight: true
             Layout.fillWidth: true
-            model: additionsRole
+            spacing: 3
+            model: propertyRole.subProperties()
             delegate: RowLayout {
                 width: parent.width
                 Label {
-                    text: PropertiesRole.name
+                    text: propertiesRole.name
                     Layout.fillWidth: true
                 }
 
                 Button {
                     text: "Éditer"
-                    onClicked: stack.push("qrc:///EditProperty.qml", {"itemRole": itemRole, "additionsRole": additionsRole})
+                    onClicked: stack.push("qrc:///PropertyDelegate.qml", {"propertyRole": propertyRole})
                 }
 
                 Button {
                     text: "Supprimer"
-                    onClicked: additionsRole.removeOne(id_role)
+                    onClicked: propertyRole.subProperties().removeOne(id_role)
                 }
             }
         }
@@ -42,7 +41,7 @@ Item {
 
             function addProperty() {
                 if(textFieldNom.text !== "") {
-                    var addition = additionsRole.append()
+                    var addition = propertyRole.append()
                     addition.setProperty("name", textFieldNom.text)
                     textFieldNom.text = ""
                 }

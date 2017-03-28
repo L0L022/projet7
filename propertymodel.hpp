@@ -41,7 +41,7 @@ class PropertyModel : public QAbstractListModel
 
 public:
     enum PropertyRoles {
-        ItemRole = Qt::UserRole + 1,
+        PropertyRole = Qt::UserRole + 1,
         IdRole,
         PropertiesRole
     };
