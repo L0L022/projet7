@@ -23,7 +23,6 @@ Game *Application::currentGame()
 
 void Application::newFileGame(const QString &gameName)
 {
-    qDebug() << m_fileGameDir;
     loadFileGame(m_fileGameDir + "/" + gameName + ".json");
     if (m_currentGame)
         m_currentGame->setName(gameName);
@@ -31,14 +30,12 @@ void Application::newFileGame(const QString &gameName)
 
 void Application::loadFileGame(const QString &fileName)
 {
-    closeCurrentGame();
     GameServer *game = new GameServer(fileName, this);
     setCurrentGame(game);
 }
 
 void Application::loadNetworkGame(const QString &address, quint16 port)
 {
-    closeCurrentGame();
     GameClient *game = new GameClient(address, port, this);
     setCurrentGame(game);
 }

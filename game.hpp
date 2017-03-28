@@ -32,8 +32,6 @@ public:
 
     Q_INVOKABLE PlayerModel *players();
 
-    //virtual GameItem toGameItem() const = 0;
-
 protected:
     void readData(const QByteArray &data);
 public: // juste pour le test
@@ -43,14 +41,13 @@ protected:
     void fromJson(const QJsonObject &json);
 
 signals:
+    void error(const QString &errorString);
+
     void nameChanged();
     void ipAddressChanged();
     void portChanged();
-    void error(const QString &errorString);
 
 private:
-    //void load(const QByteArray &data);
-
     QString m_name;
     PlayerModel m_players;
 };

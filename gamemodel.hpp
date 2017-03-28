@@ -15,15 +15,13 @@ public:
     GameItem(QString fileName, QString name);
     GameItem(QString address, quint16 port, QString name);
 
-    QString address() const;
-
     GameType type() const;
     QString name() const;
     void setName(const QString &name);
     QString location() const;
-
-    quint16 port() const;
     QString fileName() const;
+    QString address() const;
+    quint16 port() const;
 
     QJsonObject toJson() const;
     static GameItem fromJson(const QJsonObject &object);
@@ -46,21 +44,23 @@ public:
         TypeRole = Qt::UserRole + 1,
         NameRole,
         LocationRole,
+        FileNameRole,
         AddressRole,
-        PortRole,
-        FileNameRole
+        PortRole
     };
     Q_ENUM(GameRoles)
 
     GameModel(QObject *parent = nullptr);
 
     void append(const GameItem &game);
-    const GameItem &at(const int index) const;
-    void clear();
-    QVariant data(const QModelIndex & index, int role = Qt::DisplayRole) const;
     void removeAt(const int index);
-    int rowCount(const QModelIndex & parent = QModelIndex()) const;
+    void clear();
+
+    const GameItem &at(const int index) const;
     GameItem &operator[](const int index);
+
+    QVariant data(const QModelIndex & index, int role = Qt::DisplayRole) const;
+    int rowCount(const QModelIndex & parent = QModelIndex()) const;
 
 protected:
     QHash<int, QByteArray> roleNames() const;

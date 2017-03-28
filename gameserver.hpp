@@ -19,7 +19,8 @@ public:
     QString ipAddress() const;
     quint16 port() const;
 
-    //GameItem toGameItem() const;
+protected:
+    void writeData(const QByteArray &data);
 
 private:
     void openServer();
@@ -29,7 +30,6 @@ private:
     void openFromFile();
     void saveToFile();
 
-    void writeData(const QByteArray &data);
 
     QString m_fileName;
     QTcpServer m_server;

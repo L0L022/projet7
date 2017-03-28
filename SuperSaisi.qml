@@ -16,15 +16,15 @@ Item {
     onKeyChanged: update()
 
     function update() {
-        if (superText.right_value !== properties_role[key]) {
+        if (superText.right_value !== PropertiesRole[key]) {
             if (superText.text === superText.right_value || superText.txt === "")
-                superText.text = properties_role[key]
-            superText.right_value = properties_role[key]
+                superText.text = PropertiesRole[key]
+            superText.right_value = PropertiesRole[key]
         }
     }
 
     Connections {
-        target: item_role
+        target: ItemRole
         onPropertiesChanged: update()
     }
 
@@ -38,7 +38,7 @@ Item {
 
         TextField {
             id: superText
-            onAccepted: item_role.setProperty(key, text)
+            onAccepted: ItemRole.setProperty(key, text)
             Layout.fillWidth: true
             selectByMouse: true
             color: text === right_value ? "green" : "orange"
@@ -48,7 +48,7 @@ Item {
 
         Button {
             text: "Réinitialisation"
-            onClicked: superText.text = properties_role[key]
+            onClicked: superText.text = PropertiesRole[key]
         }
     }
 }

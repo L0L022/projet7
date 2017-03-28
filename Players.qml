@@ -38,7 +38,7 @@ Item {
                     model: app.currentGame.players()
                     delegate: TabButton {
                         width: 100
-                        text: properties_role.name
+                        text: PropertiesRole.name
                     }
                 }
             }

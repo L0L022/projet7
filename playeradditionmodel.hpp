@@ -8,11 +8,11 @@ class PlayerAdditionItem : public PropertyItem
     Q_OBJECT
 
 public:
-    PlayerAdditionItem(const int id = 0, QObject *parent = nullptr)
+    explicit PlayerAdditionItem(const int id = 0, QObject *parent = nullptr)
         : PropertyItem(id, parent)
     {
         for (const QString &str : {"name", "description", "category"})
-            setProperty(str, "");;
+            setProperty(str, "");
 
         for (const QString &nb : {"CC", "CT", "F", "B", "A", "I", "Desc", "Int", "Soc", "FM"})
             setProperty(nb, 0);
@@ -24,7 +24,7 @@ class PlayerAdditionModel : public PropertyModel
     Q_OBJECT
 
 public:
-    PlayerAdditionModel(QObject *parent = nullptr)
+    explicit PlayerAdditionModel(QObject *parent = nullptr)
         : PropertyModel(parent)
     {
     }

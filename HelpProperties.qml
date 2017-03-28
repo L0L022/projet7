@@ -14,15 +14,15 @@ Item {
     onPropertyKeyChanged: update()
 
     function update() {
-        if(propertyValue !== item_role.properties[propertyKey]) {
+        if(propertyValue !== ItemRole.properties[propertyKey]) {
             if (inputValue === propertyValue)
-                inputValue = item_role.properties[propertyKey]
-            propertyValue = item_role.properties[propertyKey]
+                inputValue = ItemRole.properties[propertyKey]
+            propertyValue = ItemRole.properties[propertyKey]
         }
     }
 
     function set() {
-        item_role.setProperty(propertyKey, inputValue);
+        ItemRole.setProperty(propertyKey, inputValue);
     }
 
     function reset() {
@@ -30,7 +30,7 @@ Item {
     }
 
     Connections {
-        target: item_role
+        target: ItemRole
         onPropertiesChanged: update()
     }
 }

@@ -7,8 +7,6 @@
 #include <QJsonObject>
 #include <QJsonArray>
 
-#include <QDebug>
-
 class PropertyItem : public QObject
 {
     Q_OBJECT
@@ -50,13 +48,14 @@ public:
     Q_ENUM(PropertyRoles)
 
     PropertyModel(QObject *parent = nullptr);
-    Q_INVOKABLE PropertyItem* append(const int proposed_id = 0);
 
-    Q_INVOKABLE PropertyItem *at(const int index) const;
+    Q_INVOKABLE PropertyItem* append(const int proposed_id = 0);
     Q_INVOKABLE void removeAt(const int index);
     Q_INVOKABLE bool removeOne(const int id);
     Q_INVOKABLE void clear();
 
+    Q_INVOKABLE PropertyItem *at(const int index) const;
+    Q_INVOKABLE const PropertyItem &operator[](const int index) const;
     Q_INVOKABLE int indexOf(const int id) const;
 
     int rowCount(const QModelIndex & parent = QModelIndex()) const;

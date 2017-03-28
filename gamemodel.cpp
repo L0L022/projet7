@@ -32,21 +32,6 @@ void GameItem::setName(const QString &name)
     m_name = name;
 }
 
-QString GameItem::address() const
-{
-    return m_location;
-}
-
-quint16 GameItem::port() const
-{
-    return m_port;
-}
-
-QString GameItem::fileName() const
-{
-    return m_location;
-}
-
 QString GameItem::location() const
 {
     if (m_type == FileGame)
@@ -55,6 +40,21 @@ QString GameItem::location() const
         return QString("%1:%2").arg(m_location).arg(m_port);
 
     return "";
+}
+
+QString GameItem::fileName() const
+{
+    return m_location;
+}
+
+QString GameItem::address() const
+{
+    return m_location;
+}
+
+quint16 GameItem::port() const
+{
+    return m_port;
 }
 
 QJsonObject GameItem::toJson() const
@@ -121,12 +121,6 @@ GameItem &GameModel::operator[](const int index)
     return m_games[index];
 }
 
-int GameModel::rowCount(const QModelIndex &parent) const
-{
-    Q_UNUSED(parent)
-    return m_games.count();
-}
-
 QVariant GameModel::data(const QModelIndex &index, int role) const
 {
     if (!index.isValid() || index.row() >= m_games.count())
@@ -140,26 +134,30 @@ QVariant GameModel::data(const QModelIndex &index, int role) const
         return game.name();
     else if (role == LocationRole)
         return game.location();
+    else if (role == FileNameRole)
+        return game.fileName();
     else if (role == AddressRole)
         return game.address();
     else if (role == PortRole)
         return game.port();
-    else if (role == FileNameRole)
-        return game.fileName();
 
     return QVariant();
+}
+
+int GameModel::rowCount(const QModelIndex &parent) const
+{
+    Q_UNUSED(parent)
+    return m_games.count();
 }
 
 QHash<int, QByteArray> GameModel::roleNames() const
 {
     QHash<int, QByteArray> roles;
-
     roles[TypeRole] = "TypeRole";
     roles[NameRole] = "NameRole";
     roles[LocationRole] = "LocationRole";
+    roles[FileNameRole] = "FileNameRole";
     roles[AddressRole] = "AddressRole";
     roles[PortRole] = "PortRole";
-    roles[FileNameRole] = "FileNameRole";
-
     return roles;
 }

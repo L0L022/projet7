@@ -43,11 +43,3 @@ void Game::fromJson(const QJsonObject &json)
     setName(json["name"].toString());
     m_players.fromJson(json["players"].toArray());
 }
-/*
-void Game::load(const QByteArray &data)
-{
-    QJsonDocument doc = QJsonDocument::fromJson(data);
-    if(doc.isArray())
-        m_players.fromJson(doc.array());
-}
-*/

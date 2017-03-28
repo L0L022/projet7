@@ -93,11 +93,6 @@ PropertyItem* PropertyModel::append(const int proposed_id)
     return property.data();
 }
 
-PropertyItem *PropertyModel::at(const int index) const
-{
-    return m_properties[index].data();
-}
-
 void PropertyModel::removeAt(const int index)
 {
     if (0 > index || index > m_properties.size())
@@ -125,6 +120,16 @@ void PropertyModel::clear()
     beginResetModel();
     m_properties.clear();
     endResetModel();
+}
+
+PropertyItem *PropertyModel::at(const int index) const
+{
+    return m_properties[index].data();
+}
+
+const PropertyItem &PropertyModel::operator[](const int index) const
+{
+    return *m_properties[index];
 }
 
 int PropertyModel::indexOf(const int id) const
@@ -195,10 +200,8 @@ PropertyItem *PropertyModel::makeProperty(const int id)
 QHash<int, QByteArray> PropertyModel::roleNames() const
 {
     QHash<int, QByteArray> roles;
-
-    roles[ItemRole] = "item_role";
-    roles[IdRole] = "id_role";
-    roles[PropertiesRole] = "properties_role";
-
+    roles[ItemRole] = "ItemRole";
+    roles[IdRole] = "IdRole";
+    roles[PropertiesRole] = "PropertiesRole";
     return roles;
 }

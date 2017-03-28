@@ -18,8 +18,6 @@ public:
     QString ipAddress() const;
     quint16 port() const;
 
-    //GameItem toGameItem() const;
-
 protected:
     void writeData(const QByteArray &data);
 

@@ -7,8 +7,8 @@ import Projet7 1.0
 Item {
     id: moidialog
     readonly property string title: "Édition des stats"
-    property var item_role
-    property var additions_role
+    property var itemRole
+    property var additionsRole
 
     ColumnLayout {
         anchors.fill: parent
@@ -18,22 +18,22 @@ Item {
             clip: true
             Layout.fillHeight: true
             Layout.fillWidth: true
-            model: additions_role
+            model: additionsRole
             delegate: RowLayout {
                 width: parent.width
                 Label {
-                    text: properties_role.name
+                    text: PropertiesRole.name
                     Layout.fillWidth: true
                 }
 
                 Button {
                     text: "Éditer"
-                    onClicked: stack.push("qrc:///EditProperty.qml", {"item_role": item_role, "additions_role": additions_role})
+                    onClicked: stack.push("qrc:///EditProperty.qml", {"itemRole": itemRole, "additionsRole": additionsRole})
                 }
 
                 Button {
                     text: "Supprimer"
-                    onClicked: additions_role.removeOne(id_role)
+                    onClicked: additionsRole.removeOne(id_role)
                 }
             }
         }
@@ -42,7 +42,7 @@ Item {
 
             function addProperty() {
                 if(textFieldNom.text !== "") {
-                    var addition = additions_role.append()
+                    var addition = additionsRole.append()
                     addition.setProperty("name", textFieldNom.text)
                     textFieldNom.text = ""
                 }

@@ -9,7 +9,7 @@ class PlayerItem : public PropertyItem
     Q_OBJECT
 
 public:
-    PlayerItem(const int id = 0, QObject *parent = nullptr)
+    explicit PlayerItem(const int id = 0, QObject *parent = nullptr)
         : PropertyItem(id, parent),
           m_additions(this)
     {
@@ -47,11 +47,16 @@ private:
 class PlayerModel : public PropertyModel
 {
     Q_OBJECT
+
 public:
-    PlayerModel(QObject *parent = nullptr) : PropertyModel(parent) {}
+    explicit PlayerModel(QObject *parent = nullptr)
+        : PropertyModel(parent)
+    {
+    }
 
 protected:
-    PropertyItem *makeProperty(const int id) {
+    PropertyItem *makeProperty(const int id)
+    {
         return new PlayerItem(id, this);
     }
 };

@@ -6,9 +6,9 @@ import Projet7 1.0
 
 Item {
     id: item
-    property var item_role
-    property var additions_role
-    readonly property string title: "Édition de : " + item_role.properties.name
+    property var itemRole
+    property var additionsRole
+    readonly property string title: "Édition de : " + itemRole.properties.name
 
     ColumnLayout {
         anchors.fill: parent
@@ -18,7 +18,7 @@ Item {
             clip: true
             Layout.fillHeight: true
             Layout.fillWidth: true
-            model: Object.keys(item_role.properties)
+            model: Object.keys(itemRole.properties)
             delegate: GridLayout {
                 width: parent.width
                 columns: item.width > item.height ? 4 : 2
@@ -47,7 +47,7 @@ Item {
 
                 Button {
                     text: "Supprimer"
-                    onClicked: item_role.removeProperty(modelData)
+                    onClicked: itemRole.removeProperty(modelData)
                 }
             }
         }
@@ -56,7 +56,7 @@ Item {
 
             function addKey() {
                 if(new_key_field.text !== "") {
-                    item_role.setProperty(new_key_field.text, "")
+                    itemRole.setProperty(new_key_field.text, "")
                 }
             }
 

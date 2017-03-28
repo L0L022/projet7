@@ -68,7 +68,7 @@ Flickable {
                     clip: true
 
                     model: PropertyFilterModel {
-                        sourceModel: item_role.additions()
+                        sourceModel: ItemRole.additions()
                         filterKey: "category"
                         filterValue: "characteristic"
                     }
@@ -96,7 +96,7 @@ Flickable {
                                 ToolTip {
                                     parent: salut
                                     visible: salut.activeFocus
-                                    text: "Nom : " + properties_role.name + "\nDescription : " + properties_role.description
+                                    text: "Nom : " + PropertiesRole.name + "\nDescription : " + PropertiesRole.description
                                 }
                             }
                         }
@@ -116,7 +116,7 @@ Flickable {
             Button {
                 Layout.alignment: Qt.AlignRight
                 text: "Éditer les stats"
-                onClicked: stack.push("qrc:///EditProperties.qml", {"item_role": item_role, "additions_role": item_role.additions()})
+                onClicked: stack.push("qrc:///EditProperties.qml", {"ItemRole": ItemRole, "additionsRole": ItemRole.additions()})
             }
         }
 
@@ -129,7 +129,7 @@ Flickable {
                 clip: true
                 anchors.fill: parent
                 model: PropertyFilterModel {
-                    sourceModel: item_role.additions()
+                    sourceModel: ItemRole.additions()
                     filterKey: "category"
                     filterValue: superCombo.currentText
                     onFilterValueChanged: console.log(filterValue)

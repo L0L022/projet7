@@ -38,12 +38,15 @@ quint16 GameServer::port() const
 {
     return m_server.serverPort();
 }
-/*
-GameItem GameServer::toGameItem() const
+
+void GameServer::writeData(const QByteArray &data)
 {
-    return GameItem()
+    for (QTcpSocket *socket : m_sockets) {
+        QTextStream stream(socket);
+        stream << data;
+    }
 }
-*/
+
 void GameServer::openServer()
 {
     m_server.listen();
@@ -99,13 +102,5 @@ void GameServer::saveToFile()
         QJsonDocument doc(toJson());
         QTextStream stream(&file);
         stream << doc.toJson();
-    }
-}
-
-void GameServer::writeData(const QByteArray &data)
-{
-    for (QTcpSocket *socket : m_sockets) {
-        QTextStream stream(socket);
-        stream << data;
     }
 }
