@@ -3,7 +3,7 @@
 #include <QDebug>
 #include <QJsonDocument>
 #include <QStandardPaths>
-#include <QHostInfo>
+#include <QNetworkAddressEntry>
 
 Application::Application(QObject *parent)
     : QObject(parent),
@@ -112,12 +112,11 @@ void Application::sendPresenceMessage()
 {
     QJsonObject object;
     if (m_currentGame && m_currentGame->type() == Game::ServerGame) {
-        GameItem server(m_currentGame->ipAddress(), m_currentGame->port(), m_currentGame->name());
-        object = server.toJson();
+        object = GameItem(getMyIp(), m_currentGame->port(), m_currentGame->name()).toJson();
         object["game"] = "server";
     } else {
+        object = GameItem(getMyIp(), 0, "").toJson();
         object["game"] = "client";
-        // mettre son IP locale
     }
     QJsonDocument document(object);
     m_hostFinder.sendMessage(document.toJson());
@@ -129,6 +128,8 @@ void Application::hostFound(const QHostAddress &hostAddress, const QByteArray &m
     QJsonDocument document = QJsonDocument::fromJson(message);
     if (document.isObject()) {
         QJsonObject object(document.object());
+        //vraiment null
+        //object["location"] = hostAddress.toString();
         GameItem gameMessage = GameItem::fromJson(object);
 
         for (int i = 0; i < m_availableGames.rowCount(); ++i) {
@@ -145,4 +146,19 @@ void Application::hostFound(const QHostAddress &hostAddress, const QByteArray &m
             m_availableGames.append(gameMessage);
         }
     }
+}
+
+QString Application::getMyIp() const
+{
+    QString myIp = QHostAddress(QHostAddress::Any).toString();
+    QList<QNetworkInterface> interfaces = QNetworkInterface::allInterfaces();
+    for (int i = 0; i < interfaces.count(); ++i)
+    {
+        if (interfaces.at(i).flags() != (QNetworkInterface::IsUp | QNetworkInterface::IsRunning | QNetworkInterface::IsLoopBack)) {
+        QList<QNetworkAddressEntry> entries = interfaces.at(i).addressEntries();
+            for (int j = 0; j < entries.count(); ++j)
+                    myIp = entries.at(j).ip().toString();
+        }
+    }
+    return myIp;
 }
