@@ -31,12 +31,25 @@ public:
     virtual quint16 port() const = 0;
 
     Q_INVOKABLE PlayerModel *players();
+    const PlayerModel *players() const;
 
 protected:
     void readData(const QByteArray &data);
 public: // juste pour le test
     virtual void writeData(const QByteArray &data) = 0;
 protected:
+    enum CommandType {
+        GameNameCommand,
+        UserNameCommand,
+        PlayersResetCommand,
+        PlayersInsertCommad,
+        PlayersRemoveCommad,
+        PlayersPropertyChangedCommand
+    };
+
+    virtual void readCommand(const QJsonObject &object) = 0;
+    void writeCommand(const QJsonObject &object);
+
     QJsonObject toJson() const;
     void fromJson(const QJsonObject &json);
 

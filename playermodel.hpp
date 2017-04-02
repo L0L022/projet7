@@ -8,7 +8,7 @@ class PlayerItem : public PropertyItem
     Q_OBJECT
 
 public:
-    explicit PlayerItem(const int id = 0, QObject *parent = nullptr)
+    explicit PlayerItem(const Id id = 0, QObject *parent = nullptr)
         : PropertyItem(id, parent),
           m_subProperties(this)
     {

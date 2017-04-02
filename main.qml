@@ -112,18 +112,18 @@ ApplicationWindow {
                                 Layout.fillWidth: true
                                 id: portSpin
                                 editable: true
-                                to: 9999
+                                to: 999999
                             }
                         }
-                    }
 
-                    Button {
-                        Layout.fillWidth: true
-                        text: "Connection"
-                        onClicked: {
-                            if(ipField.text !== "" && portSpin.value !== 0) {
-                                app.loadNetworkGame(ipField.text, portSpin.value)
-                                stack.replace("qrc:///GameView.qml")
+                        Button {
+                            Layout.fillWidth: true
+                            text: "Connexion"
+                            onClicked: {
+                                if(ipField.text !== "" && portSpin.value !== 0) {
+                                    app.loadNetworkGame(ipField.text, portSpin.value)
+                                    stack.replace("qrc:///GameView.qml")
+                                }
                             }
                         }
                     }

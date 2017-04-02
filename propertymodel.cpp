@@ -1,16 +1,16 @@
 #include "propertymodel.hpp"
 #include <QJsonDocument>
 
-PropertyItem::PropertyItem(const int id, QObject *parent)
+PropertyItem::PropertyItem(const Id id, QObject *parent)
     : QObject(parent),
       m_properties()
 {
     m_properties["id"] = id;
 }
 
-int PropertyItem::id() const
+PropertyItem::Id PropertyItem::id() const
 {
-    return m_properties["id"].toInt();
+    return m_properties["id"].value<Id>();
 }
 
 const QVariantMap &PropertyItem::properties() const
@@ -20,7 +20,7 @@ const QVariantMap &PropertyItem::properties() const
 
 void PropertyItem::setProperties(const QVariantMap &prop)
 {
-    if (id() == prop["id"].toInt()) {
+    if (id() == prop["id"].value<Id>() && m_properties != prop) {
         m_properties = prop;
         emit propertiesChanged();
     }
@@ -68,9 +68,9 @@ PropertyModel::PropertyModel(QObject *parent)
 {
 }
 
-PropertyItem* PropertyModel::append(const int proposed_id)
+PropertyItem* PropertyModel::append(const PropertyItem::Id proposed_id)
 {
-    int id = proposed_id;
+    PropertyItem::Id id = proposed_id;
     for (int i = 0; i < m_properties.size(); ++i) {
         if (id == m_properties[i]->id()) {
             ++id;
@@ -84,11 +84,13 @@ PropertyItem* PropertyModel::append(const int proposed_id)
         PropertyItem *property = qobject_cast<PropertyItem*>(sender());
         QModelIndex index = createIndex(indexOf(property->id()), 0);
         emit dataChanged(index, index, {PropertiesRole}); //add item ?
+        emit propertyChanged(property);
     });
 
     beginInsertRows(QModelIndex(), rowCount(), rowCount());
     m_properties.append(property);
     endInsertRows();
+    emit propertyInserted(property.data());
 
     return property.data();
 }
@@ -98,12 +100,14 @@ void PropertyModel::removeAt(const int index)
     if (0 > index || index > m_properties.size())
         return;
 
+    PropertyItem::Id id = m_properties.at(index).data()->id();
     beginRemoveRows(QModelIndex(), index, index);
     m_properties.removeAt(index);
     endRemoveRows();
+    emit propertyRemoved(id);
 }
 
-bool PropertyModel::removeOne(const int id)
+bool PropertyModel::removeOne(const PropertyItem::Id id)
 {
     int index = indexOf(id);
 
@@ -117,13 +121,21 @@ bool PropertyModel::removeOne(const int id)
 
 void PropertyModel::clear()
 {
+    PropertyItem::Id id;
     beginResetModel();
-    m_properties.clear();
+    for (int i = 0; i < m_properties.size(); ++i) {
+        id = m_properties.at(i).data()->id();
+        m_properties.removeAt(i);
+        emit propertyRemoved(id);
+    }
     endResetModel();
 }
 
 PropertyItem *PropertyModel::at(const int index) const
 {
+    if (0 > index || index > m_properties.count())
+        return nullptr;
+
     return m_properties[index].data();
 }
 
@@ -132,7 +144,7 @@ const PropertyItem &PropertyModel::operator[](const int index) const
     return *m_properties[index];
 }
 
-int PropertyModel::indexOf(const int id) const
+int PropertyModel::indexOf(const PropertyItem::Id id) const
 {
     int index = -1;
 
@@ -185,14 +197,14 @@ void PropertyModel::fromJson(const QJsonArray &json)
             QJsonObject property = value.toObject();
 
             if (property.contains("id")) {
-                PropertyItem *item = append(property["id"].toInt());
+                PropertyItem *item = append(property["id"].toVariant().value<PropertyItem::Id>());
                 item->fromJson(property);
             }
         }
     }
 }
 
-PropertyItem *PropertyModel::makeProperty(const int id)
+PropertyItem *PropertyModel::makeProperty(const PropertyItem::Id id)
 {
     return new PropertyItem(id, this);
 }

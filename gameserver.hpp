@@ -9,6 +9,8 @@
 class GameServer : public Game
 {
     Q_OBJECT
+    Q_PROPERTY(QList<QString> clients READ clients NOTIFY clientsChanged)
+    typedef QMap<PropertyItem::Id, QList<PropertyItem::Id>> MapRights;
 
 public:
     explicit GameServer(const QString &fileName, QObject *parent = nullptr);
@@ -19,21 +21,38 @@ public:
     QString ipAddress() const;
     quint16 port() const;
 
+    QList<QString> clients() const;
+
+signals:
+    void clientsChanged();
+
 protected:
     void writeData(const QByteArray &data);
+    void readCommand(const QJsonObject &object);
 
 private:
     void openServer();
     void closeServer();
     void newConnection();
 
+    void playersNew(const QModelIndex &parent, int first, int last);
+    void playersRemove(const QModelIndex &parent, int first, int last);
+
     void openFromFile();
     void saveToFile();
 
+    QJsonObject rightsToJson(const MapRights map) const;
+    void rightsFromJson(const QJsonObject object, MapRights &map);
+
+    QJsonArray playersToJson(const PropertyItem::Id id) const;
 
     QString m_fileName;
     QTcpServer m_server;
     QList<QTcpSocket*> m_sockets;
+
+    QMap<QString, PropertyItem::Id> m_clientToId;
+    MapRights m_readRights;
+    MapRights m_writeRights;
 };
 
 #endif // GAMESERVER_HPP

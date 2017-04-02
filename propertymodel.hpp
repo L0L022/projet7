@@ -10,13 +10,15 @@
 class PropertyItem : public QObject
 {
     Q_OBJECT
-    Q_PROPERTY(int id READ id CONSTANT)
+    Q_PROPERTY(Id id READ id CONSTANT)
     Q_PROPERTY(QVariantMap properties READ properties WRITE setProperties NOTIFY propertiesChanged)
 
 public:
-    PropertyItem(const int id = 0, QObject *parent = nullptr);
+    typedef int Id;
 
-    int id() const;
+    PropertyItem(const Id id = 0, QObject *parent = nullptr);
+
+    Id id() const;
     const QVariantMap &properties() const;
     void setProperties(const QVariantMap &prop);
 
@@ -49,14 +51,14 @@ public:
 
     PropertyModel(QObject *parent = nullptr);
 
-    Q_INVOKABLE PropertyItem* append(const int proposed_id = 0);
+    Q_INVOKABLE PropertyItem* append(const PropertyItem::Id proposed_id = 0);
     Q_INVOKABLE void removeAt(const int index);
-    Q_INVOKABLE bool removeOne(const int id);
+    Q_INVOKABLE bool removeOne(const PropertyItem::Id id);
     Q_INVOKABLE void clear();
 
     Q_INVOKABLE PropertyItem *at(const int index) const;
     Q_INVOKABLE const PropertyItem &operator[](const int index) const;
-    Q_INVOKABLE int indexOf(const int id) const;
+    Q_INVOKABLE int indexOf(const PropertyItem::Id id) const;
 
     int rowCount(const QModelIndex & parent = QModelIndex()) const;
     QVariant data(const QModelIndex & index, int role = Qt::DisplayRole) const;
@@ -64,8 +66,13 @@ public:
     QJsonArray toJson() const;
     void fromJson(const QJsonArray &json);
 
+signals:
+    void propertyInserted(PropertyItem *property);
+    void propertyRemoved(const PropertyItem::Id id);
+    void propertyChanged(PropertyItem *property);
+
 protected:
-    virtual PropertyItem *makeProperty(const int id);
+    virtual PropertyItem *makeProperty(const PropertyItem::Id id);
     QHash<int, QByteArray> roleNames() const;
 
 private:
@@ -113,7 +120,7 @@ public:
     }
 
 protected:
-    bool filterAcceptsRow(int sourceRow, const QModelIndex &sourceParent) const override
+    bool filterAcceptsRow(int sourceRow, const QModelIndex &sourceParent) const
     {
         return sourceModel()->data(sourceModel()->index(sourceRow, 0, sourceParent),
                                    PropertyModel::PropertiesRole).toMap().value(m_filterKey) == m_filterValue;

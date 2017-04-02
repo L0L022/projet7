@@ -7,6 +7,7 @@
 
 Application::Application(QObject *parent)
     : QObject(parent),
+      m_userName(""),
       m_currentGame(nullptr),
       m_availableGames(this),
       m_hostFinder(8888, this),
@@ -14,6 +15,17 @@ Application::Application(QObject *parent)
 {
     connect(&m_hostFinder, &HostFinder::hostFound, this, &Application::hostFound);
     QDir("/").mkpath(m_fileGameDir);
+}
+
+QString Application::userName() const
+{
+    return m_userName;
+}
+
+void Application::setUserName(const QString &userName)
+{
+    m_userName = userName;
+    emit userNameChanged();
 }
 
 Game *Application::currentGame()

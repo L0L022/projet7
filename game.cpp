@@ -25,9 +25,20 @@ PlayerModel *Game::players()
     return &m_players;
 }
 
+const PlayerModel *Game::players() const
+{
+    return &m_players;
+}
+
 void Game::readData(const QByteArray &data)
 {
     qDebug() << "Game::readData() :" << data;
+    readCommand(QJsonDocument::fromJson(data).object());
+}
+
+void Game::writeCommand(const QJsonObject &object)
+{
+    writeData(QJsonDocument(object).toJson());
 }
 
 QJsonObject Game::toJson() const
