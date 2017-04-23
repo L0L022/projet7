@@ -141,6 +141,11 @@ const PropertyItem &PropertyModel::operator[](const int index) const
     return *m_properties[index];
 }
 
+PropertyItem *PropertyModel::get(const PropertyItem::Id id) const
+{
+    return at(indexOf(id));
+}
+
 int PropertyModel::indexOf(const PropertyItem::Id id) const
 {
     int index = -1;

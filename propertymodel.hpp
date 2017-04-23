@@ -33,7 +33,7 @@ public:
 signals:
     void propertiesChanged();
 
-private:
+protected:
     QVariantMap m_properties;
 };
 
@@ -58,6 +58,7 @@ public:
 
     Q_INVOKABLE PropertyItem *at(const int index) const;
     Q_INVOKABLE const PropertyItem &operator[](const int index) const;
+    Q_INVOKABLE PropertyItem *get(const PropertyItem::Id id) const;
     Q_INVOKABLE int indexOf(const PropertyItem::Id id) const;
 
     int rowCount(const QModelIndex & parent = QModelIndex()) const;

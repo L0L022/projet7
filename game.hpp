@@ -53,7 +53,7 @@ protected:
         PlayerSubPropertyUpdateCommand
     };
 
-    virtual void readCommand(const QJsonObject &object);
+    virtual void readCommand(const QJsonObject &command);
     void writeCommand(const QJsonObject &object);
 
     QJsonObject toJson() const;
@@ -69,6 +69,7 @@ signals:
 private:
     QString m_name;
     PlayerModel m_players;
+    bool m_isReadingCommand;
 };
 
 #endif // GAME_HPP

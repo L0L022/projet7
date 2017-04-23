@@ -25,6 +25,7 @@ private:
     void readMessage();
 
     QUdpSocket m_socket;
+    QHostAddress m_broadcastIp;
 };
 
 #endif // HOSTFINDER_HPP

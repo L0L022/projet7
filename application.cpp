@@ -10,7 +10,7 @@ Application::Application(QObject *parent)
       m_userName(""),
       m_currentGame(nullptr),
       m_availableGames(this),
-      m_hostFinder(8888, this),
+      m_hostFinder(19857, this),
       m_fileGameDir(QStandardPaths::writableLocation(QStandardPaths::AppDataLocation))
 {
     connect(&m_hostFinder, &HostFinder::hostFound, this, &Application::hostFound);
@@ -157,16 +157,13 @@ void Application::hostFound(const QHostAddress &hostAddress, const QByteArray &m
 
 QString Application::myIp() const
 {
-    QString ip = QHostAddress(QHostAddress::AnyIPv4).toString();
-    QList<QNetworkInterface> interfaces = QNetworkInterface::allInterfaces();
-    for (int i = 0; i < interfaces.count(); ++i)
-    {
-        if (interfaces.at(i).flags() != (QNetworkInterface::IsUp | QNetworkInterface::IsRunning | QNetworkInterface::IsLoopBack)) {
-        QList<QNetworkAddressEntry> entries = interfaces.at(i).addressEntries();
-            for (int j = 0; j < entries.count(); ++j)
-                if(entries.at(j).ip().protocol() == QAbstractSocket::IPv4Protocol)
-                    ip = entries.at(j).ip().toString();
-        }
-    }
-    return ip;
+    QHostAddress ip = QHostAddress(QHostAddress::AnyIPv4);
+    auto flags = (QNetworkInterface::IsUp | QNetworkInterface::IsRunning | QNetworkInterface::CanBroadcast);
+    for (const QNetworkInterface &interface : QNetworkInterface::allInterfaces())
+        if (flags == (interface.flags() &= flags))
+            for(const QNetworkAddressEntry &entry : interface.addressEntries())
+                if(entry.ip().protocol() == QAbstractSocket::IPv4Protocol)
+                    ip = entry.ip();
+
+    return ip.toString();
 }

@@ -13,7 +13,7 @@ public:
           m_subProperties(this)
     {
         for (const QString &str : {"name", "calling", "age", "height"})
-            setProperty(str, "");
+            m_properties[str] = "";
     }
 
     Q_INVOKABLE PropertyModel *subProperties()
@@ -23,10 +23,12 @@ public:
 
     Q_INVOKABLE PropertyItem* append(const int proposed_id = 0)
     {
-        PropertyItem * property = m_subProperties.append(proposed_id);
+        QVariantMap properties;
         for (const QString &str : {"name", "description", "category", "CC", "CT", "F", "B", "A", "I", "Desc", "Int", "Soc", "FM"})
-            property->setProperty(str, "");
+            properties[str] = "";
 
+        PropertyItem * property = m_subProperties.append(proposed_id);
+        property->setProperties(properties);
         return property;
     }
 
@@ -57,6 +59,11 @@ public:
     explicit PlayerModel(QObject *parent = nullptr)
         : PropertyModel(parent)
     {
+    }
+
+    PlayerItem *getPlayer(const PropertyItem::Id id) const
+    {
+        return qobject_cast<PlayerItem*>(get(id));
     }
 
 protected:
