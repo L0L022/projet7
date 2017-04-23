@@ -63,7 +63,10 @@ void GameServer::writeData(const QByteArray &data)
 
 void GameServer::readCommand(const QJsonObject &object)
 {
-    writeCommand(object);
+    //writeCommand(object);
+    Game::readCommand(object);
+
+    //sendGame();
 }
 
 void GameServer::openServer()
@@ -93,10 +96,11 @@ void GameServer::newConnection()
         });
 
         connect(socket, &QTcpSocket::readyRead, this, [this, socket](){
-            readData(socket->readAll());
+            readData(*socket);
         });
 
         m_sockets.append(socket);
+        sendGame();
     }
 }
 
@@ -150,6 +154,18 @@ void GameServer::saveToFile()
         QJsonDocument doc(object);
         QTextStream stream(&file);
         stream << doc.toJson();
+    }
+}
+
+void GameServer::sendGame()
+{
+    for (QTcpSocket *socket : m_sockets) {
+        QJsonObject command;
+        command["commandType"] = PlayersResetCommand;
+        command["value"] = players()->toJson(); //use playersToJson
+
+        QTextStream stream(socket);
+        stream << QJsonDocument(command).toJson(QJsonDocument::Compact).append('\n');
     }
 }
 

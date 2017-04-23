@@ -27,7 +27,6 @@ signals:
 
 protected:
     void writeData(const QByteArray &data);
-    void readCommand(const QJsonObject &object);
 
 private:
     QString m_userName;

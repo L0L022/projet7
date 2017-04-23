@@ -121,14 +121,11 @@ bool PropertyModel::removeOne(const PropertyItem::Id id)
 
 void PropertyModel::clear()
 {
-    PropertyItem::Id id;
-    beginResetModel();
-    for (int i = 0; i < m_properties.size(); ++i) {
-        id = m_properties.at(i).data()->id();
-        m_properties.removeAt(i);
-        emit propertyRemoved(id);
+    if(!m_properties.isEmpty()) {
+        beginResetModel();
+        m_properties.clear();
+        endResetModel();
     }
-    endResetModel();
 }
 
 PropertyItem *PropertyModel::at(const int index) const

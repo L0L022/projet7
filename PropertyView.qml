@@ -5,6 +5,7 @@ import Projet7 1.0
 
 
 Item {
+    id: item
     readonly property string title: "Édition des sous propriétées"
     property var propertyRole
 
@@ -32,7 +33,7 @@ Item {
 
                 Button {
                     text: "Supprimer"
-                    onClicked: propertyRole.subProperties().removeOne(id_role)
+                    onClicked: item.propertyRole.subProperties().removeOne(idRole)
                 }
             }
         }

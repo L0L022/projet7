@@ -41,6 +41,8 @@ private:
     void openFromFile();
     void saveToFile();
 
+    void sendGame();
+
     QJsonObject rightsToJson(const MapRights map) const;
     void rightsFromJson(const QJsonObject object, MapRights &map);
 

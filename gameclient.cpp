@@ -18,32 +18,11 @@ GameClient::GameClient(const QString &address, quint16 port, QObject *parent)
     });
 
     connect(&m_socket, &QTcpSocket::readyRead, this, [this](){
-        readData(m_socket.readAll());
+        readData(m_socket);
     });
 
     connect(&m_socket, static_cast<void (QTcpSocket::*)(QAbstractSocket::SocketError)>(&QAbstractSocket::error), this, [this](){
         emit error(m_socket.errorString());
-    });
-
-    connect(players(), &PlayerModel::propertyInserted, this, [this](PropertyItem *property){
-        QJsonObject command;
-        command["commandType"] = PlayersInsertCommad;
-        command["value"] = property->toJson();
-        writeCommand(command);
-    });
-
-    connect(players(), &PlayerModel::propertyRemoved, this, [this](const PropertyItem::Id id){
-        QJsonObject command;
-        command["commandType"] = PlayersRemoveCommad;
-        command["value"] = id;
-        writeCommand(command);
-    });
-
-    connect(players(), &PlayerModel::propertyChanged, this, [this](const PropertyItem *property){
-        QJsonObject command;
-        command["commandType"] = PlayersPropertyChangedCommand;
-        command["value"] = property->toJson();
-        writeCommand(command);
     });
 
     m_socket.connectToHost(address, port);
@@ -91,36 +70,4 @@ void GameClient::writeData(const QByteArray &data)
 {
     QTextStream stream(&m_socket);
     stream << data;
-}
-
-
-void GameClient::readCommand(const QJsonObject &object)
-{
-    switch (object["commandType"].toInt()) {
-    case GameNameCommand:
-        setName(object["value"].toString());
-        break;
-    case PlayersResetCommand:
-        players()->fromJson(object["value"].toArray());
-        break;
-    case PlayersInsertCommad: {
-        QJsonObject player = object["value"].toObject();
-        if (players()->at(players()->indexOf(player["id"].toVariant().value<PropertyItem::Id>())) == nullptr) {
-            PropertyItem *property = players()->append(player["id"].toVariant().value<PropertyItem::Id>());
-            property->fromJson(player);
-        }
-        break;
-    }
-    case PlayersRemoveCommad:
-        players()->removeOne(object["value"].toVariant().value<PropertyItem::Id>());
-        break;
-    case PlayersPropertyChangedCommand: {
-        QJsonObject player = object["value"].toObject();
-        PropertyItem *property = players()->at(players()->indexOf(player["id"].toVariant().value<PropertyItem::Id>()));
-        property->fromJson(player);
-        break;
-    }
-    default:
-        break;
-    }
 }

@@ -34,20 +34,26 @@ public:
     const PlayerModel *players() const;
 
 protected:
-    void readData(const QByteArray &data);
+    void readData(QIODevice &device);
 public: // juste pour le test
     virtual void writeData(const QByteArray &data) = 0;
 protected:
     enum CommandType {
         GameNameCommand,
         UserNameCommand,
+
         PlayersResetCommand,
         PlayersInsertCommad,
         PlayersRemoveCommad,
-        PlayersPropertyChangedCommand
+        PlayerUpdateCommand,
+
+        PlayerSubPropertiesResetCommand,
+        PlayerSubPropertiesInsertCommand,
+        PlayerSubPropertiesRemoveCommand,
+        PlayerSubPropertyUpdateCommand
     };
 
-    virtual void readCommand(const QJsonObject &object) = 0;
+    virtual void readCommand(const QJsonObject &object);
     void writeCommand(const QJsonObject &object);
 
     QJsonObject toJson() const;
