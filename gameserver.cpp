@@ -53,20 +53,14 @@ QList<QString> GameServer::clients() const
     return list;
 }
 
-void GameServer::writeData(const QByteArray &data)
+void GameServer::handleLeavingCommands()
 {
-    for (QTcpSocket *socket : m_sockets) {
-        QTextStream stream(socket);
-        stream << data;
+    while(!m_leavingCommands.isEmpty()) {
+        auto command = m_leavingCommands.dequeue(); //use playersToJson ?
+        for (QTcpSocket *socket : m_sockets) {
+            writeCommand(command, *socket);
+        }
     }
-}
-
-void GameServer::readCommand(const QJsonObject &object)
-{
-    //writeCommand(object);
-    Game::readCommand(object);
-
-    //sendGame();
 }
 
 void GameServer::openServer()
@@ -96,7 +90,7 @@ void GameServer::newConnection()
         });
 
         connect(socket, &QTcpSocket::readyRead, this, [this, socket](){
-            readData(*socket);
+            pushIncomingCommand(*socket);
         });
 
         m_sockets.append(socket);
@@ -159,14 +153,10 @@ void GameServer::saveToFile()
 
 void GameServer::sendGame()
 {
-    for (QTcpSocket *socket : m_sockets) {
-        QJsonObject command;
-        command["commandType"] = PlayersResetCommand;
-        command["value"] = players()->toJson(); //use playersToJson
-
-        QTextStream stream(socket);
-        stream << QJsonDocument(command).toJson(QJsonDocument::Compact).append('\n');
-    }
+    QJsonObject command;
+    command["commandType"] = PlayersResetCommand;
+    command["value"] = players()->toJson(); //use playersToJson
+    sendCommand(command);
 }
 
 QJsonObject GameServer::rightsToJson(const MapRights map) const
@@ -210,4 +200,24 @@ QJsonArray GameServer::playersToJson(const PropertyItem::Id id) const
         }
     }
     return array;
+}
+
+QJsonObject GameServer::playerSpecificCommand(const QJsonObject &command, const PropertyItem::Id id) const
+{
+    QList<PropertyItem::Id> read = m_readRights[id];
+    QList<PropertyItem::Id> write = m_writeRights[id];
+
+    QJsonObject specificCommand = command;
+
+    switch (command["commandType"].toInt()) {
+    case PlayersResetCommand:
+        break;
+    case PlayersInsertCommad:
+    case PlayersRemoveCommad:
+    case PlayerUpdateCommand:
+        break;
+    default:
+        break;
+    }
+    return specificCommand;
 }

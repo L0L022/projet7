@@ -1,6 +1,7 @@
 #include "game.hpp"
 #include <QDebug>
 #include <QJsonDocument>
+#include <QTextStream>
 
 Game::Game(QObject *parent)
     : QObject(parent),
@@ -8,11 +9,14 @@ Game::Game(QObject *parent)
       m_players(this),
       m_isReadingCommand(false)
 {
+    connect(this, &Game::newIncomingCommand, this, &Game::handleIncomingCommands);
+    connect(this, &Game::newLeavingCommand, this, &Game::handleLeavingCommands);
+
     connect(&m_players, &PlayerModel::modelReset, this, [this](){
         QJsonObject command;
         command["commandType"] = PlayersResetCommand;
         command["value"] = m_players.toJson();
-        writeCommand(command);
+        sendCommand(command);
     });
 
     connect(&m_players, &PlayerModel::propertyInserted, this, [this](PropertyItem *property){
@@ -24,7 +28,7 @@ Game::Game(QObject *parent)
             command["commandType"] = PlayerSubPropertiesResetCommand;
             command["player"] = player->id();
             command["value"] = player->subProperties()->toJson();
-            writeCommand(command);
+            sendCommand(command);
         });
 
         connect(player->subProperties(), &PropertyModel::propertyInserted, this, [this, player](PropertyItem *property){
@@ -32,7 +36,7 @@ Game::Game(QObject *parent)
             command["commandType"] = PlayerSubPropertiesInsertCommand;
             command["player"] = player->id();
             command["value"] = property->toJson();
-            writeCommand(command);
+            sendCommand(command);
         });
 
         connect(player->subProperties(), &PropertyModel::propertyRemoved, this, [this, player](const PropertyItem::Id id){
@@ -40,7 +44,7 @@ Game::Game(QObject *parent)
             command["commandType"] = PlayerSubPropertiesRemoveCommand;
             command["player"] = player->id();
             command["value"] = id;
-            writeCommand(command);
+            sendCommand(command);
         });
 
         connect(player->subProperties(), &PropertyModel::propertyChanged, this, [this, player](const PropertyItem *property){
@@ -48,27 +52,27 @@ Game::Game(QObject *parent)
             command["commandType"] = PlayerSubPropertyUpdateCommand;
             command["player"] = player->id();
             command["value"] = property->toJson();
-            writeCommand(command);
+            sendCommand(command);
         });
 
         QJsonObject command;
         command["commandType"] = PlayersInsertCommad;
         command["value"] = property->toJson(); //with all subProperties
-        writeCommand(command);
+        sendCommand(command);
     });
 
     connect(&m_players, &PlayerModel::propertyRemoved, this, [this](const PropertyItem::Id id){
         QJsonObject command;
         command["commandType"] = PlayersRemoveCommad;
         command["value"] = id;
-        writeCommand(command);
+        sendCommand(command);
     });
 
     connect(&m_players, &PlayerModel::propertyChanged, this, [this](const PropertyItem *property){
         QJsonObject command;
         command["commandType"] = PlayerUpdateCommand;
         command["value"] = property->toJson(); //with all subProperties
-        writeCommand(command);
+        sendCommand(command);
     });
 }
 
@@ -93,12 +97,18 @@ const PlayerModel *Game::players() const
     return &m_players;
 }
 
-void Game::readData(QIODevice &device)
+void Game::pushIncomingCommand(const QJsonObject &command)
+{
+    m_incomingCommands.enqueue(command);
+    emit newIncomingCommand();
+}
+
+void Game::pushIncomingCommand(QIODevice &device)
 {
     while(device.canReadLine()) {
         QByteArray data = device.readLine();
         qDebug() << "Game::readData() :" << data;
-        readCommand(QJsonDocument::fromJson(data).object());
+        pushIncomingCommand(QJsonDocument::fromJson(data).object());
     }
 }
 
@@ -152,10 +162,25 @@ void Game::readCommand(const QJsonObject &command)
     m_isReadingCommand = false;
 }
 
-void Game::writeCommand(const QJsonObject &object)
+void Game::sendCommand(const QJsonObject &command)
 {
-    if(!m_isReadingCommand)
-        writeData(QJsonDocument(object).toJson(QJsonDocument::Compact).append('\n'));
+    m_leavingCommands.enqueue(command);
+    emit newLeavingCommand();
+}
+
+void Game::handleIncomingCommands()
+{
+    while(!m_incomingCommands.isEmpty())
+        readCommand(m_incomingCommands.dequeue());
+}
+
+void Game::writeCommand(const QJsonObject &command, QIODevice &device)
+{
+    if(m_isReadingCommand)
+        return;
+
+    QTextStream stream(&device);
+    stream << QJsonDocument(command).toJson(QJsonDocument::Compact).append('\n');
 }
 
 QJsonObject Game::toJson() const

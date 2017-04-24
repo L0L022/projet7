@@ -18,7 +18,7 @@ GameClient::GameClient(const QString &address, quint16 port, QObject *parent)
     });
 
     connect(&m_socket, &QTcpSocket::readyRead, this, [this](){
-        readData(m_socket);
+        pushIncomingCommand(m_socket);
     });
 
     connect(&m_socket, static_cast<void (QTcpSocket::*)(QAbstractSocket::SocketError)>(&QAbstractSocket::error), this, [this](){
@@ -53,7 +53,7 @@ void GameClient::setUserName(const QString &userName)
     QJsonObject command;
     command["commandType"] = UserNameCommand;
     command["value"] = m_userName;
-    writeCommand(command);
+    sendCommand(command);
 }
 
 QString GameClient::ipAddress() const
@@ -66,8 +66,8 @@ quint16 GameClient::port() const
     return m_socket.peerPort();
 }
 
-void GameClient::writeData(const QByteArray &data)
+void GameClient::handleLeavingCommands()
 {
-    QTextStream stream(&m_socket);
-    stream << data;
+    while(!m_leavingCommands.isEmpty())
+        writeCommand(m_leavingCommands.dequeue(), m_socket);
 }

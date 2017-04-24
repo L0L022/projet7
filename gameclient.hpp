@@ -26,7 +26,7 @@ signals:
     void userNameChanged();
 
 protected:
-    void writeData(const QByteArray &data);
+    void handleLeavingCommands();
 
 private:
     QString m_userName;

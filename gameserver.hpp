@@ -27,8 +27,7 @@ signals:
     void clientsChanged();
 
 protected:
-    void writeData(const QByteArray &data);
-    void readCommand(const QJsonObject &object);
+    void handleLeavingCommands();
 
 private:
     void openServer();
@@ -41,12 +40,16 @@ private:
     void openFromFile();
     void saveToFile();
 
+    // inutile si on fait ça dans handleLeavingCommand
     void sendGame();
 
     QJsonObject rightsToJson(const MapRights map) const;
     void rightsFromJson(const QJsonObject object, MapRights &map);
 
     QJsonArray playersToJson(const PropertyItem::Id id) const;
+
+    //c'est vraiment pertinant si on utilise sendGame tout le temps ?
+    QJsonObject playerSpecificCommand(const QJsonObject &command, const PropertyItem::Id id) const;
 
     QString m_fileName;
     QTcpServer m_server;

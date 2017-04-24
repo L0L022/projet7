@@ -102,12 +102,6 @@ void Application::refreshNetworkGames()
     sendPresenceMessage();
 }
 
-void Application::say_something(QString blabla)
-{
-    if (m_currentGame)
-        m_currentGame->writeData(blabla.toUtf8());
-}
-
 void Application::setCurrentGame(Game *game)
 {
     delete m_currentGame;

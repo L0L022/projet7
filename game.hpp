@@ -4,6 +4,7 @@
 #include "playermodel.hpp"
 #include "gamemodel.hpp"
 #include <QAbstractSocket>
+#include <QQueue>
 
 class Game : public QObject
 {
@@ -33,10 +34,20 @@ public:
     Q_INVOKABLE PlayerModel *players();
     const PlayerModel *players() const;
 
+signals:
+    void error(const QString &errorString);
+
+    void newIncomingCommand();
+    void newLeavingCommand();
+
+    void nameChanged();
+    void ipAddressChanged();
+    void portChanged();
+
 protected:
-    void readData(QIODevice &device);
-public: // juste pour le test
-    virtual void writeData(const QByteArray &data) = 0;
+    void pushIncomingCommand(const QJsonObject &command);
+    void pushIncomingCommand(QIODevice &device);
+
 protected:
     enum CommandType {
         GameNameCommand,
@@ -53,23 +64,25 @@ protected:
         PlayerSubPropertyUpdateCommand
     };
 
-    virtual void readCommand(const QJsonObject &command);
-    void writeCommand(const QJsonObject &object);
+
+    void sendCommand(const QJsonObject &command);
+    virtual void handleLeavingCommands() = 0;
+    // ou alors un virtual handleLeavingCommand = 0 ET handleLeavingCommandS
+    void writeCommand(const QJsonObject &command, QIODevice &device);
 
     QJsonObject toJson() const;
     void fromJson(const QJsonObject &json);
 
-signals:
-    void error(const QString &errorString);
-
-    void nameChanged();
-    void ipAddressChanged();
-    void portChanged();
+    QQueue<QJsonObject> m_leavingCommands;
 
 private:
+    void readCommand(const QJsonObject &command);
+    void handleIncomingCommands();
+
     QString m_name;
     PlayerModel m_players;
     bool m_isReadingCommand;
+    QQueue<QJsonObject> m_incomingCommands;
 };
 
 #endif // GAME_HPP

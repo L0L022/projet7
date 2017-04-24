@@ -30,8 +30,6 @@ public:
     Q_INVOKABLE void refreshFileGames();
     Q_INVOKABLE void refreshNetworkGames();
 
-    Q_INVOKABLE void say_something(QString blabla); // juste pour le test
-
 signals:
     void userNameChanged();
     void currentGameChanged();
