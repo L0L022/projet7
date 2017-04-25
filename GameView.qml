@@ -51,10 +51,31 @@ Item {
             text: app.currentGame !== null ? "Adresse ip : " + app.currentGame.ipAddress + ":" + app.currentGame.port : ""
         }
 
-        TextField {
+        Label {
             Layout.fillWidth: true
-            placeholderText: "envoi un truc sur le réseau"
-            onAccepted: app.say_something(text)
+            text: "IP Joueur -> Id Joueur"
+        }
+
+        ListView {
+            clip: true
+            Layout.fillWidth: true
+            Layout.fillHeight: true
+            visible: app.currentGame.type === Game.ServerGame
+            model: Object.keys(app.currentGame.clientsToId)
+
+            delegate: RowLayout {
+                width: parent.width
+
+                Label {
+                    Layout.fillWidth: true
+                    text: modelData
+                }
+
+                TextField {
+                    text: app.currentGame.clientsToId[modelData]
+                    onAccepted: app.currentGame.setClientToId(modelData, text)
+                }
+            }
         }
 
         Button {

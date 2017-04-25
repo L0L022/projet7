@@ -50,6 +50,7 @@ protected:
 
 protected:
     enum CommandType {
+        GameResetCommand,
         GameNameCommand,
         UserNameCommand,
 
@@ -63,7 +64,6 @@ protected:
         PlayerSubPropertiesRemoveCommand,
         PlayerSubPropertyUpdateCommand
     };
-
 
     void sendCommand(const QJsonObject &command);
     virtual void handleLeavingCommands() = 0;
