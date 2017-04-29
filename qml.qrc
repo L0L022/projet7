@@ -1,12 +1,13 @@
 <RCC>
     <qresource prefix="/">
         <file>main.qml</file>
-        <file>qtquickcontrols2.conf</file>
         <file>PlayerDelegate.qml</file>
         <file>PropertyView.qml</file>
         <file>PropertyDelegate.qml</file>
         <file>PlayersView.qml</file>
         <file>GameView.qml</file>
         <file>PropertyField.qml</file>
+        <file>Cyberpunk/Button.qml</file>
+        <file>Cyberpunk/Button.png</file>
     </qresource>
 </RCC>

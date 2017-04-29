@@ -1,4 +1,4 @@
-QT += qml quick network
+QT += qml quick quickcontrols2 network
 
 CONFIG += c++11
 

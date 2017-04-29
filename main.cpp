@@ -1,6 +1,7 @@
 #include <QGuiApplication>
 #include <QQmlApplicationEngine>
 #include <QQmlContext>
+#include <QQuickStyle>
 
 #include "application.hpp"
 #include "playermodel.hpp"
@@ -21,6 +22,7 @@ int main(int argc, char *argv[])
 {
     QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
     QGuiApplication app(argc, argv);
+    QQuickStyle::setStyle(":/Cyberpunk");
 
     qmlRegisterType<Application>("Projet7", 1, 0, "Application");
 
