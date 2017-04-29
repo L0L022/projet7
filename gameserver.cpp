@@ -45,12 +45,16 @@ quint16 GameServer::port() const
     return m_server.serverPort();
 }
 
-QList<QString> GameServer::clients() const
+QVariantMap GameServer::clientsToId() const
 {
-    QList<QString> list;
-    for (const QTcpSocket *socket : m_sockets)
-        list.append(socket->peerAddress().toString());
-    return list;
+    return m_clientToId;
+}
+
+void GameServer::setClientToId(const QString &client, const QVariant &id)
+{
+    //vérifier des trucs
+    m_clientToId[client] = id;
+    emit clientsToIdChanged();
 }
 
 void GameServer::handleLeavingCommands()
@@ -87,6 +91,9 @@ void GameServer::newConnection()
 
         connect(socket, &QTcpSocket::disconnected, this, [this, socket](){
             m_sockets.removeOne(socket);
+
+            m_clientToId.remove(socket->peerAddress().toString());
+            emit clientsToIdChanged();
         });
 
         connect(socket, &QTcpSocket::readyRead, this, [this, socket](){
@@ -94,6 +101,8 @@ void GameServer::newConnection()
         });
 
         m_sockets.append(socket);
+        setClientToId(socket->peerAddress().toString(), m_clientToId.size());
+
         sendGame();
     }
 }
@@ -153,9 +162,13 @@ void GameServer::saveToFile()
 
 void GameServer::sendGame()
 {
+    QJsonObject game;
+    game["name"] = name();
+    game["players"] = players()->toJson(); //use playersToJson
+
     QJsonObject command;
-    command["commandType"] = PlayersResetCommand;
-    command["value"] = players()->toJson(); //use playersToJson
+    command["commandType"] = GameResetCommand;
+    command["value"] = game;
     sendCommand(command);
 }
 

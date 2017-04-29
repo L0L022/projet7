@@ -9,7 +9,7 @@
 class GameServer : public Game
 {
     Q_OBJECT
-    Q_PROPERTY(QList<QString> clients READ clients NOTIFY clientsChanged)
+    Q_PROPERTY(QVariantMap clientsToId READ clientsToId NOTIFY clientsToIdChanged)
     typedef QMap<PropertyItem::Id, QList<PropertyItem::Id>> MapRights;
 
 public:
@@ -21,10 +21,11 @@ public:
     QString ipAddress() const;
     quint16 port() const;
 
-    QList<QString> clients() const;
+    QVariantMap clientsToId() const;
+    Q_INVOKABLE void setClientToId(const QString &client, const QVariant &id);
 
 signals:
-    void clientsChanged();
+    void clientsToIdChanged();
 
 protected:
     void handleLeavingCommands();
@@ -55,7 +56,7 @@ private:
     QTcpServer m_server;
     QList<QTcpSocket*> m_sockets;
 
-    QMap<QString, PropertyItem::Id> m_clientToId;
+    QVariantMap m_clientToId;
     MapRights m_readRights;
     MapRights m_writeRights;
 };

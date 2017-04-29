@@ -12,6 +12,13 @@ Game::Game(QObject *parent)
     connect(this, &Game::newIncomingCommand, this, &Game::handleIncomingCommands);
     connect(this, &Game::newLeavingCommand, this, &Game::handleLeavingCommands);
 
+    connect(this, &Game::nameChanged, this, [this](){
+        QJsonObject command;
+        command["commandType"] = GameNameCommand;
+        command["value"] = m_name;
+        sendCommand(command);
+    });
+
     connect(&m_players, &PlayerModel::modelReset, this, [this](){
         QJsonObject command;
         command["commandType"] = PlayersResetCommand;
@@ -107,7 +114,7 @@ void Game::pushIncomingCommand(QIODevice &device)
 {
     while(device.canReadLine()) {
         QByteArray data = device.readLine();
-        qDebug() << "Game::readData() :" << data;
+        qDebug() << "Game::pushIncomingCommand() :" << data;
         pushIncomingCommand(QJsonDocument::fromJson(data).object());
     }
 }
@@ -116,6 +123,9 @@ void Game::readCommand(const QJsonObject &command)
 {
     m_isReadingCommand = true;
     switch (command["commandType"].toInt()) {
+    case GameResetCommand:
+        fromJson(command["value"].toObject());
+        break;
     case GameNameCommand:
         setName(command["value"].toString());
         break;
