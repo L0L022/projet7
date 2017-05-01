@@ -33,11 +33,12 @@ T.Button {
     Glow {
         anchors.fill: contentItem
         source: contentItem
+        samples: 30
         color: "#843025"
 
         SequentialAnimation on spread {
                 loops: Animation.Infinite
-                PropertyAnimation { to: 0.1; duration: 2000 }
+                PropertyAnimation { to: 0.3; duration: 2000 }
                 PropertyAnimation { to: 0.6; duration: 2000 }
         }
     }
@@ -64,12 +65,30 @@ T.Button {
             anchors.fill: image
             source: image
             color: "green"
+            visible: control.visualFocus
+            samples: 30
 
             SequentialAnimation on spread {
                     loops: Animation.Infinite
+                    running: control.visualFocus
+                    //alwaysRunToEnd: true
+
                     PropertyAnimation { to: 0.1; duration: 2000 }
                     PropertyAnimation { to: 0.5; duration: 2000 }
             }
         }
+
+        LevelAdjust {
+            anchors.fill: image
+            source: image
+            visible: control.down
+            gamma: Qt.vector3d(1.4, 0.7, 1.0)
+        }
     }
+/*
+    BrightnessContrast {
+        anchors.fill: parent
+        source: parent
+        contrast: control.checked || control.visualFocus ? 0.5 : 0
+    }*/
 }
