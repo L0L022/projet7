@@ -9,5 +9,6 @@
         <file>PropertyField.qml</file>
         <file>Cyberpunk/Button.qml</file>
         <file>Cyberpunk/Button.png</file>
+        <file>qtquickcontrols2.conf</file>
     </qresource>
 </RCC>

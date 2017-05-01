@@ -61,6 +61,14 @@ void Application::loadAvailableGame(const int index)
         loadNetworkGame(game.address(), game.port());
 }
 
+void Application::removeAvailableGame(const int index)
+{
+    const GameItem &game = m_availableGames.at(index);
+    if (game.type() == GameItem::FileGame)
+        QFile::remove(game.fileName());
+    refreshFileGames();
+}
+
 void Application::closeCurrentGame()
 {
     setCurrentGame();

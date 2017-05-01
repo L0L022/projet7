@@ -24,6 +24,7 @@ public:
     Q_INVOKABLE void loadFileGame(const QString &fileName);
     Q_INVOKABLE void loadNetworkGame(const QString &address, quint16 port);
     Q_INVOKABLE void loadAvailableGame(const int index);
+    Q_INVOKABLE void removeAvailableGame(const int index);
     Q_INVOKABLE void closeCurrentGame();
 
     Q_INVOKABLE GameModel *availableGames();

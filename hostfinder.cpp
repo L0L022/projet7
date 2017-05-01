@@ -6,7 +6,7 @@
 HostFinder::HostFinder(const quint16 port, QObject *parent)
     : QObject(parent),
       m_socket(this),
-      m_broadcastIp(QHostAddress::Any)
+      m_broadcastAddresses()
 {
     connect(&m_socket, &QUdpSocket::readyRead, this, &HostFinder::readMessage);
 
@@ -19,15 +19,18 @@ HostFinder::HostFinder(const quint16 port, QObject *parent)
         if (flags == (interface.flags() &= flags))
             for(const QNetworkAddressEntry &entry : interface.addressEntries())
                 if(entry.ip().protocol() == QAbstractSocket::IPv4Protocol)
-                    m_broadcastIp = entry.broadcast();
+                    m_broadcastAddresses.append(entry.broadcast());
     }
-
+    if(m_broadcastAddresses.empty())
+        m_broadcastAddresses.append(QHostAddress::Any);
+qDebug() << m_broadcastAddresses;
     setPort(port);
 }
 
 void HostFinder::sendMessage(const QByteArray &message)
 {
-    m_socket.writeDatagram(message, m_broadcastIp, port());
+    for(const QHostAddress &address : m_broadcastAddresses)
+        m_socket.writeDatagram(message, address, port());
 }
 
 quint16 HostFinder::port() const

@@ -144,12 +144,22 @@ ApplicationWindow {
                     }
 
 
-                    delegate: ItemDelegate {
+                    delegate: RowLayout {
                         width: parent.width
-                        text: nameRole + " at " + locationRole
-                        onClicked: {
-                            app.loadAvailableGame(index)
-                            stack.push("qrc:///GameView.qml")
+
+                        ItemDelegate {
+                            Layout.fillWidth: true
+                            text: nameRole + " at " + locationRole
+                            onClicked: {
+                                app.loadAvailableGame(index)
+                                stack.push("qrc:///GameView.qml")
+                            }
+                        }
+
+                        Button {
+                            visible: typeRole === GameItem.FileGame
+                            text: "Supprimer"
+                            onClicked: app.removeAvailableGame(index)
                         }
                     }
                 }

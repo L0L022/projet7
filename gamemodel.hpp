@@ -6,11 +6,14 @@
 
 class GameItem
 {
+    Q_GADGET
+
 public:
     enum GameType {
         FileGame,
         NetworkGame
     };
+    Q_ENUM(GameType)
 
     GameItem(QString fileName, QString name);
     GameItem(QString address, quint16 port, QString name);

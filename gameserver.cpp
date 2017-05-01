@@ -6,8 +6,7 @@ GameServer::GameServer(const QString &fileName, QObject *parent)
     : Game(parent),
       m_fileName(fileName),
       m_server(this),
-      m_sockets(),
-      m_clientToId(),
+      m_clients(this),
       m_readRights(),
       m_writeRights()
 {
@@ -45,25 +44,17 @@ quint16 GameServer::port() const
     return m_server.serverPort();
 }
 
-QVariantMap GameServer::clientsToId() const
+ClientModel *GameServer::clients()
 {
-    return m_clientToId;
-}
-
-void GameServer::setClientToId(const QString &client, const QVariant &id)
-{
-    //vérifier des trucs
-    m_clientToId[client] = id;
-    emit clientsToIdChanged();
+    return &m_clients;
 }
 
 void GameServer::handleLeavingCommands()
 {
     while(!m_leavingCommands.isEmpty()) {
         auto command = m_leavingCommands.dequeue(); //use playersToJson ?
-        for (QTcpSocket *socket : m_sockets) {
-            writeCommand(command, *socket);
-        }
+        for (int i = 0; i < m_clients.rowCount(); ++i)
+            writeCommand(command, *m_clients[i].socket);
     }
 }
 
@@ -80,8 +71,8 @@ void GameServer::closeServer()
     emit ipAddressChanged();
     emit portChanged();
 
-    for (QTcpSocket *socket : m_sockets)
-        socket->disconnectFromHost();
+    for (int i = 0; i < m_clients.rowCount(); ++i)
+        m_clients[i].socket->disconnectFromHost();
 }
 
 void GameServer::newConnection()
@@ -90,18 +81,20 @@ void GameServer::newConnection()
         QTcpSocket *socket = m_server.nextPendingConnection();
 
         connect(socket, &QTcpSocket::disconnected, this, [this, socket](){
-            m_sockets.removeOne(socket);
-
-            m_clientToId.remove(socket->peerAddress().toString());
-            emit clientsToIdChanged();
+            for(int i = 0; i < m_clients.rowCount(); ++i)
+                if(socket == m_clients.at(i).socket)
+                    m_clients.removeAt(i);
         });
 
         connect(socket, &QTcpSocket::readyRead, this, [this, socket](){
             pushIncomingCommand(*socket);
         });
 
-        m_sockets.append(socket);
-        setClientToId(socket->peerAddress().toString(), m_clientToId.size());
+        ClientItem client;
+        client.id = -1;
+        client.name = "Uname";
+        client.socket = socket;
+        m_clients.append(client);
 
         sendGame();
     }

@@ -9,7 +9,8 @@ SOURCES += main.cpp \
     gameclient.cpp \
     gameserver.cpp \
     gamemodel.cpp \
-    hostfinder.cpp
+    hostfinder.cpp \
+    clientmodel.cpp
 
 RESOURCES += qml.qrc
 
@@ -43,7 +44,8 @@ HEADERS += \
     gameclient.hpp \
     gameserver.hpp \
     gamemodel.hpp \
-    hostfinder.hpp
+    hostfinder.hpp \
+    clientmodel.hpp
 
 DISTFILES += \
     players.json

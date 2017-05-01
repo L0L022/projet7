@@ -1,7 +1,6 @@
 #include <QGuiApplication>
 #include <QQmlApplicationEngine>
 #include <QQmlContext>
-#include <QQuickStyle>
 
 #include "application.hpp"
 #include "playermodel.hpp"
@@ -22,15 +21,17 @@ int main(int argc, char *argv[])
 {
     QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
     QGuiApplication app(argc, argv);
-    QQuickStyle::setStyle(":/Cyberpunk");
 
     qmlRegisterType<Application>("Projet7", 1, 0, "Application");
 
+    qmlRegisterUncreatableType<GameItem>("Projet7", 1, 0, "GameItem", "Access to enum only");
     qmlRegisterType<GameModel>("Projet7", 1, 0, "GameModel");
 
     qmlRegisterUncreatableType<Game>("Projet7", 1, 0, "Game", "Use Application");
     qmlRegisterUncreatableType<GameClient>("Projet7", 1, 0, "GameClient", "Use Application");
     qmlRegisterUncreatableType<GameServer>("Projet7", 1, 0, "GameServer", "Use Application");
+
+    qmlRegisterType<ClientModel>("Projet7", 1, 0, "ClientModel");
 
     qmlRegisterType<PropertyItem>("Projet7", 1, 0, "PropertyItem");
     qmlRegisterType<PropertyModel>("Projet7", 1, 0, "PropertyModel");

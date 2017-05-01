@@ -5,11 +5,11 @@
 #include <QTcpSocket>
 
 #include "game.hpp"
+#include "clientmodel.hpp"
 
 class GameServer : public Game
 {
     Q_OBJECT
-    Q_PROPERTY(QVariantMap clientsToId READ clientsToId NOTIFY clientsToIdChanged)
     typedef QMap<PropertyItem::Id, QList<PropertyItem::Id>> MapRights;
 
 public:
@@ -21,11 +21,10 @@ public:
     QString ipAddress() const;
     quint16 port() const;
 
-    QVariantMap clientsToId() const;
-    Q_INVOKABLE void setClientToId(const QString &client, const QVariant &id);
+    Q_INVOKABLE ClientModel *clients();
 
 signals:
-    void clientsToIdChanged();
+    void clientsChanged();
 
 protected:
     void handleLeavingCommands();
@@ -54,9 +53,8 @@ private:
 
     QString m_fileName;
     QTcpServer m_server;
-    QList<QTcpSocket*> m_sockets;
 
-    QVariantMap m_clientToId;
+    ClientModel m_clients;
     MapRights m_readRights;
     MapRights m_writeRights;
 };

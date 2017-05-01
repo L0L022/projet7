@@ -51,29 +51,42 @@ Item {
             text: app.currentGame !== null ? "Adresse ip : " + app.currentGame.ipAddress + ":" + app.currentGame.port : ""
         }
 
-        Label {
-            Layout.fillWidth: true
-            text: "IP Joueur -> Id Joueur"
-        }
-
-        ListView {
-            clip: true
+        Loader {
+            visible: active
             Layout.fillWidth: true
             Layout.fillHeight: true
-            visible: app.currentGame.type === Game.ServerGame
-            model: Object.keys(app.currentGame.clientsToId)
+            sourceComponent: serverComponent
+            active: app.currentGame.type === Game.ServerGame
+        }
 
-            delegate: RowLayout {
-                width: parent.width
+        Component {
+            id: serverComponent
+
+            ColumnLayout {
 
                 Label {
                     Layout.fillWidth: true
-                    text: modelData
+                    text: "Nom du joueur -> Id Joueur"
                 }
 
-                TextField {
-                    text: app.currentGame.clientsToId[modelData]
-                    onAccepted: app.currentGame.setClientToId(modelData, text)
+                ListView {
+                    Layout.fillWidth: true
+                    Layout.fillHeight: true
+                    clip: true
+                    model: app.currentGame.clients()
+
+                    delegate: RowLayout {
+                        width: parent.width
+
+                        Label {
+                            Layout.fillWidth: true
+                            text: nameRole
+                        }
+
+                        TextField {
+                            text: idRole
+                        }
+                    }
                 }
             }
         }
