@@ -41,6 +41,13 @@ ClientItem &ClientModel::operator[](const int index)
     return m_clients[index];
 }
 
+void ClientModel::setId(const int index, const QVariant& id)
+{
+    m_clients[index].id = id.value<PropertyItem::Id>();
+    auto qindex = createIndex(index, 0);
+    emit dataChanged(qindex, qindex, {IdRole});
+}
+
 int ClientModel::rowCount(const QModelIndex &parent) const
 {
     Q_UNUSED(parent)

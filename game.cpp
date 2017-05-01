@@ -188,7 +188,7 @@ void Game::writeCommand(const QJsonObject &command, QIODevice &device)
 {
     if(m_isReadingCommand)
         return;
-
+qDebug() << QJsonDocument(command).toJson(QJsonDocument::Compact).append('\n');
     QTextStream stream(&device);
     stream << QJsonDocument(command).toJson(QJsonDocument::Compact).append('\n');
 }

@@ -85,6 +85,7 @@ Item {
 
                         TextField {
                             text: idRole
+                            onAccepted: app.currentGame.clients().setId(index, text)
                         }
                     }
                 }

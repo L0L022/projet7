@@ -39,6 +39,8 @@ public:
     const ClientItem &at(const int index) const;
     ClientItem &operator[](const int index);
 
+    Q_INVOKABLE void setId(const int index, const QVariant& id);
+
     int rowCount(const QModelIndex &parent = QModelIndex()) const;
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const;
 

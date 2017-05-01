@@ -16,6 +16,8 @@ GameServer::GameServer(const QString &fileName, QObject *parent)
 
     connect(&m_server, &QTcpServer::newConnection, this, &GameServer::newConnection);
 
+    connect(&m_clients, &ClientModel::dataChanged, this, &GameServer::sendGame);
+
     connect(players(), &PlayerModel::rowsInserted, this, &GameServer::playersNew);
     connect(players(), &PlayerModel::rowsAboutToBeRemoved, this, &GameServer::playersRemove);
 
@@ -53,8 +55,23 @@ void GameServer::handleLeavingCommands()
 {
     while(!m_leavingCommands.isEmpty()) {
         auto command = m_leavingCommands.dequeue(); //use playersToJson ?
-        for (int i = 0; i < m_clients.rowCount(); ++i)
-            writeCommand(command, *m_clients[i].socket);
+
+        switch (command["commandType"].toInt()) {
+        case PlayersResetCommand:
+        case PlayersInsertCommad:
+        case PlayersRemoveCommad:
+        case PlayerUpdateCommand:
+        case PlayerSubPropertiesResetCommand:
+        case PlayerSubPropertiesInsertCommand:
+        case PlayerSubPropertiesRemoveCommand:
+        case PlayerSubPropertyUpdateCommand:
+            sendGame();
+            break;
+        default:
+            for (int i = 0; i < m_clients.rowCount(); ++i)
+                writeCommand(command, *m_clients[i].socket);
+            break;
+        }
     }
 }
 
@@ -155,14 +172,16 @@ void GameServer::saveToFile()
 
 void GameServer::sendGame()
 {
-    QJsonObject game;
+    QJsonObject game, command;
     game["name"] = name();
-    game["players"] = players()->toJson(); //use playersToJson
-
-    QJsonObject command;
     command["commandType"] = GameResetCommand;
-    command["value"] = game;
-    sendCommand(command);
+
+    for(int i = 0; i < m_clients.rowCount(); ++i) {
+        ClientItem &client = m_clients[i];
+        game["players"] = playersToJson(client.id);
+        command["value"] = game;
+        writeCommand(command, *client.socket);
+    }
 }
 
 QJsonObject GameServer::rightsToJson(const MapRights map) const
