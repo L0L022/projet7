@@ -1,5 +1,4 @@
-import QtQuick 2.7
-//import QtQuick.Controls 1.4
+import QtQuick 2.8
 import QtQuick.Controls 2.1
 import QtQuick.Layouts 1.3
 
@@ -38,15 +37,19 @@ ApplicationWindow {
         }
     }
 
-    StackView {
-        id: stack
-        initialItem: mainView
+    Frame {
         anchors.fill: parent
-        Keys.onBackPressed: {
-            if(depth > 1)
-                pop()
-            else
-                applicationWindow.close()
+
+        StackView {
+            id: stack
+            initialItem: mainView
+            anchors.fill: parent
+            Keys.onBackPressed: {
+                if(depth > 1)
+                    pop()
+                else
+                    applicationWindow.close()
+            }
         }
     }
 
