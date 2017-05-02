@@ -65,6 +65,10 @@ QVariant ClientModel::data(const QModelIndex &index, int role) const
         return client.name;
     else if (role == IdRole)
         return client.id;
+    else if (role == ReadRightsRole)
+        return QVariant::fromValue(client.readRights);
+    else if (role == WriteRightRole)
+        return QVariant::fromValue(client.writeRights);
 
     return QVariant();
 }
@@ -74,5 +78,7 @@ QHash<int, QByteArray> ClientModel::roleNames() const
     QHash<int, QByteArray> roles;
     roles[NameRole] = "nameRole";
     roles[IdRole] = "idRole";
+    roles[ReadRightsRole] = "readRightsRole";
+    roles[WriteRightRole] = "writeRightsRole";
     return roles;
 }

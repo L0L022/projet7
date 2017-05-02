@@ -52,6 +52,7 @@ T.Button {
             (control.visualFocus ? (control.down ? Default.focusPressedColor : Default.focusLightColor) : (control.down ? Default.buttonPressedColor : Default.buttonColor))
         border.color: Default.focusColor
         border.width: control.visualFocus ? 2 : 0*/
+        color: "transparent"
 
         BorderImage {
             id: image

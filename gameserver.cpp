@@ -10,6 +10,7 @@ GameServer::GameServer(const QString &fileName, QObject *parent)
       m_readRights(),
       m_writeRights()
 {
+    m_clients.append({"CLIENT", 0, {10, 11, 12}, {13, 14, 15}, nullptr});
     connect(&m_server, &QTcpServer::acceptError, this, [this](){
         emit error(m_server.errorString());
     });

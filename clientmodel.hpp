@@ -10,11 +10,13 @@ class ClientItem {
 public:
     QString name;
     PropertyItem::Id id;
+    QList<PropertyItem::Id> readRights;
+    QList<PropertyItem::Id> writeRights;
     QTcpSocket *socket;
 
     bool operator ==(const ClientItem &client)
     {
-        return name == client.name && id == client.id && socket == client.socket;
+        return name == client.name && id == client.id && readRights == client.readRights && writeRights == client.writeRights && socket == client.socket;
     }
 };
 
@@ -26,6 +28,8 @@ public:
     enum ClientRoles {
         NameRole = Qt::UserRole + 1,
         IdRole,
+        ReadRightsRole,
+        WriteRightRole,
         SocketRole
     };
     Q_ENUM(ClientRoles)

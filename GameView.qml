@@ -79,13 +79,25 @@ Item {
                         width: parent.width
 
                         Label {
-                            Layout.fillWidth: true
+                            //Layout.fillWidth: true
                             text: nameRole
                         }
 
                         TextField {
                             text: idRole
                             onAccepted: app.currentGame.clients().setId(index, text)
+                        }
+
+                        ListView {
+                            model: Object.keys(readRightsRole)
+                            Layout.fillWidth: true
+                            height: 100
+                            delegate: Label {
+                                width: 100
+                                height: 100
+                                text: readRightsRole[modelData]
+                                Component.onCompleted: console.log(readRightsRole[modelData])
+                            }
                         }
                     }
                 }

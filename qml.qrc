@@ -10,5 +10,8 @@
         <file>Cyberpunk/Button.qml</file>
         <file>Cyberpunk/Button.png</file>
         <file>qtquickcontrols2.conf</file>
+        <file>Cyberpunk/ApplicationWindow.qml</file>
+        <file>Cyberpunk/cadre.png</file>
+        <file>Cyberpunk/cadremask.png</file>
     </qresource>
 </RCC>
