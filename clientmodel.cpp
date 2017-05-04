@@ -4,6 +4,7 @@ ClientModel::ClientModel(QObject *parent)
     : QAbstractListModel(parent),
       m_clients()
 {
+    m_clients.append({tr("Nobody"), -1, nullptr});
 }
 
 void ClientModel::append(const ClientItem &client)
@@ -23,7 +24,7 @@ void ClientModel::removeAt(const int index)
 bool ClientModel::removeOne(const ClientItem& client)
 {
     int index = m_clients.indexOf(client);
-    if(index < 0)
+    if (index < 0)
         return false;
 
     removeAt(index);
@@ -41,11 +42,29 @@ ClientItem &ClientModel::operator[](const int index)
     return m_clients[index];
 }
 
+int ClientModel::idToIndex(const QVariant &id) const
+{
+    for (int i = 0; i < rowCount(); ++i)
+        if (m_clients[i].id == id.value<PropertyItem::Id>())
+            return i;
+    return 0;
+}
+
 void ClientModel::setId(const int index, const QVariant &id)
 {
-    m_clients[index].id = id.value<PropertyItem::Id>();
-    auto qindex = createIndex(index, 0);
-    emit dataChanged(qindex, qindex, {IdRole});
+    PropertyItem::Id pid = id.value<PropertyItem::Id>();
+    if (m_clients[index].id != pid) {
+        for (int i = 0; i < rowCount(); ++i) {
+            if (m_clients[i].id == pid) {
+                m_clients[i].id = -1;
+                auto qindex = createIndex(i, 0);
+                emit dataChanged(qindex, qindex, {IdRole});
+            }
+        }
+        m_clients[index].id = pid;
+        auto qindex = createIndex(index, 0);
+        emit dataChanged(qindex, qindex, {IdRole});
+    }
 }
 
 int ClientModel::rowCount(const QModelIndex &parent) const

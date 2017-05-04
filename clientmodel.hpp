@@ -39,6 +39,7 @@ public:
     const ClientItem &at(const int index) const;
     //le model n'est pas notifié si clientitem change
     ClientItem &operator[](const int index);
+    Q_INVOKABLE int idToIndex(const QVariant &id) const;
 
     Q_INVOKABLE void setId(const int index, const QVariant &id);
 

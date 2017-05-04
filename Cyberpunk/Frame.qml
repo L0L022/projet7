@@ -18,25 +18,27 @@ T.Frame {
     background: Item {
         BorderImage {
             anchors.fill: parent
+            anchors.margins: -23
             source: "cadre.png"
             horizontalTileMode: BorderImage.Repeat
             verticalTileMode: BorderImage.Repeat
-            border.left: 67
-            border.top: 66
-            border.right: 68
-            border.bottom: 70
+            border.left: 102
+            border.top: 103
+            border.right: 102
+            border.bottom: 103
         }
 
         BorderImage {
             id: fond
             anchors.fill: parent
+            anchors.margins: -23
             source: "cadremask.png"
             horizontalTileMode: BorderImage.Repeat
             verticalTileMode: BorderImage.Repeat
-            border.left: 67
-            border.top: 66
-            border.right: 68
-            border.bottom: 70
+            border.left: 102
+            border.top: 103
+            border.right: 102
+            border.bottom: 103
         }
 
         Glow {

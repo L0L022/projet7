@@ -146,6 +146,11 @@ PropertyItem *PropertyModel::get(const PropertyItem::Id id) const
     return at(indexOf(id));
 }
 
+PropertyItem *PropertyModel::get(const QVariant &id) const
+{
+    return get(id.value<PropertyItem::Id>());
+}
+
 int PropertyModel::indexOf(const PropertyItem::Id id) const
 {
     int index = -1;

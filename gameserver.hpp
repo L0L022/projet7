@@ -10,7 +10,6 @@
 class GameServer : public Game
 {
     Q_OBJECT
-    typedef QMap<PropertyItem::Id, QList<PropertyItem::Id>> MapRights;
 
 public:
     explicit GameServer(const QString &fileName, QObject *parent = nullptr);

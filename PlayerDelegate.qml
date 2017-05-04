@@ -13,23 +13,101 @@ Flickable {
         id: columnLayout
         anchors.fill: parent
 
-        ListView {
-            model: Object.keys(propertyRole.readRights)
-            Component.onCompleted: console.log(propertyRole.readRights)
-            Layout.fillWidth: true
-            Layout.fillHeight: true
-            Layout.minimumHeight: 200
-            delegate: RowLayout {
-                width: parent.width
-
+        Loader {
+            active: app.currentGame.type == Game.ServerGame
+            sourceComponent: ColumnLayout {
                 Label {
-                    Layout.fillWidth: true
-                    text: propertyRole.readRights[modelData]
+                    text: "Joeur associé"
                 }
 
-                Button {
-                    text: "Supprimer"
-                    onClicked: propertyRole.removeReadRight(clients.i, index)
+                ComboBox {
+                    id: clientsCombo
+                    model: app.currentGame.clients()
+                    textRole: "nameRole"
+                    onActivated: app.currentGame.clients().setId(index, propertyRole.id)
+
+                    Connections {
+                        target: app.currentGame.clients()
+                        onDataChanged: clientsCombo.currentIndex = app.currentGame.clients().idToIndex(propertyRole.id)
+                    }
+                }
+
+                Label {
+                    text: "Droits de lecture"
+                }
+
+                RowLayout {
+                    Layout.fillWidth: true
+
+                    ComboBox {
+                        id: readPlayerId
+                        model: app.currentGame.players()
+                        textRole: "idRole"
+                    }
+
+                    Button {
+                        text: "Ajouter"
+                        onClicked: propertyRole.addReadRight(readPlayerId.currentText)
+                    }
+                }
+
+                ListView {
+                    model: Object.keys(propertyRole.readRights)
+                    Layout.fillWidth: true
+                    Layout.fillHeight: true
+                    Layout.minimumHeight: 200
+                    delegate: RowLayout {
+                        width: parent.width
+
+                        Label {
+                            Layout.fillWidth: true
+                            text: app.currentGame.players().get(propertyRole.readRights[modelData]).properties["name"]
+                        }
+
+                        Button {
+                            text: "Supprimer"
+                            onClicked: propertyRole.removeReadRight(index)
+                        }
+                    }
+                }
+
+                Label {
+                    text: "Droits d'écriture"
+                }
+
+                RowLayout {
+                    Layout.fillWidth: true
+
+                    ComboBox {
+                        id: writePlayerId
+                        model: app.currentGame.players()
+                        textRole: "idRole"
+                    }
+
+                    Button {
+                        text: "Ajouter"
+                        onClicked: propertyRole.addWriteRight(writePlayerId.currentText)
+                    }
+                }
+
+                ListView {
+                    model: Object.keys(propertyRole.writeRights)
+                    Layout.fillWidth: true
+                    Layout.fillHeight: true
+                    Layout.minimumHeight: 200
+                    delegate: RowLayout {
+                        width: parent.width
+
+                        Label {
+                            Layout.fillWidth: true
+                            text: app.currentGame.players().get(propertyRole.writeRights[modelData]).properties["name"]
+                        }
+
+                        Button {
+                            text: "Supprimer"
+                            onClicked: propertyRole.removeWriteRight(index)
+                        }
+                    }
                 }
             }
         }

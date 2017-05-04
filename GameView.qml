@@ -51,50 +51,6 @@ Item {
             text: app.currentGame !== null ? "Adresse ip : " + app.currentGame.ipAddress + ":" + app.currentGame.port : ""
         }
 
-        Loader {
-            visible: active
-            Layout.fillWidth: true
-            Layout.fillHeight: true
-            sourceComponent: serverComponent
-            active: app.currentGame.type === Game.ServerGame
-        }
-
-        Component {
-            id: serverComponent
-
-            ColumnLayout {
-
-                Label {
-                    Layout.fillWidth: true
-                    text: "Nom du joueur -> Id Joueur"
-                }
-
-                ListView {
-                    Layout.fillWidth: true
-                    Layout.fillHeight: true
-                    clip: true
-                    model: app.currentGame.clients()
-
-                    delegate: RowLayout {
-                        id: clients
-                        width: parent.width
-                        height: parent.height
-                        readonly property int i: index
-
-                        Label {
-                            //Layout.fillWidth: true
-                            text: nameRole
-                        }
-
-                        TextField {
-                            text: idRole
-                            onAccepted: app.currentGame.clients().setId(index, text)
-                        }
-                    }
-                }
-            }
-        }
-
         Button {
             Layout.fillWidth: true
             text: "Ouvrir la liste des joueurs"

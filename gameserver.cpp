@@ -16,9 +16,6 @@ GameServer::GameServer(const QString &fileName, QObject *parent)
 
     connect(&m_clients, &ClientModel::dataChanged, this, &GameServer::sendGame);
 
-    connect(players(), &PlayerModel::rowsInserted, this, &GameServer::playersNew);
-    connect(players(), &PlayerModel::rowsAboutToBeRemoved, this, &GameServer::playersRemove);
-
     openFromFile();
     openServer();
 }
@@ -67,7 +64,8 @@ void GameServer::handleLeavingCommands()
             break;
         default:
             for (int i = 0; i < m_clients.rowCount(); ++i)
-                writeCommand(command, *m_clients[i].socket);
+                if (m_clients[i].socket)
+                    writeCommand(command, *m_clients[i].socket);
             break;
         }
     }
@@ -87,7 +85,8 @@ void GameServer::closeServer()
     emit portChanged();
 
     for (int i = 0; i < m_clients.rowCount(); ++i)
-        m_clients[i].socket->disconnectFromHost();
+        if (m_clients[i].socket)
+            m_clients[i].socket->disconnectFromHost();
 }
 
 void GameServer::newConnection()
@@ -97,7 +96,7 @@ void GameServer::newConnection()
 
         connect(socket, &QTcpSocket::disconnected, this, [this, socket](){
             for(int i = 0; i < m_clients.rowCount(); ++i)
-                if(socket == m_clients.at(i).socket)
+                if(socket == m_clients[i].socket)
                     m_clients.removeAt(i);
         });
 
@@ -112,28 +111,6 @@ void GameServer::newConnection()
         m_clients.append(client);
 
         sendGame();
-    }
-}
-
-void GameServer::playersNew(const QModelIndex &parent, int first, int last)
-{
-    Q_UNUSED(parent)
-    for (int i = first; i <= last; ++i) {
-        PropertyItem *property = players()->at(i);
-//        if (!m_readRights.contains(property->id()))
-//            m_readRights[property->id()] = {property->id()};
-//        if (!m_writeRights.contains(property->id()))
-//            m_writeRights[property->id()] = {property->id()};
-    }
-}
-
-void GameServer::playersRemove(const QModelIndex &parent, int first, int last)
-{
-    Q_UNUSED(parent)
-    for (int i = first; i <= last; ++i) {
-        PropertyItem *property = players()->at(i);
-//        m_readRights.remove(property->id());
-//        m_writeRights.remove(property->id());
     }
 }
 
@@ -170,28 +147,32 @@ void GameServer::sendGame()
     game["name"] = name();
     command["commandType"] = GameResetCommand;
 
-    for(int i = 0; i < m_clients.rowCount(); ++i) {
-        ClientItem &client = m_clients[i];
-        game["players"] = playersToJson(client.id);
-        command["value"] = game;
-        writeCommand(command, *client.socket);
+    for (int i = 0; i < m_clients.rowCount(); ++i) {
+        if (m_clients[i].socket) {
+            ClientItem &client = m_clients[i];
+            game["players"] = playersToJson(client.id);
+            command["value"] = game;
+            writeCommand(command, *client.socket);
+        }
     }
 }
 
 QJsonArray GameServer::playersToJson(const PropertyItem::Id id) const
 {
     QJsonArray array;
-    PlayerItem *me = players()->getPlayer(id);
-    const PlayerItem::Rights &read = me->readRights(), &write = me->writeRights();
-    for (int i = 0; i < players()->rowCount(); ++i) {
-        PlayerItem * player = qobject_cast<PlayerItem*>(players()->get(i));
-        if (read.contains(player->id())) {
-            QJsonObject object = player->toJson();
-            if (write.contains(player->id()))
-                object["editable"] = true;
-            else
-                object["editable"] = false;
-            array.append(object);
+    PlayerItem *player = players()->getPlayer(id);
+    if (player) {
+        const PlayerItem::Rights &read = player->readRights(), &write = player->writeRights();
+        for (int i = 0; i < players()->rowCount(); ++i) {
+            PropertyItem * property = players()->at(i);
+            if (read.contains(property->id())) {
+                QJsonObject object = property->toJson();
+                if (write.contains(property->id()))
+                    object["editable"] = true;
+                else
+                    object["editable"] = false;
+                array.append(object);
+            }
         }
     }
     return array;
