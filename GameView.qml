@@ -76,7 +76,10 @@ Item {
                     model: app.currentGame.clients()
 
                     delegate: RowLayout {
+                        id: clients
                         width: parent.width
+                        height: parent.height
+                        readonly property int i: index
 
                         Label {
                             //Layout.fillWidth: true
@@ -91,12 +94,19 @@ Item {
                         ListView {
                             model: Object.keys(readRightsRole)
                             Layout.fillWidth: true
-                            height: 100
-                            delegate: Label {
-                                width: 100
-                                height: 100
-                                text: readRightsRole[modelData]
-                                Component.onCompleted: console.log(readRightsRole[modelData])
+                            Layout.fillHeight: true
+                            delegate: RowLayout {
+                                width: parent.width
+
+                                Label {
+                                    Layout.fillWidth: true
+                                    text: readRightsRole[modelData]
+                                }
+
+                                Button {
+                                    text: "Supprimer"
+                                    onClicked: app.currentGame.clients().removeReadRight(clients.i, index)
+                                }
                             }
                         }
                     }

@@ -41,11 +41,39 @@ ClientItem &ClientModel::operator[](const int index)
     return m_clients[index];
 }
 
-void ClientModel::setId(const int index, const QVariant& id)
+void ClientModel::setId(const int index, const QVariant &id)
 {
     m_clients[index].id = id.value<PropertyItem::Id>();
     auto qindex = createIndex(index, 0);
     emit dataChanged(qindex, qindex, {IdRole});
+}
+
+void ClientModel::addReadRight(const int index, const QVariant &id)
+{
+    m_clients[index].readRights.append(id.value<PropertyItem::Id>());
+    auto qindex = createIndex(index, 0);
+    emit dataChanged(qindex, qindex, {ReadRightsRole});
+}
+
+void ClientModel::addWriteRight(const int index, const QVariant &id)
+{
+    m_clients[index].writeRights.append(id.value<PropertyItem::Id>());
+    auto qindex = createIndex(index, 0);
+    emit dataChanged(qindex, qindex, {WriteRightRole});
+}
+
+void ClientModel::removeReadRight(const int index, const int idIndex)
+{
+    m_clients[index].readRights.removeAt(idIndex);
+    auto qindex = createIndex(index, 0);
+    emit dataChanged(qindex, qindex, {ReadRightsRole});
+}
+
+void ClientModel::removeWriteRight(const int index, const int idIndex)
+{
+    m_clients[index].writeRights.removeAt(idIndex);
+    auto qindex = createIndex(index, 0);
+    emit dataChanged(qindex, qindex, {WriteRightRole});
 }
 
 int ClientModel::rowCount(const QModelIndex &parent) const

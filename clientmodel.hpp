@@ -41,9 +41,14 @@ public:
     bool removeOne(const ClientItem& client);
 
     const ClientItem &at(const int index) const;
+    //le model n'est pas notifié si clientitem change
     ClientItem &operator[](const int index);
 
-    Q_INVOKABLE void setId(const int index, const QVariant& id);
+    Q_INVOKABLE void setId(const int index, const QVariant &id);
+    Q_INVOKABLE void addReadRight(const int index, const QVariant &id);
+    Q_INVOKABLE void addWriteRight(const int index, const QVariant &id);
+    Q_INVOKABLE void removeReadRight(const int index, const int idIndex);
+    Q_INVOKABLE void removeWriteRight(const int index, const int idIndex);
 
     int rowCount(const QModelIndex &parent = QModelIndex()) const;
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const;
