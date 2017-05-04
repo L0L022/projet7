@@ -13,6 +13,27 @@ Flickable {
         id: columnLayout
         anchors.fill: parent
 
+        ListView {
+            model: Object.keys(propertyRole.readRights)
+            Component.onCompleted: console.log(propertyRole.readRights)
+            Layout.fillWidth: true
+            Layout.fillHeight: true
+            Layout.minimumHeight: 200
+            delegate: RowLayout {
+                width: parent.width
+
+                Label {
+                    Layout.fillWidth: true
+                    text: propertyRole.readRights[modelData]
+                }
+
+                Button {
+                    text: "Supprimer"
+                    onClicked: propertyRole.removeReadRight(clients.i, index)
+                }
+            }
+        }
+
         GridLayout {
             Layout.fillWidth: true
             columns: item.width > item.height ? 2 : 1

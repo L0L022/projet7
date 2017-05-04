@@ -34,10 +34,12 @@ int main(int argc, char *argv[])
     qmlRegisterType<ClientModel>("Projet7", 1, 0, "ClientModel");
 
     qmlRegisterType<PropertyItem>("Projet7", 1, 0, "PropertyItem");
+    qRegisterMetaType<PropertyItem::Id>("Id");
     qmlRegisterType<PropertyModel>("Projet7", 1, 0, "PropertyModel");
     qmlRegisterType<PropertyFilterModel>("Projet7", 1, 0, "PropertyFilterModel");
 
     qmlRegisterType<PlayerItem>("Projet7", 1, 0, "PlayerItem");
+    qRegisterMetaType<PlayerItem::Rights>("Rights");
     qmlRegisterType<PlayerModel>("Projet7", 1, 0, "PlayerModel");
 
     Application mon_app;

@@ -90,25 +90,6 @@ Item {
                             text: idRole
                             onAccepted: app.currentGame.clients().setId(index, text)
                         }
-
-                        ListView {
-                            model: Object.keys(readRightsRole)
-                            Layout.fillWidth: true
-                            Layout.fillHeight: true
-                            delegate: RowLayout {
-                                width: parent.width
-
-                                Label {
-                                    Layout.fillWidth: true
-                                    text: readRightsRole[modelData]
-                                }
-
-                                Button {
-                                    text: "Supprimer"
-                                    onClicked: app.currentGame.clients().removeReadRight(clients.i, index)
-                                }
-                            }
-                        }
                     }
                 }
             }

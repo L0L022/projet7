@@ -34,6 +34,7 @@ private:
     void closeServer();
     void newConnection();
 
+    // sert à rien ...
     void playersNew(const QModelIndex &parent, int first, int last);
     void playersRemove(const QModelIndex &parent, int first, int last);
 
@@ -42,21 +43,11 @@ private:
 
     // inutile si on fait ça dans handleLeavingCommand
     void sendGame();
-
-    QJsonObject rightsToJson(const MapRights map) const;
-    void rightsFromJson(const QJsonObject object, MapRights &map);
-
     QJsonArray playersToJson(const PropertyItem::Id id) const;
-
-    //c'est vraiment pertinant si on utilise sendGame tout le temps ?
-    QJsonObject playerSpecificCommand(const QJsonObject &command, const PropertyItem::Id id) const;
 
     QString m_fileName;
     QTcpServer m_server;
-
     ClientModel m_clients;
-    MapRights m_readRights;
-    MapRights m_writeRights;
 };
 
 #endif // GAMESERVER_HPP

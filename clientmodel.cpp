@@ -48,34 +48,6 @@ void ClientModel::setId(const int index, const QVariant &id)
     emit dataChanged(qindex, qindex, {IdRole});
 }
 
-void ClientModel::addReadRight(const int index, const QVariant &id)
-{
-    m_clients[index].readRights.append(id.value<PropertyItem::Id>());
-    auto qindex = createIndex(index, 0);
-    emit dataChanged(qindex, qindex, {ReadRightsRole});
-}
-
-void ClientModel::addWriteRight(const int index, const QVariant &id)
-{
-    m_clients[index].writeRights.append(id.value<PropertyItem::Id>());
-    auto qindex = createIndex(index, 0);
-    emit dataChanged(qindex, qindex, {WriteRightRole});
-}
-
-void ClientModel::removeReadRight(const int index, const int idIndex)
-{
-    m_clients[index].readRights.removeAt(idIndex);
-    auto qindex = createIndex(index, 0);
-    emit dataChanged(qindex, qindex, {ReadRightsRole});
-}
-
-void ClientModel::removeWriteRight(const int index, const int idIndex)
-{
-    m_clients[index].writeRights.removeAt(idIndex);
-    auto qindex = createIndex(index, 0);
-    emit dataChanged(qindex, qindex, {WriteRightRole});
-}
-
 int ClientModel::rowCount(const QModelIndex &parent) const
 {
     Q_UNUSED(parent)
@@ -93,10 +65,6 @@ QVariant ClientModel::data(const QModelIndex &index, int role) const
         return client.name;
     else if (role == IdRole)
         return client.id;
-    else if (role == ReadRightsRole)
-        return QVariant::fromValue(client.readRights);
-    else if (role == WriteRightRole)
-        return QVariant::fromValue(client.writeRights);
 
     return QVariant();
 }
@@ -106,7 +74,5 @@ QHash<int, QByteArray> ClientModel::roleNames() const
     QHash<int, QByteArray> roles;
     roles[NameRole] = "nameRole";
     roles[IdRole] = "idRole";
-    roles[ReadRightsRole] = "readRightsRole";
-    roles[WriteRightRole] = "writeRightsRole";
     return roles;
 }

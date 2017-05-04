@@ -10,13 +10,11 @@ class ClientItem {
 public:
     QString name;
     PropertyItem::Id id;
-    QList<PropertyItem::Id> readRights;
-    QList<PropertyItem::Id> writeRights;
     QTcpSocket *socket;
 
     bool operator ==(const ClientItem &client)
     {
-        return name == client.name && id == client.id && readRights == client.readRights && writeRights == client.writeRights && socket == client.socket;
+        return name == client.name && id == client.id && socket == client.socket;
     }
 };
 
@@ -28,8 +26,6 @@ public:
     enum ClientRoles {
         NameRole = Qt::UserRole + 1,
         IdRole,
-        ReadRightsRole,
-        WriteRightRole,
         SocketRole
     };
     Q_ENUM(ClientRoles)
@@ -45,10 +41,6 @@ public:
     ClientItem &operator[](const int index);
 
     Q_INVOKABLE void setId(const int index, const QVariant &id);
-    Q_INVOKABLE void addReadRight(const int index, const QVariant &id);
-    Q_INVOKABLE void addWriteRight(const int index, const QVariant &id);
-    Q_INVOKABLE void removeReadRight(const int index, const int idIndex);
-    Q_INVOKABLE void removeWriteRight(const int index, const int idIndex);
 
     int rowCount(const QModelIndex &parent = QModelIndex()) const;
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const;
