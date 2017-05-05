@@ -33,7 +33,7 @@ T.Button {
     Glow {
         anchors.fill: contentItem
         source: contentItem
-        samples: 30
+        samples: Qt.platform.os === "android" ? 9 : 30
         color: "#843025"
 
         SequentialAnimation on spread {

@@ -45,7 +45,7 @@ T.Frame {
             anchors.fill: fond
             source: fond
             color: "#0ACAE7"
-            samples: 30
+            samples: Qt.platform.os === "android" ? 9 : 30
 
             SequentialAnimation on spread {
                     loops: Animation.Infinite

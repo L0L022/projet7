@@ -32,6 +32,25 @@ Flickable {
                     }
                 }
 
+                ListModel {
+                    id: players
+                    Component.onCompleted: update()
+
+                    function update() {
+                        clear()
+                        for (var i = 0; i < app.currentGame.players().rowCount(); ++i)
+                            append(app.currentGame.players().at(i).properties)
+                    }
+                }
+
+                Connections {
+                    target: app.currentGame.players()
+                    onRowsInserted: players.update()
+                    onRowsRemoved: players.update()
+                    onModelReset: players.update()
+                    onDataChanged: players.update()
+                }
+
                 Label {
                     text: "Droits de lecture"
                 }
@@ -41,13 +60,14 @@ Flickable {
 
                     ComboBox {
                         id: readPlayerId
-                        model: app.currentGame.players()
-                        textRole: "idRole"
+                        model: players
+                        textRole: "name"
+                        onCountChanged: currentIndex = 0
                     }
 
                     Button {
                         text: "Ajouter"
-                        onClicked: propertyRole.addReadRight(readPlayerId.currentText)
+                        onClicked: propertyRole.addReadRight(players.get(readPlayerId.currentIndex)["id"])
                     }
                 }
 
@@ -80,13 +100,14 @@ Flickable {
 
                     ComboBox {
                         id: writePlayerId
-                        model: app.currentGame.players()
-                        textRole: "idRole"
+                        model: players
+                        textRole: "name"
+                        onCountChanged: currentIndex = 0
                     }
 
                     Button {
                         text: "Ajouter"
-                        onClicked: propertyRole.addWriteRight(writePlayerId.currentText)
+                        onClicked: propertyRole.addWriteRight(players.get(writePlayerId.currentIndex)["id"])
                     }
                 }
 
