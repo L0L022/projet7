@@ -26,6 +26,8 @@ signals:
     void clientsChanged();
 
 protected:
+    void pushIncomingCommand(QIODevice &device);
+    void readCommand(const QJsonObject &command);
     void handleLeavingCommands();
 
 private:

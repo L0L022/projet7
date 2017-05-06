@@ -8,14 +8,19 @@
 
 class ClientItem {
 public:
-    QString name;
-    PropertyItem::Id id;
-    QTcpSocket *socket;
+    ClientItem()
+        : name("Unanme client"), id(-1), socket(nullptr)
+    {
+    }
 
     bool operator ==(const ClientItem &client)
     {
         return name == client.name && id == client.id && socket == client.socket;
     }
+
+    QString name;
+    PropertyItem::Id id;
+    QTcpSocket *socket;
 };
 
 class ClientModel : public QAbstractListModel
@@ -45,6 +50,9 @@ public:
 
     int rowCount(const QModelIndex &parent = QModelIndex()) const;
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const;
+
+signals:
+    void modelChanged();
 
 protected:
     QHash<int, QByteArray> roleNames() const;

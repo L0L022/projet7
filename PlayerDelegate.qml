@@ -14,10 +14,12 @@ Flickable {
         anchors.fill: parent
 
         Loader {
+            Layout.fillWidth: true
             active: app.currentGame.type == Game.ServerGame
             sourceComponent: ColumnLayout {
+
                 Label {
-                    text: "Joeur associé"
+                    text: "Joueur associé"
                 }
 
                 ComboBox {
@@ -51,82 +53,94 @@ Flickable {
                     onDataChanged: players.update()
                 }
 
-                Label {
-                    text: "Droits de lecture"
-                }
-
                 RowLayout {
                     Layout.fillWidth: true
 
-                    ComboBox {
-                        id: readPlayerId
-                        model: players
-                        textRole: "name"
-                        onCountChanged: currentIndex = 0
-                    }
-
-                    Button {
-                        text: "Ajouter"
-                        onClicked: propertyRole.addReadRight(players.get(readPlayerId.currentIndex)["id"])
-                    }
-                }
-
-                ListView {
-                    model: Object.keys(propertyRole.readRights)
-                    Layout.fillWidth: true
-                    Layout.fillHeight: true
-                    Layout.minimumHeight: 200
-                    delegate: RowLayout {
-                        width: parent.width
+                    ColumnLayout {
+                        Layout.fillWidth: true
 
                         Label {
+                            text: "Droits de lecture"
+                        }
+
+                        RowLayout {
                             Layout.fillWidth: true
-                            text: app.currentGame.players().get(propertyRole.readRights[modelData]).properties["name"]
+
+                            ComboBox {
+                                Layout.fillWidth: true
+                                id: readPlayerId
+                                model: players
+                                textRole: "name"
+                                onCountChanged: currentIndex = 0
+                            }
+
+                            Button {
+                                text: "Ajouter"
+                                onClicked: propertyRole.addReadRight(players.get(readPlayerId.currentIndex)["id"])
+                            }
                         }
 
-                        Button {
-                            text: "Supprimer"
-                            onClicked: propertyRole.removeReadRight(index)
+                        Repeater {
+                            Layout.fillWidth: true
+                            Layout.fillHeight: true
+                            model: Object.keys(propertyRole.readRights)
+                            delegate: RowLayout {
+                                width: parent.width
+
+                                Label {
+                                    Layout.fillWidth: true
+                                    text: app.currentGame.players().get(propertyRole.readRights[modelData]).properties["name"]
+                                }
+
+                                Button {
+                                    text: "Supprimer"
+                                    onClicked: propertyRole.removeReadRight(index)
+                                }
+                            }
                         }
                     }
-                }
 
-                Label {
-                    text: "Droits d'écriture"
-                }
-
-                RowLayout {
-                    Layout.fillWidth: true
-
-                    ComboBox {
-                        id: writePlayerId
-                        model: players
-                        textRole: "name"
-                        onCountChanged: currentIndex = 0
-                    }
-
-                    Button {
-                        text: "Ajouter"
-                        onClicked: propertyRole.addWriteRight(players.get(writePlayerId.currentIndex)["id"])
-                    }
-                }
-
-                ListView {
-                    model: Object.keys(propertyRole.writeRights)
-                    Layout.fillWidth: true
-                    Layout.fillHeight: true
-                    Layout.minimumHeight: 200
-                    delegate: RowLayout {
-                        width: parent.width
+                    ColumnLayout {
+                        Layout.fillWidth: true
 
                         Label {
-                            Layout.fillWidth: true
-                            text: app.currentGame.players().get(propertyRole.writeRights[modelData]).properties["name"]
+                            text: "Droits d'écriture"
                         }
 
-                        Button {
-                            text: "Supprimer"
-                            onClicked: propertyRole.removeWriteRight(index)
+                        RowLayout {
+                            Layout.fillWidth: true
+
+                            ComboBox {
+                                Layout.fillWidth: true
+                                id: writePlayerId
+                                model: players
+                                textRole: "name"
+                                onCountChanged: currentIndex = 0
+                            }
+
+                            Button {
+                                text: "Ajouter"
+                                onClicked: propertyRole.addWriteRight(players.get(writePlayerId.currentIndex)["id"])
+                            }
+                        }
+
+                        Repeater {
+                            Layout.fillWidth: true
+                            Layout.fillHeight: true
+                            model: Object.keys(propertyRole.writeRights)
+                            delegate: RowLayout {
+                                width: parent.width
+
+                                Label {
+                                    Layout.fillWidth: true
+                                    text: app.currentGame.players().get(propertyRole.writeRights[modelData]).properties["name"]
+                                }
+
+                                Button {
+                                    text: "Supprimer"
+                                    onClicked: propertyRole.removeWriteRight(index)
+                                }
+                            }
                         }
                     }
                 }

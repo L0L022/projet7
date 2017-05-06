@@ -8,13 +8,21 @@ GameServer::GameServer(const QString &fileName, QObject *parent)
       m_server(this),
       m_clients(this)
 {
+    connect(players(), &PlayerModel::propertyInserted, this, [this](PropertyItem *property){
+        PlayerItem *player = qobject_cast<PlayerItem*>(property);
+        if (player) {
+            connect(player, &PlayerItem::readRightsChanged, this, &GameServer::sendGame);
+            connect(player, &PlayerItem::writeRightsChanged, this, &GameServer::sendGame);
+        }
+    });
+
     connect(&m_server, &QTcpServer::acceptError, this, [this](){
         emit error(m_server.errorString());
     });
 
     connect(&m_server, &QTcpServer::newConnection, this, &GameServer::newConnection);
 
-    connect(&m_clients, &ClientModel::dataChanged, this, &GameServer::sendGame);
+    connect(&m_clients, &ClientModel::modelChanged, this, &GameServer::sendGame);
 
     openFromFile();
     openServer();
@@ -46,10 +54,60 @@ ClientModel *GameServer::clients()
     return &m_clients;
 }
 
+void GameServer::pushIncomingCommand(QIODevice &device)
+{
+    PropertyItem::Id senderId(-1);
+    for (int i = 0; i < m_clients.rowCount(); ++i)
+        if (m_clients[i].socket == &device)
+            senderId = m_clients[i].id;
+
+    while(device.canReadLine()) {
+        QByteArray data = device.readLine();
+        qDebug() << "Sender id : " << senderId;
+        qDebug() << "Game::pushIncomingCommand() :" << data;
+        QJsonObject command = QJsonDocument::fromJson(data).object();
+        command["senderId"] = senderId;
+        Game::pushIncomingCommand(command);
+    }
+}
+
+void GameServer::readCommand(const QJsonObject &command)
+{
+    PropertyItem::Id senderId = command["senderId"].toVariant().value<PropertyItem::Id>();
+    PlayerItem *player = nullptr;
+    switch (command["commandType"].toInt()) {
+    case PlayersResetCommand:
+    case PlayersInsertCommad:
+    case PlayersRemoveCommad:
+        break;
+    case PlayerUpdateCommand: {
+        QJsonObject object = command["value"].toObject();
+        player = players()->getPlayer(object["id"].toVariant().value<PropertyItem::Id>());
+        break;
+    }
+    case PlayerSubPropertiesResetCommand:
+    case PlayerSubPropertiesInsertCommand:
+    case PlayerSubPropertiesRemoveCommand:
+    case PlayerSubPropertyUpdateCommand:
+        player = players()->getPlayer(command["player"].toVariant().value<PropertyItem::Id>());
+        break;
+    default:
+        break;
+    }
+    if (player) {
+        if (player->writeRights().contains(senderId))
+            Game::readCommand(command);
+    }
+    else {
+        Game::readCommand(command);
+    }
+    sendGame();
+}
+
 void GameServer::handleLeavingCommands()
 {
     while(!m_leavingCommands.isEmpty()) {
-        auto command = m_leavingCommands.dequeue(); //use playersToJson ?
+        auto command = m_leavingCommands.dequeue();
 
         switch (command["commandType"].toInt()) {
         case PlayersResetCommand:
@@ -105,8 +163,6 @@ void GameServer::newConnection()
         });
 
         ClientItem client;
-        client.id = -1;
-        client.name = "Uname";
         client.socket = socket;
         m_clients.append(client);
 
@@ -160,14 +216,12 @@ void GameServer::sendGame()
 QJsonArray GameServer::playersToJson(const PropertyItem::Id id) const
 {
     QJsonArray array;
-    PlayerItem *player = players()->getPlayer(id);
-    if (player) {
-        const PlayerItem::Rights &read = player->readRights(), &write = player->writeRights();
-        for (int i = 0; i < players()->rowCount(); ++i) {
-            PropertyItem * property = players()->at(i);
-            if (read.contains(property->id())) {
-                QJsonObject object = property->toJson();
-                if (write.contains(property->id()))
+    for (int i = 0; i < players()->rowCount(); ++i) {
+        PlayerItem *player = qobject_cast<PlayerItem*>(players()->at(i));
+        if (player) {
+            if (player->readRights().contains(id)) {
+                QJsonObject object = player->toJson();
+                if (player->writeRights().contains(id))
                     object["editable"] = true;
                 else
                     object["editable"] = false;

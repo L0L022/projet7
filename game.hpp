@@ -45,10 +45,6 @@ signals:
     void portChanged();
 
 protected:
-    void pushIncomingCommand(const QJsonObject &command);
-    void pushIncomingCommand(QIODevice &device);
-
-protected:
     enum CommandType {
         GameResetCommand,
         GameNameCommand,
@@ -64,7 +60,10 @@ protected:
         PlayerSubPropertiesRemoveCommand,
         PlayerSubPropertyUpdateCommand
     };
+    void pushIncomingCommand(const QJsonObject &command);
+    virtual void pushIncomingCommand(QIODevice &device);
 
+    virtual void readCommand(const QJsonObject &command);
     void sendCommand(const QJsonObject &command);
     virtual void handleLeavingCommands() = 0;
     // ou alors un virtual handleLeavingCommand = 0 ET handleLeavingCommandS
@@ -76,7 +75,6 @@ protected:
     QQueue<QJsonObject> m_leavingCommands;
 
 private:
-    void readCommand(const QJsonObject &command);
     void handleIncomingCommands();
 
     QString m_name;

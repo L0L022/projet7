@@ -4,7 +4,9 @@ ClientModel::ClientModel(QObject *parent)
     : QAbstractListModel(parent),
       m_clients()
 {
-    m_clients.append({tr("Nobody"), -1, nullptr});
+    ClientItem nobody;
+    nobody.name = tr("Nobody");
+    m_clients.append(nobody);
 }
 
 void ClientModel::append(const ClientItem &client)
@@ -12,6 +14,7 @@ void ClientModel::append(const ClientItem &client)
     beginInsertRows(QModelIndex(), rowCount(), rowCount());
     m_clients.append(client);
     endInsertRows();
+    emit modelChanged();
 }
 
 void ClientModel::removeAt(const int index)
@@ -19,6 +22,7 @@ void ClientModel::removeAt(const int index)
     beginRemoveRows(QModelIndex(), index, index);
     m_clients.removeAt(index);
     endRemoveRows();
+    emit modelChanged();
 }
 
 bool ClientModel::removeOne(const ClientItem& client)
@@ -59,11 +63,13 @@ void ClientModel::setId(const int index, const QVariant &id)
                 m_clients[i].id = -1;
                 auto qindex = createIndex(i, 0);
                 emit dataChanged(qindex, qindex, {IdRole});
+                emit modelChanged();
             }
         }
         m_clients[index].id = pid;
         auto qindex = createIndex(index, 0);
         emit dataChanged(qindex, qindex, {IdRole});
+        emit modelChanged();
     }
 }
 

@@ -13,114 +13,28 @@ class PlayerItem : public PropertyItem
 public:
     typedef QList<PropertyItem::Id> Rights;
 
-    explicit PlayerItem(const Id id = 0, QObject *parent = nullptr)
-        : PropertyItem(id, parent),
-          m_subProperties(this),
-          m_readRights(),
-          m_writeRights()
-    {
-        for (const QString &str : {"name", "calling", "age", "height"})
-            m_properties[str] = "";
+    explicit PlayerItem(const Id id = 0, QObject *parent = nullptr);
 
-        m_readRights.append(id);
-        m_writeRights.append(id);
-    }
+    Rights readRights() const;
+    Rights writeRights() const;
+    Q_INVOKABLE void addReadRight(const QVariant &id);
+    Q_INVOKABLE void addWriteRight(const QVariant &id);
+    Q_INVOKABLE void removeReadRight(const int index);
+    Q_INVOKABLE void removeWriteRight(const int index);
 
-    Rights readRights() const
-    {
-        return m_readRights;
-    }
+    Q_INVOKABLE PropertyModel *subProperties();
+    Q_INVOKABLE PropertyItem* append(const int proposed_id = 0);
 
-    Rights writeRights() const
-    {
-        return m_writeRights;
-    }
-
-    Q_INVOKABLE void addReadRight(const QVariant &id)
-    {
-        if (m_readRights.contains(id.value<PropertyItem::Id>()))
-            return;
-
-        m_readRights.append(id.value<PropertyItem::Id>());
-        emit readRightsChanged();
-    }
-
-    Q_INVOKABLE void addWriteRight(const QVariant &id)
-    {
-        if (m_writeRights.contains(id.value<PropertyItem::Id>()))
-            return;
-
-        m_writeRights.append(id.value<PropertyItem::Id>());
-        emit writeRightsChanged();
-    }
-
-    Q_INVOKABLE void removeReadRight(const int index)
-    {
-        m_readRights.removeAt(index);
-        emit readRightsChanged();
-    }
-
-    Q_INVOKABLE void removeWriteRight(const int index)
-    {
-        m_writeRights.removeAt(index);
-        emit writeRightsChanged();
-    }
-
-    Q_INVOKABLE PropertyModel *subProperties()
-    {
-        return &m_subProperties;
-    }
-
-    Q_INVOKABLE PropertyItem* append(const int proposed_id = 0)
-    {
-        QVariantMap properties;
-        for (const QString &str : {"name", "description", "category", "CC", "CT", "F", "B", "A", "I", "Desc", "Int", "Soc", "FM"})
-            properties[str] = "";
-
-        PropertyItem * property = m_subProperties.append(proposed_id);
-        property->setProperties(properties);
-        return property;
-    }
-
-    QJsonObject toJson() const
-    {
-        QJsonObject object = PropertyItem::toJson();
-        object["subProperties"] = m_subProperties.toJson();
-        object["readRights"] = rightsToJson(m_readRights);
-        object["writeRights"] = rightsToJson(m_writeRights);
-        return object;
-    }
-
-    void fromJson(const QJsonObject &json)
-    {
-        if (json["subProperties"].isArray()) {
-            setProperties(json.toVariantMap());
-            m_subProperties.fromJson(json["subProperties"].toArray());
-        }
-        m_readRights = rightsFromJson(json["readRights"].toArray());
-        m_writeRights = rightsFromJson(json["writeRights"].toArray());
-    }
+    QJsonObject toJson() const;
+    void fromJson(const QJsonObject &json);
 
 signals:
     void readRightsChanged();
     void writeRightsChanged();
 
 private:
-    QJsonArray rightsToJson(const Rights &rights) const
-    {
-        QJsonArray array;
-        for(const PropertyItem::Id id : rights)
-            array.append(id);
-        return array;
-    }
-
-    Rights rightsFromJson(const QJsonArray &array)
-    {
-        Rights rights;
-        for(const QJsonValue &value : array)
-            rights.append(value.toVariant().value<PropertyItem::Id>());
-        return rights;
-    }
+    QJsonArray rightsToJson(const Rights &rights) const;
+    Rights rightsFromJson(const QJsonArray &array);
 
     PropertyModel m_subProperties;
     Rights m_readRights;
@@ -132,21 +46,12 @@ class PlayerModel : public PropertyModel
     Q_OBJECT
 
 public:
-    explicit PlayerModel(QObject *parent = nullptr)
-        : PropertyModel(parent)
-    {
-    }
+    explicit PlayerModel(QObject *parent = nullptr);
 
-    PlayerItem *getPlayer(const PropertyItem::Id id) const
-    {
-        return qobject_cast<PlayerItem*>(get(id));
-    }
+    PlayerItem *getPlayer(const PropertyItem::Id id) const;
 
 protected:
-    PropertyItem *makeProperty(const int id)
-    {
-        return new PlayerItem(id, this);
-    }
+    PropertyItem *makeProperty(const int id);
 };
 
 #endif // PLAYERMODEL_HPP
