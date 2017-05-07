@@ -1,4 +1,5 @@
 #include "playermodel.hpp"
+#include <QDebug>
 
 PlayerItem::PlayerItem(const Id id, QObject *parent)
     : PropertyItem(id, parent),
@@ -88,10 +89,12 @@ QJsonObject PlayerItem::toJson() const
 
 void PlayerItem::fromJson(const QJsonObject &json)
 {
-    if (json["subProperties"].isArray()) {
-        setProperties(json.toVariantMap());
-        m_subProperties.fromJson(json["subProperties"].toArray());
-    }
+    QJsonObject prop(json);
+    prop.remove("subProperties");
+    prop.remove("readRights");
+    prop.remove("writeRights");
+    setProperties(prop.toVariantMap());
+    m_subProperties.fromJson(json["subProperties"].toArray());
     m_readRights = rightsFromJson(json["readRights"].toArray());
     m_writeRights = rightsFromJson(json["writeRights"].toArray());
 }

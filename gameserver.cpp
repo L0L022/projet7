@@ -16,6 +16,12 @@ GameServer::GameServer(const QString &fileName, QObject *parent)
         }
     });
 
+    connect(players(), &PlayerModel::propertyRemoved, this, [this](const PropertyItem::Id id){
+        for (int i = 0; i < m_clients.rowCount(); ++i)
+            if (m_clients[i].id == id)
+                m_clients[i].id = -1;
+    });
+
     connect(&m_server, &QTcpServer::acceptError, this, [this](){
         emit error(m_server.errorString());
     });
@@ -56,29 +62,54 @@ ClientModel *GameServer::clients()
 
 void GameServer::pushIncomingCommand(QIODevice &device)
 {
-    PropertyItem::Id senderId(-1);
+    int client(-1);
     for (int i = 0; i < m_clients.rowCount(); ++i)
         if (m_clients[i].socket == &device)
-            senderId = m_clients[i].id;
+            client = i;
 
     while(device.canReadLine()) {
         QByteArray data = device.readLine();
-        qDebug() << "Sender id : " << senderId;
+        qDebug() << "Client : " << client;
         qDebug() << "Game::pushIncomingCommand() :" << data;
         QJsonObject command = QJsonDocument::fromJson(data).object();
-        command["senderId"] = senderId;
+        command["client"] = client;
         Game::pushIncomingCommand(command);
     }
 }
 
 void GameServer::readCommand(const QJsonObject &command)
 {
-    PropertyItem::Id senderId = command["senderId"].toVariant().value<PropertyItem::Id>();
+    ClientItem sender = m_clients[command["client"].toInt()];
     PlayerItem *player = nullptr;
+
     switch (command["commandType"].toInt()) {
     case PlayersResetCommand:
-    case PlayersInsertCommad:
+        break;
+    case PlayersInsertCommad: {
+        if (sender.id == -1) {
+            QList<PropertyItem::Id> oldId;
+            for (int i = 0; i < players()->rowCount(); ++i)
+                oldId.append(players()->at(i)->id());
+            Game::readCommand(command);
+            PropertyItem::Id playerId;
+            for (int i = 0; i < players()->rowCount(); ++i)
+                if (!oldId.contains(players()->at(i)->id()))
+                    playerId = players()->at(i)->id();
+            player = players()->getPlayer(playerId);
+            while (!player->readRights().isEmpty())
+                player->removeReadRight(0);
+            while (!player->writeRights().isEmpty())
+                player->removeWriteRight(0);
+            player->addReadRight(playerId);
+            player->addWriteRight(playerId);
+            m_clients.setId(command["client"].toInt(), player->id());
+            player = nullptr;
+        }
+        break;
+    }
     case PlayersRemoveCommad:
+        if (sender.id == command["value"].toVariant().value<PropertyItem::Id>())
+            Game::readCommand(command);
         break;
     case PlayerUpdateCommand: {
         QJsonObject object = command["value"].toObject();
@@ -92,14 +123,12 @@ void GameServer::readCommand(const QJsonObject &command)
         player = players()->getPlayer(command["player"].toVariant().value<PropertyItem::Id>());
         break;
     default:
+        Game::readCommand(command);
         break;
     }
     if (player) {
-        if (player->writeRights().contains(senderId))
+        if (player->writeRights().contains(sender.id))
             Game::readCommand(command);
-    }
-    else {
-        Game::readCommand(command);
     }
     sendGame();
 }

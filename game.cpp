@@ -134,8 +134,7 @@ void Game::readCommand(const QJsonObject &command)
         break;
     case PlayersInsertCommad: {
         QJsonObject player = command["value"].toObject();
-        if(players()->get(player["id"].toVariant().value<PropertyItem::Id>()) == nullptr)
-            players()->append(player["id"].toVariant().value<PropertyItem::Id>())->fromJson(player);
+        players()->append(player["id"].toVariant().value<PropertyItem::Id>())->fromJson(player);
         break;
     }
     case PlayersRemoveCommad:
