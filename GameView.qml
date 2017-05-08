@@ -7,11 +7,53 @@ Item {
     id: item
     readonly property string title: app.currentGame !== null ? app.currentGame.name : ""
 
+    Dialog {
+        id: dialogError
+        x: (item.width - width) / 2
+        y: (item.height - height) / 2
+        title: qsTr("An error occurred")
+        standardButtons: Dialog.Ok
+        onClosed: app.closeCurrentGame()
+
+        Label {
+            id: labelError
+        }
+    }
+
     Connections {
-        target: app
-        onCurrentGameChanged: {
-            if(app.currentGame === null)
-                stack.pop()
+        target: app.currentGame
+        onError: {
+            labelError.text = errorString
+            dialogError.open()
+        }
+    }
+
+    Component {
+        id: serverGame
+
+        ColumnLayout {
+            TextField {
+                Layout.fillWidth: true
+                text: app.currentGame.name
+                onAccepted: app.currentGame.name = text
+            }
+        }
+    }
+
+    Component {
+        id: clientGame
+
+        ColumnLayout {
+            Label {
+                Layout.fillWidth: true
+                text: app.currentGame.name
+            }
+
+            Button {
+                Layout.fillWidth: true
+                text: qsTr("Choose a character")
+                onClicked: stack.push("qrc:///CharactersView.qml")
+            }
         }
     }
 
@@ -19,31 +61,9 @@ Item {
         anchors.fill: parent
         anchors.margins: 6
 
-        Dialog {
-            id: dialogError
-            x: (item.width - width) / 2
-            y: (item.height - height) / 2
-            title: "Une erreur est survenue"
-            standardButtons: Dialog.Ok
-            onClosed: app.closeCurrentGame()
-
-            Label {
-                id: labelError
-            }
-        }
-
-        Connections {
-            target: app.currentGame
-            onError: {
-                labelError.text = errorString
-                dialogError.open()
-            }
-        }
-
-        TextField {
+        Loader {
             Layout.fillWidth: true
-            text: app.currentGame !== null ? app.currentGame.name : ""
-            onAccepted: app.currentGame.name = text
+            sourceComponent: app.currentGame.type === Game.ServerGame ? serverGame : clientGame
         }
 
         Label {
@@ -53,13 +73,13 @@ Item {
 
         Button {
             Layout.fillWidth: true
-            text: "Ouvrir la liste des joueurs"
+            text: qsTr("Open players")
             onClicked: stack.push("qrc:///PlayersView.qml")
         }
 
         Button {
             Layout.fillWidth: true
-            text: "Terminer la partie"
+            text: qsTr("Quit the game")
             onClicked: app.closeCurrentGame()
         }
     }

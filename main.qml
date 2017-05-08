@@ -9,7 +9,7 @@ ApplicationWindow {
     visible: true
     width: 640
     height: 480
-    title: qsTr("Projet7")
+    title: qsTr("Project 7")
 
     header: ToolBar {
         Label {
@@ -24,16 +24,7 @@ ApplicationWindow {
               text: qsTr("‹")
               onClicked: stack.pop()
               visible: stack.depth > 1
-
             }
-        }
-    }
-
-    Connections {
-        target: app
-        onCurrentGameChanged: {
-            app.refreshNetworkGames()
-            app.refreshFileGames()
         }
     }
 
@@ -44,44 +35,67 @@ ApplicationWindow {
             id: stack
             initialItem: mainView
             anchors.fill: parent
+
             Keys.onBackPressed: {
-                if(depth > 1)
-                    pop()
+                if(depth === 1)
+                    stack.clear()
                 else
+                    stack.pop()
+            }
+
+            onDepthChanged: {
+                if(depth === 0)
                     applicationWindow.close()
             }
         }
     }
 
+    Connections {
+        target: app
+        onCurrentGameChanged: {
+            if (app.currentGame === null)
+                stack.pop(null)
+        }
+    }
+
     Component {
         id: mainView
+
         Item {
-            readonly property string title: "Projet7"
+            readonly property string title: applicationWindow.title
+
+            StackView.onActivated: {
+                app.refreshNetworkGames()
+                app.refreshFileGames()
+            }
 
             Component {
                 id: fileGame
 
                 Item {
-                    readonly property string title: "Nouvelle partie"
+                    readonly property string title: qsTr("Begin a new game")
 
                     ColumnLayout {
                         anchors.fill: parent
                         anchors.margins: 6
 
                         TextField {
-                            Layout.fillWidth: true
                             id: newGameName
-                            placeholderText: "Nom de la nouvelle partie"
+                            Layout.fillWidth: true
+                            placeholderText: qsTr("The game's name")
+                            onAccepted: parent.newgame()
                         }
 
                         Button {
                             Layout.fillWidth: true
-                            text: "Créer la partie"
-                            onClicked: {
-                                if(newGameName.text !== "") {
-                                    app.newFileGame(newGameName.text)
-                                    stack.replace("qrc:///GameView.qml")
-                                }
+                            text: qsTr("Make the game")
+                            onClicked: parent.newgame()
+                        }
+
+                        function newgame() {
+                            if(newGameName.text !== "") {
+                                app.newFileGame(newGameName.text)
+                                stack.replace("qrc:///GameView.qml")
                             }
                         }
                     }
@@ -92,41 +106,53 @@ ApplicationWindow {
                 id: networkGame
 
                 Item {
-                    readonly property string title: "Se connecter"
+                    readonly property string title: qsTr("Connect to a game")
 
                 ColumnLayout {
                         anchors.fill: parent
                         anchors.margins: 6
 
-                        TextField {
-                            id: ipField
-                            placeholderText: "Addresse ip"
-                            Layout.fillWidth: true
-                        }
-
                         RowLayout {
+                            Layout.fillWidth: true
 
                             Label {
                                 Layout.fillWidth: true
-                                text: "Port"
+                                text: qsTr("IP address")
+                            }
+
+                            TextField {
+                                id: ipField
+                                Layout.fillWidth: true
+                                onAccepted: portSpin.focus = true
+                            }
+                        }
+
+                        RowLayout {
+                            Layout.fillWidth: true
+
+                            Label {
+                                Layout.fillWidth: true
+                                text: qsTr("Port")
                             }
 
                             SpinBox {
-                                Layout.fillWidth: true
                                 id: portSpin
+                                Layout.fillWidth: true
                                 editable: true
-                                to: 999999
+                                to: 65535
                             }
                         }
 
                         Button {
                             Layout.fillWidth: true
-                            text: "Connexion"
-                            onClicked: {
-                                if(ipField.text !== "" && portSpin.value !== 0) {
-                                    app.loadNetworkGame(ipField.text, portSpin.value)
-                                    stack.replace("qrc:///GameView.qml")
-                                }
+                            text: qsTr("Connection")
+                            onClicked: parent.connectgame()
+                        }
+
+                        function connectgame() {
+                            if(ipField.text !== "" && portSpin.value !== 0) {
+                                app.loadNetworkGame(ipField.text, portSpin.value)
+                                stack.replace("qrc:///GameView.qml")
                             }
                         }
                     }
@@ -141,18 +167,18 @@ ApplicationWindow {
                     Layout.fillWidth: true
                     Layout.fillHeight: true
                     model: app.availableGames()
+
                     Component.onCompleted: {
                         app.refreshNetworkGames()
                         app.refreshFileGames()
                     }
-
 
                     delegate: RowLayout {
                         width: parent.width
 
                         ItemDelegate {
                             Layout.fillWidth: true
-                            text: nameRole + " at " + locationRole
+                            text: typeRole === GameItem.FileGame ? nameRole : nameRole + " at " + locationRole
                             onClicked: {
                                 app.loadAvailableGame(index)
                                 stack.push("qrc:///GameView.qml")
@@ -161,30 +187,28 @@ ApplicationWindow {
 
                         Button {
                             visible: typeRole === GameItem.FileGame
-                            text: "Supprimer"
+                            text: qsTr("Remove")
                             onClicked: app.removeAvailableGame(index)
                         }
                     }
                 }
 
                 Button {
-                    text: "Ouvrir la partie en cours"
+                    Layout.fillWidth: true
                     visible: app.currentGame !== null
+                    text: qsTr("Open the current game")
                     onClicked: stack.push("qrc:///GameView.qml")
-                    Layout.fillWidth: true
                 }
 
                 Button {
                     Layout.fillWidth: true
-                    text: "Commencer une nouvelle partie"
+                    text: qsTr("Begin a new game")
                     onClicked: stack.push(fileGame)
-
                 }
 
                 Button {
                     Layout.fillWidth: true
-                    Layout.alignment: Qt.AlignHCenter
-                    text: "Se connecter à une partie"
+                    text: qsTr("Connect to a game")
                     onClicked: stack.push(networkGame)
                 }
             }
