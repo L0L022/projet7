@@ -18,5 +18,6 @@
         <file>Cyberpunk/fond.jpeg</file>
         <file>CharactersView.qml</file>
         <file>CharacterDelegate.qml</file>
+        <file>FactionDelegate.qml</file>
     </qresource>
 </RCC>

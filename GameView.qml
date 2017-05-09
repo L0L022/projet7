@@ -48,12 +48,6 @@ Item {
                 Layout.fillWidth: true
                 text: app.currentGame.name
             }
-
-            Button {
-                Layout.fillWidth: true
-                text: qsTr("Choose a character")
-                onClicked: stack.push("qrc:///CharactersView.qml")
-            }
         }
     }
 
@@ -69,6 +63,12 @@ Item {
         Label {
             Layout.fillWidth: true
             text: app.currentGame !== null ? "Adresse ip : " + app.currentGame.ipAddress + ":" + app.currentGame.port : ""
+        }
+
+        Button {
+            Layout.fillWidth: true
+            text: qsTr("Open characters")
+            onClicked: stack.push("qrc:///CharactersView.qml")
         }
 
         Button {

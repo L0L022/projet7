@@ -19,7 +19,7 @@ Item {
         ListElement {
             idRole: "1"
             nameRole: "Windows"
-            descriptionRole: "Des sans ames."
+            descriptionRole: "Des sans âmes."
         }
 
         ListElement {
@@ -54,10 +54,31 @@ Item {
         }
 
         ListElement {
+            nameRole: "Killian"
+            factionRole: "0"
+            imageRole: "http://img.over-blog-kiwi.com/1/23/41/63/20151206/ob_1b2311_actu-anime.jpg"
+            descriptionRole: "Aime marine. Beurk."
+        }
+
+        ListElement {
             nameRole: "L'autre Loic"
             factionRole: "1"
             imageRole: "http://3.bp.blogspot.com/_f7BjNAnSRfo/TFldiUauV5I/AAAAAAAAADY/0q4B-B1aD3A/s1600/blender1.jpg"
             descriptionRole: "L'artiste ultime !"
+        }
+
+        ListElement {
+            nameRole: "Hugo"
+            factionRole: "1"
+            imageRole: "http://www.fotofever.com/artist/image/large/3273/galerie-des-soupirs___olivier-dani___sans-titre-1___ame-de-fer___2014.jpg"
+            descriptionRole: "MMI sans âme."
+        }
+
+        ListElement {
+            nameRole: "Laurent"
+            factionRole: "1"
+            imageRole: "http://www.alextools.be/wp-content/associal.jpg"
+            descriptionRole: "Le mec associal qui préfère regarder des animés que faire le diapo. Ce petit con."
         }
 
         ListElement {
@@ -69,10 +90,13 @@ Item {
     }
 
     Component {
-        id: charactersSwipe
+        id: swipeview
 
         Item {
-            readonly property string title: qsTr("Characters")
+            id: swipeitem
+            property string title
+            property alias model: repeater.model
+            property var delegate
             property alias currentIndex: swipe.currentIndex
 
             SwipeView {
@@ -81,12 +105,13 @@ Item {
                 clip: true
 
                 Repeater {
+                    id: repeater
                     model: characters
                     delegate: Loader {
+                        id: loader
+                        property int modelIndex: index
                         active: SwipeView.isCurrentItem || SwipeView.isNextItem || SwipeView.isPreviousItem
-                        sourceComponent: CharacterDelegate {
-                            faction: factions.get(getFactionIndex(factionRole))
-                        }
+                        sourceComponent: swipeitem.delegate
                     }
                 }
             }
@@ -94,10 +119,26 @@ Item {
             PageIndicator {
                  count: swipe.count
                  currentIndex: swipe.currentIndex
-
                  anchors.bottom: swipe.bottom
                  anchors.horizontalCenter: parent.horizontalCenter
              }
+        }
+    }
+
+    Component {
+        id: characterDelegate
+
+        CharacterDelegate {
+            character: characters.get(modelIndex)
+            faction: factions.get(getFactionIndex(character.factionRole))
+        }
+    }
+
+    Component {
+        id: factionDelegate
+
+        FactionDelegate {
+            faction: factions.get(modelIndex)
         }
     }
 
@@ -106,14 +147,17 @@ Item {
         model: characters
         section.property: "factionRole"
         section.delegate: ItemDelegate {
+            width: parent.width
             text: factions.get(section).nameRole
             font.bold: true
             font.italic: true
+            onClicked: stack.push(swipeview, {"title": qsTr("Factions"), "model": factions, "delegate": factionDelegate, "currentIndex": section})
         }
 
         delegate: ItemDelegate {
+            width: parent.width
             text: nameRole
-            onClicked: stack.push(charactersSwipe, {"currentIndex": index})
+            onClicked: stack.push(swipeview, {"title": qsTr("Characters"), "model": characters, "delegate": characterDelegate, "currentIndex": index})
         }
     }
 }

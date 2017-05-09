@@ -5,7 +5,6 @@ import Projet7 1.0
 
 Item {
     id: item
-    property var character
     property var faction
 
     GridLayout {
@@ -17,18 +16,12 @@ Item {
             Layout.rowSpan: 2
             Layout.fillWidth: true
             Layout.fillHeight: true
-            source: character.imageRole
+            source: faction.imageRole
             fillMode: Image.PreserveAspectFit
         }
 
         Label {
             Layout.row: 0
-            Layout.column: 1
-            text: character.nameRole
-        }
-
-        Label {
-            Layout.row: 1
             Layout.column: 1
             text: faction.nameRole
         }
@@ -37,7 +30,7 @@ Item {
             Layout.row: 2
             Layout.column: 0
             Layout.columnSpan: 2
-            text: character.descriptionRole
+            text: faction.descriptionRole
         }
     }
 }
