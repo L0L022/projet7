@@ -96,7 +96,7 @@ Item {
             id: swipeitem
             property string title
             property alias model: repeater.model
-            property var delegate
+            property Component delegate
             property alias currentIndex: swipe.currentIndex
 
             SwipeView {
@@ -148,9 +148,9 @@ Item {
         section.property: "factionRole"
         section.delegate: ItemDelegate {
             width: parent.width
-            text: factions.get(section).nameRole
             font.bold: true
             font.italic: true
+            Component.onCompleted: text = factions.get(section).nameRole
             onClicked: stack.push(swipeview, {"title": qsTr("Factions"), "model": factions, "delegate": factionDelegate, "currentIndex": section})
         }
 
