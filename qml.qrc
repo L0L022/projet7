@@ -16,5 +16,6 @@
         <file>Cyberpunk/Frame.qml</file>
         <file>Cyberpunk/Label.qml</file>
         <file>Cyberpunk/fond.jpeg</file>
+        <file>Cyberpunk/fondmask.png</file>
     </qresource>
 </RCC>
