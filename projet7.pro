@@ -11,7 +11,8 @@ SOURCES += main.cpp \
     gamemodel.cpp \
     hostfinder.cpp \
     clientmodel.cpp \
-    playermodel.cpp
+    playermodel.cpp \
+    projet7.cpp
 
 RESOURCES += qml.qrc
 
@@ -46,6 +47,5 @@ HEADERS += \
     gameserver.hpp \
     gamemodel.hpp \
     hostfinder.hpp \
-    clientmodel.hpp
-
-DISTFILES +=
+    clientmodel.hpp \
+    projet7.hpp

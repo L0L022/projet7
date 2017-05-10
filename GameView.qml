@@ -59,6 +59,12 @@ Item {
 
         Button {
             Layout.fillWidth: true
+            text: "Lancer un dé"
+            onClicked: stack.push("qrc:///DieView.qml")
+        }
+
+        Button {
+            Layout.fillWidth: true
             text: "Terminer la partie"
             onClicked: app.closeCurrentGame()
         }
