@@ -6,25 +6,42 @@ import Projet7 1.0
 Item {
     readonly property string title: "Lancé de dé"
 
+    Component {
+        id: die
+
+        Rectangle {
+            width: grid.cellWidth - 5
+            height: grid.cellHeight - 5
+            color: "transparent"
+            border.color: "white"
+            border.width: 5
+            radius: 10
+
+            Label {
+                anchors.fill: parent
+                text: modelData
+                font.pointSize: 400
+                verticalAlignment: Text.AlignVCenter
+                horizontalAlignment: Text.AlignHCenter
+                fontSizeMode: Text.Fit
+            }
+        }
+    }
+
+    ListModel {
+        id: results
+    }
+
     ColumnLayout {
         anchors.fill: parent
 
-        Label {
+        GridView {
+            id: grid
             Layout.fillWidth: true
             Layout.fillHeight: true
-            id: number
-            text: "0"
-            font.pointSize: 400
-            verticalAlignment: Text.AlignVCenter
-            horizontalAlignment: Text.AlignHCenter
-            font.weight: Font.Black
-            fontSizeMode: Text.Fit
-        }
-
-        Timer {
-            id: timer
-            interval: 5000
-            onTriggered: number.text = "0"
+            model: results
+            delegate: die
+            clip: true
         }
 
         RowLayout {
@@ -36,8 +53,23 @@ Item {
             }
 
             SpinBox {
-                id: face
+                id: nbFace
                 value: 6
+                editable: true
+            }
+        }
+
+        RowLayout {
+            Layout.fillWidth: true
+
+            Label {
+                Layout.fillWidth: true
+                text: "Nombre de dé"
+            }
+
+            SpinBox {
+                id: nbDie
+                value: 1
                 editable: true
             }
         }
@@ -46,8 +78,9 @@ Item {
             Layout.fillWidth: true
             text: "Lancer le dé !"
             onClicked: {
-                number.text = Projet7.die(face.value)
-                timer.start()
+                results.clear()
+                for (var i = 0; i < nbDie.value; ++i)
+                    results.append({"value": Projet7.die(nbFace.value)})
             }
         }
     }
