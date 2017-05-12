@@ -7,7 +7,10 @@ T.Label {
     id: control
 
     color: "white"
-    font.family: "Hack"
-    font.bold: true
-    font.capitalization: Font.AllUppercase
+    font.pointSize: 20
+    font.family: smallFont.name
+    FontLoader {
+        id: smallFont
+        source: "futureforces.ttf"
+    }
 }

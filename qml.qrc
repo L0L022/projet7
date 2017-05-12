@@ -18,5 +18,8 @@
         <file>Cyberpunk/fond.jpeg</file>
         <file>Cyberpunk/fondmask.png</file>
         <file>DieView.qml</file>
+        <file>Cyberpunk/batmfa.ttf</file>
+        <file>Cyberpunk/futureforces.ttf</file>
+        <file>Cyberpunk/jumpers.ttf</file>
     </qresource>
 </RCC>

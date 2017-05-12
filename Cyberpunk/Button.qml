@@ -25,9 +25,11 @@ T.Button {
         verticalAlignment: Text.AlignVCenter
         elide: Text.ElideRight
 
-        font.family: "Hack"
-        font.bold: true
-        font.capitalization: Font.AllUppercase
+        font.family: middleFont.name
+        FontLoader {
+            id: middleFont
+            source: "batmfa.ttf"
+        }
     }
 
     Glow {
