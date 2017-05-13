@@ -68,7 +68,7 @@ Item {
         Button {
             Layout.fillWidth: true
             text: qsTr("Open characters")
-            onClicked: stack.push("qrc:///CharactersView.qml")
+            onClicked: stack.push("qrc:///UniverseView.qml")
         }
 
         Button {

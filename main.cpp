@@ -42,9 +42,23 @@ int main(int argc, char *argv[])
     qRegisterMetaType<PlayerItem::Rights>("Rights");
     qmlRegisterType<PlayerModel>("Projet7", 1, 0, "PlayerModel");
 
+    QVariant characters, factions;
+    QFile file(":/Univers/characters.json");
+    if (file.open(QIODevice::ReadOnly | QIODevice::Text)) {
+        characters = QJsonDocument::fromJson(file.readAll()).array().toVariantList();
+    }
+    file.close();
+    file.setFileName(":/Univers/factions.json");
+    if (file.open(QIODevice::ReadOnly | QIODevice::Text)) {
+        factions = QJsonDocument::fromJson(file.readAll()).array().toVariantList();
+    }
+    file.close();
+
     Application mon_app;
     QQmlApplicationEngine engine;
     engine.rootContext()->setContextProperty("app", &mon_app);
+    engine.rootContext()->setContextProperty("characters", characters);
+    engine.rootContext()->setContextProperty("factions", factions);
     engine.load(QUrl(QLatin1String("qrc:/main.qml")));
 
     return app.exec();

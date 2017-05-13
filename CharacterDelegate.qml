@@ -17,27 +17,27 @@ Item {
             Layout.rowSpan: 2
             Layout.fillWidth: true
             Layout.fillHeight: true
-            source: character.imageRole
+            source: character.image
             fillMode: Image.PreserveAspectFit
         }
 
         Label {
             Layout.row: 0
             Layout.column: 1
-            text: character.nameRole
+            text: character.name
         }
 
         Label {
             Layout.row: 1
             Layout.column: 1
-            text: faction.nameRole
+            text: faction.name
         }
 
         Label {
             Layout.row: 2
             Layout.column: 0
             Layout.columnSpan: 2
-            text: character.descriptionRole
+            text: character.description
         }
 
         Button {
@@ -48,10 +48,10 @@ Item {
              text: qsTr("Choose this one")
              onClicked: {
                  var player = app.currentGame.players().append();
-                 player.properties = {"name": character.nameRole, "faction": faction.nameRole, "image": character.imageRole, "description": character.descriptionRole};
-                 /*stack.replace(stack.find(function(item, index) {
-                     return item.objectName === "CharactersView";
-                 }), Qt.resolvedUrl("qrc:///PlayersView.qml"), {}, StackView.Transition);*/
+                 player.properties = character;
+                 stack.replace(stack.find(function(item, index) {
+                     return item.objectName === "UniverseView";
+                 }), Qt.resolvedUrl("qrc:///PlayersView.qml"), {}, StackView.Transition);
              }
          }
     }

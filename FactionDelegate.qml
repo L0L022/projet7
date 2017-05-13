@@ -16,21 +16,21 @@ Item {
             Layout.rowSpan: 2
             Layout.fillWidth: true
             Layout.fillHeight: true
-            source: faction.imageRole
+            source: faction.image
             fillMode: Image.PreserveAspectFit
         }
 
         Label {
             Layout.row: 0
             Layout.column: 1
-            text: faction.nameRole
+            text: faction.name
         }
 
         Label {
             Layout.row: 2
             Layout.column: 0
             Layout.columnSpan: 2
-            text: faction.descriptionRole
+            text: faction.description
         }
     }
 }

@@ -16,8 +16,10 @@
         <file>Cyberpunk/Frame.qml</file>
         <file>Cyberpunk/Label.qml</file>
         <file>Cyberpunk/fond.jpeg</file>
-        <file>CharactersView.qml</file>
+        <file>UniverseView.qml</file>
         <file>CharacterDelegate.qml</file>
         <file>FactionDelegate.qml</file>
+        <file>Univers/characters.json</file>
+        <file>Univers/factions.json</file>
     </qresource>
 </RCC>

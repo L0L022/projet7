@@ -1,0 +1,20 @@
+[
+    {
+        "name": "Linux",
+        "id": 0,
+        "description": "La plus puissante des factions !",
+        "image": "http://cf.juggle-images.com/matte/white/280x280/linux-tux-3-logo-primary.jpg"
+    },
+    {
+        "name": "Windows",
+        "id": 1,
+        "description": "Des sans âmes.",
+        "image": "http://portes-fenetres.webmaisons.com/images/fenetre00.gif"
+    },
+    {
+        "name": "Macaca",
+        "id": 2,
+        "description": "No comment.",
+        "image": "http://www.ukfoodguide.net/images/apple190x190.png"
+    }
+]

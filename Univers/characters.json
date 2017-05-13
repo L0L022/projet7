@@ -1,0 +1,44 @@
+[
+    {
+        "name": "Loïc Escales",
+        "faction": 0,
+        "description": "Le maitre de l'univers.",
+        "image": "http://images6.fanpop.com/image/photos/35600000/Light-Yagami-death-note-35690679-800-600.jpg"
+    },
+    {
+        "name": "Alexandre Dejeeaguèrre",
+        "faction": 0,
+        "description": "Le maitre de l'univers.",
+        "image": "https://www.metaliercoatings.com/wp-content/uploads/2014/11/Aluminium-Liquid-Metal-540x272.jpg"
+    },
+    {
+        "name": "Killian",
+        "faction": 0,
+        "description": "Pro-Qt",
+        "image": "http://img.over-blog-kiwi.com/1/23/41/63/20151206/ob_1b2311_actu-anime.jpg"
+    },
+    {
+        "name": "Laurent",
+        "faction": 0,
+        "description": "Le mec INssociable qui préfère regarder des animés que faire le diapo.",
+        "image": "http://www.alextools.be/wp-content/associal.jpg"
+    },
+    {
+        "name": "L'autre Loic",
+        "faction": 1,
+        "description": "L'artiste ultime !",
+        "image": "http://3.bp.blogspot.com/_f7BjNAnSRfo/TFldiUauV5I/AAAAAAAAADY/0q4B-B1aD3A/s1600/blender1.jpg"
+    },
+    {
+        "name": "Hugo",
+        "faction": 1,
+        "description": "MMI sans âme.",
+        "image": "http://www.fotofever.com/artist/image/large/3273/galerie-des-soupirs___olivier-dani___sans-titre-1___ame-de-fer___2014.jpg"
+    },
+    {
+        "name": "Martin",
+        "faction": 2,
+        "description": "Il fait des sites web en html5/css3.",
+        "image": "http://www.heurtevent.net/wp-content/uploads/2014/07/url.jpg"
+    }
+]

@@ -19,9 +19,14 @@ Item {
 
             Repeater {
                 model: app.currentGame.players()
-                delegate: PlayerDelegate {
-                    height: view.height
-                    width: view.width
+                delegate: Component {
+                    Loader {
+                        active: bar.currentIndex === index
+                        sourceComponent: PlayerDelegate {
+                            height: view.height
+                            width: view.width
+                        }
+                    }
                 }
             }
         }
