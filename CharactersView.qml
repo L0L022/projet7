@@ -5,6 +5,7 @@ import Projet7 1.0
 
 Item {
     id: item
+    objectName: "CharactersView"
     readonly property string title: qsTr("Choose a character")
 
     ListModel {

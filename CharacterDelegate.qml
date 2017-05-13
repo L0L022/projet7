@@ -48,9 +48,10 @@ Item {
              text: qsTr("Choose this one")
              onClicked: {
                  var player = app.currentGame.players().append();
-                 //console.log("player: "+typeof(player)+" properties: "+player.properties+" character: "+Object.create(character))
-                 player.properties = Object.create(character)
-                 //console.log(Object.create(character))
+                 player.properties = {"name": character.nameRole, "faction": faction.nameRole, "image": character.imageRole, "description": character.descriptionRole};
+                 /*stack.replace(stack.find(function(item, index) {
+                     return item.objectName === "CharactersView";
+                 }), Qt.resolvedUrl("qrc:///PlayersView.qml"), {}, StackView.Transition);*/
              }
          }
     }

@@ -20,11 +20,10 @@ const QVariantMap &PropertyItem::properties() const
 
 void PropertyItem::setProperties(const QVariantMap &prop)
 {
-    if (id() == prop["id"].value<Id>() && m_properties != prop) {
-    //if (m_properties != prop) {
-        //PropertyItem::Id oldId = id();
+    if (m_properties != prop) {
+        PropertyItem::Id oldId = id();
         m_properties = prop;
-        //m_properties["id"] = oldId;
+        m_properties["id"] = oldId;
         emit propertiesChanged();
     }
 }
