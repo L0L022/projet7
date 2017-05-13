@@ -40,9 +40,10 @@ T.ApplicationWindow {
 
         Glow {
             anchors.fill: mask
+            visible: Qt.platform.os !== "android"
             source: mask
-            color: "#0ACAE7"
-            samples: Qt.platform.os === "android" ? 9 : 30
+            color: "#21FFFF"
+            samples: 30
 
             SequentialAnimation on spread {
                     loops: Animation.Infinite

@@ -8,7 +8,6 @@
         <file>GameView.qml</file>
         <file>PropertyField.qml</file>
         <file>Cyberpunk/Button.qml</file>
-        <file>Cyberpunk/Button.png</file>
         <file>qtquickcontrols2.conf</file>
         <file>Cyberpunk/ApplicationWindow.qml</file>
         <file>Cyberpunk/cadre.png</file>
@@ -21,5 +20,15 @@
         <file>Cyberpunk/batmfa.ttf</file>
         <file>Cyberpunk/futureforces.ttf</file>
         <file>Cyberpunk/jumpers.ttf</file>
+        <file>Cyberpunk/fondB.jpeg</file>
+        <file>Cyberpunk/fondR.jpeg</file>
+        <file>Cyberpunk/bouton.png</file>
+        <file>Cyberpunk/fondBC.jpeg</file>
+        <file>Cyberpunk/ItemDelegate.qml</file>
+        <file>Cyberpunk/TextField.qml</file>
+        <file>Cyberpunk/textline.png</file>
+        <file>Cyberpunk/Xolonium.ttf</file>
+        <file>Cyberpunk/combobox.png</file>
+        <file>Cyberpunk/ComboBox.qml</file>
     </qresource>
 </RCC>

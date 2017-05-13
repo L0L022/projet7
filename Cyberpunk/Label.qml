@@ -7,10 +7,9 @@ T.Label {
     id: control
 
     color: "white"
-    font.pointSize: 20
     font.family: smallFont.name
     FontLoader {
         id: smallFont
-        source: "futureforces.ttf"
+        source: "Xolonium.ttf"
     }
 }
