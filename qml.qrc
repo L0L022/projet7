@@ -21,5 +21,6 @@
         <file>FactionDelegate.qml</file>
         <file>Univers/characters.json</file>
         <file>Univers/factions.json</file>
+        <file>RightsView.qml</file>
     </qresource>
 </RCC>
