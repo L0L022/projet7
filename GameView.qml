@@ -42,6 +42,13 @@ Item {
 
         TextField {
             Layout.fillWidth: true
+            visible: app.currentGame !== null && app.currentGame.type === Game.ClientGame
+            text: Projet7.userName
+            onAccepted: Projet7.userName = text
+        }
+
+        TextField {
+            Layout.fillWidth: true
             text: app.currentGame !== null ? app.currentGame.name : ""
             onAccepted: app.currentGame.name = text
         }

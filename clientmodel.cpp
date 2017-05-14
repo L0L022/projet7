@@ -54,6 +54,16 @@ int ClientModel::idToIndex(const QVariant &id) const
     return 0;
 }
 
+void ClientModel::setName(const int index, const QString &name)
+{
+    if (m_clients[index].name != name) {
+        m_clients[index].name = name;
+        auto qindex = createIndex(index, 0);
+        emit dataChanged(qindex, qindex, {NameRole});
+        emit modelChanged();
+    }
+}
+
 void ClientModel::setId(const int index, const QVariant &id)
 {
     PropertyItem::Id pid = id.value<PropertyItem::Id>();

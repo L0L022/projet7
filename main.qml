@@ -116,6 +116,7 @@ ApplicationWindow {
                                 id: portSpin
                                 editable: true
                                 to: 999999
+                                value: Projet7.portGame
                             }
                         }
 
