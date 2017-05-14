@@ -76,7 +76,7 @@ void Projet7::reloadAddresses()
     qDebug() << "m_localhostAddresses : " << m_localhostAddresses << " m_broadcastAddresses : " << m_broadcastAddresses;
 }
 
-unsigned int Projet7::die(size_t nbFace)
+unsigned int Projet7::die(unsigned int nbFace)
 {
     if (!m_dis or m_dis->max() != nbFace) {
         delete m_dis;

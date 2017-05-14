@@ -27,7 +27,7 @@ public:
     const QList<QHostAddress> &broadcastAddresses() const;
     void reloadAddresses();
 
-    Q_INVOKABLE unsigned int die(size_t nbFace = 6);
+    Q_INVOKABLE unsigned int die(unsigned int nbFace = 6);
 
 public:
     static const quint16 portGame, portHostFinder;
