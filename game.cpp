@@ -1,4 +1,5 @@
 #include "game.hpp"
+#include "projet7.hpp"
 #include <QDebug>
 #include <QJsonDocument>
 #include <QTextStream>
@@ -11,6 +12,13 @@ Game::Game(QObject *parent)
 {
     connect(this, &Game::newIncomingCommand, this, &Game::handleIncomingCommands);
     connect(this, &Game::newLeavingCommand, this, &Game::handleLeavingCommands);
+
+    connect(Projet7::instance(), &Projet7::userNameChanged, this, [this](){
+        QJsonObject command;
+        command["commandType"] = UserNameCommand;
+        command["value"] = Projet7::instance()->userName();
+        sendCommand(command);
+    });
 
     connect(this, &Game::nameChanged, this, [this](){
         QJsonObject command;

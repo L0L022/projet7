@@ -46,6 +46,7 @@ public:
     ClientItem &operator[](const int index);
     Q_INVOKABLE int idToIndex(const QVariant &id) const;
 
+    Q_INVOKABLE void setName(const int index, const QString &name);
     Q_INVOKABLE void setId(const int index, const QVariant &id);
 
     int rowCount(const QModelIndex &parent = QModelIndex()) const;

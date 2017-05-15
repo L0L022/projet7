@@ -1,31 +1,17 @@
 #include "application.hpp"
+#include "projet7.hpp"
 #include <QDir>
 #include <QDebug>
 #include <QJsonDocument>
-#include <QStandardPaths>
 #include <QNetworkAddressEntry>
 
 Application::Application(QObject *parent)
     : QObject(parent),
-      m_userName(""),
       m_currentGame(nullptr),
       m_availableGames(this),
-      m_hostFinder(19857, this),
-      m_fileGameDir(QStandardPaths::writableLocation(QStandardPaths::AppDataLocation))
+      m_hostFinder(Projet7::portHostFinder, this)
 {
     connect(&m_hostFinder, &HostFinder::hostFound, this, &Application::hostFound);
-    QDir("/").mkpath(m_fileGameDir);
-}
-
-QString Application::userName() const
-{
-    return m_userName;
-}
-
-void Application::setUserName(const QString &userName)
-{
-    m_userName = userName;
-    emit userNameChanged();
 }
 
 Game *Application::currentGame()
@@ -35,7 +21,7 @@ Game *Application::currentGame()
 
 void Application::newFileGame(const QString &gameName)
 {
-    loadFileGame(m_fileGameDir + "/" + gameName + ".json");
+    loadFileGame(Projet7::instance()->filesLocation() + "/" + gameName.simplified() + ".json");
     if (m_currentGame)
         m_currentGame->setName(gameName);
 }
@@ -85,7 +71,7 @@ void Application::refreshFileGames()
         while (i < m_availableGames.rowCount() && m_availableGames.at(i).type() == GameItem::FileGame)
             m_availableGames.removeAt(i);
 
-    QDir dir(m_fileGameDir);
+    QDir dir(Projet7::instance()->filesLocation());
     for (QFileInfo info : dir.entryInfoList({"*.json"})) {
         QFile file;
         file.setFileName(info.absoluteFilePath());
@@ -122,10 +108,10 @@ void Application::sendPresenceMessage()
 {
     QJsonObject object;
     if (m_currentGame && m_currentGame->type() == Game::ServerGame) {
-        object = GameItem(myIp(), m_currentGame->port(), m_currentGame->name()).toJson();
+        object = GameItem(Projet7::instance()->localhostAddresses().first().toString(), m_currentGame->port(), m_currentGame->name()).toJson();
         object["game"] = "server";
     } else {
-        object = GameItem(myIp(), 0, "").toJson();
+        object = GameItem(Projet7::instance()->localhostAddresses().first().toString(), 0, "").toJson();
         object["game"] = "client";
     }
     QJsonDocument document(object);
@@ -151,21 +137,8 @@ void Application::hostFound(const QHostAddress &hostAddress, const QByteArray &m
             if (m_currentGame && m_currentGame->type() == Game::ServerGame)
                 sendPresenceMessage();
         } else if (object["game"].toString() == "server") {
-            if (gameMessage.address() != myIp())
+            if (gameMessage.address() != Projet7::instance()->localhostAddresses().first().toString())
                 m_availableGames.append(gameMessage);
         }
     }
-}
-
-QString Application::myIp() const
-{
-    QHostAddress ip = QHostAddress(QHostAddress::AnyIPv4);
-    auto flags = (QNetworkInterface::IsUp | QNetworkInterface::IsRunning | QNetworkInterface::CanBroadcast);
-    for (const QNetworkInterface &interface : QNetworkInterface::allInterfaces())
-        if (flags == (interface.flags() &= flags))
-            for(const QNetworkAddressEntry &entry : interface.addressEntries())
-                if(entry.ip().protocol() == QAbstractSocket::IPv4Protocol)
-                    ip = entry.ip();
-
-    return ip.toString();
 }

@@ -14,32 +14,20 @@ T.Button {
     baselineOffset: contentItem.y + contentItem.baselineOffset
 
     padding: 6
-    leftPadding: padding + 2
-    rightPadding: padding + 2
 
     contentItem: Text {
         text: control.text
         opacity: enabled || control.highlighted || control.checked ? 1 : 0.3
-        color: "white"
         horizontalAlignment: Text.AlignHCenter
         verticalAlignment: Text.AlignVCenter
         elide: Text.ElideRight
 
-        font.family: "Hack"
+        color: "white"
         font.bold: true
-        font.capitalization: Font.AllUppercase
-    }
-
-    Glow {
-        anchors.fill: contentItem
-        source: contentItem
-        samples: Qt.platform.os === "android" ? 9 : 30
-        color: "#843025"
-
-        SequentialAnimation on spread {
-                loops: Animation.Infinite
-                PropertyAnimation { to: 0.3; duration: 2000 }
-                PropertyAnimation { to: 0.6; duration: 2000 }
+        font.family: smallFont.name
+        FontLoader {
+            id: smallFont
+            source: "Xolonium.ttf"
         }
     }
 
@@ -47,49 +35,38 @@ T.Button {
         implicitWidth: 100
         implicitHeight: 50
         visible: !control.flat || control.down || control.checked || control.highlighted
-        /*color: control.checked || control.highlighted ?
-            (control.visualFocus ? (control.down ? Default.buttonCheckedFocusColor : Default.focusColor) : (control.down ? Default.buttonCheckedPressedColor : Default.textColor)) :
-            (control.visualFocus ? (control.down ? Default.focusPressedColor : Default.focusLightColor) : (control.down ? Default.buttonPressedColor : Default.buttonColor))
-        border.color: Default.focusColor
-        border.width: control.visualFocus ? 2 : 0*/
         color: "transparent"
 
-        BorderImage {
-            id: image
+        Image {
             anchors.fill: parent
-            source: "Button.png"
-            border.left: 37; border.top: 14
-            border.right: 33; border.bottom: 9
+            anchors.topMargin: 4
+            anchors.bottomMargin: 4
+            anchors.leftMargin: 8
+            anchors.rightMargin: 8
+            opacity: control.visualFocus ? 1 : 0.78
+            source: control.visualFocus ? "fondBC.jpeg" : "fondB.jpeg"
+            fillMode: Image.Tile
         }
 
-        Glow {
-            anchors.fill: image
-            source: image
-            color: "green"
-            visible: control.visualFocus
-            samples: 30
-
-            SequentialAnimation on spread {
-                    loops: Animation.Infinite
-                    running: control.visualFocus
-                    //alwaysRunToEnd: true
-
-                    PropertyAnimation { to: 0.1; duration: 2000 }
-                    PropertyAnimation { to: 0.5; duration: 2000 }
-            }
-        }
-
-        LevelAdjust {
-            anchors.fill: image
-            source: image
+        Image {
+            anchors.fill: parent
+            anchors.topMargin: 4
+            anchors.bottomMargin: 4
+            anchors.leftMargin: 8
+            anchors.rightMargin: 8
             visible: control.down
-            gamma: Qt.vector3d(1.4, 0.7, 1.0)
+            opacity: 0.90
+            source: "fondR.jpeg"
+            fillMode: Image.Tile
+        }
+
+        BorderImage {
+            anchors.fill: parent
+            source: "bouton.png"
+            border.left: 16; border.top: 11
+            border.right: 16; border.bottom: 11
+            horizontalTileMode: BorderImage.Repeat
+            verticalTileMode: BorderImage.Repeat
         }
     }
-/*
-    BrightnessContrast {
-        anchors.fill: parent
-        source: parent
-        contrast: control.checked || control.visualFocus ? 0.5 : 0
-    }*/
 }

@@ -9,15 +9,10 @@
 class Application : public QObject
 {
     Q_OBJECT
-    //userName en trop ?
-    Q_PROPERTY(QString userName READ userName WRITE setUserName NOTIFY userNameChanged)
     Q_PROPERTY(Game* currentGame READ currentGame NOTIFY currentGameChanged)
 
 public:    
     explicit Application(QObject *parent = nullptr);
-
-    QString userName() const;
-    void setUserName(const QString &userName);
 
     Game *currentGame();
     Q_INVOKABLE void newFileGame(const QString &gameName);
@@ -39,13 +34,10 @@ private:
     void setCurrentGame(Game *game = nullptr);
     void sendPresenceMessage();
     void hostFound(const QHostAddress &hostAddress, const QByteArray &message);
-    QString myIp() const;
 
-    QString m_userName;
     Game *m_currentGame;
     GameModel m_availableGames;
     HostFinder m_hostFinder;
-    const QString m_fileGameDir;
 };
 
 #endif // APPLICATION_HPP

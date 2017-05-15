@@ -2,6 +2,7 @@
 #include <QQmlApplicationEngine>
 #include <QQmlContext>
 
+#include "projet7.hpp"
 #include "application.hpp"
 #include "playermodel.hpp"
 
@@ -17,11 +18,20 @@
 #include <iostream>
 using namespace std;
 
+static QObject *projet7_provider(QQmlEngine *engine, QJSEngine *scriptEngine)
+{
+    Q_UNUSED(engine)
+    Q_UNUSED(scriptEngine)
+
+    return Projet7::instance();
+}
+
 int main(int argc, char *argv[])
 {
     QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
     QGuiApplication app(argc, argv);
 
+    qmlRegisterSingletonType<Projet7>("Projet7", 1, 0, "Projet7", projet7_provider);
     qmlRegisterType<Application>("Projet7", 1, 0, "Application");
 
     qmlRegisterUncreatableType<GameItem>("Projet7", 1, 0, "GameItem", "Access to enum only");

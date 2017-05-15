@@ -1,12 +1,10 @@
 #include "hostfinder.hpp"
+#include "projet7.hpp"
 #include <QNetworkDatagram>
-#include <QNetworkAddressEntry>
-#include <QDebug>
 
 HostFinder::HostFinder(const quint16 port, QObject *parent)
     : QObject(parent),
-      m_socket(this),
-      m_broadcastAddresses()
+      m_socket(this)
 {
     connect(&m_socket, &QUdpSocket::readyRead, this, &HostFinder::readMessage);
 
@@ -14,22 +12,12 @@ HostFinder::HostFinder(const quint16 port, QObject *parent)
         qDebug() << "HostFinder error : " << m_socket.errorString();
     });
 
-    auto flags = (QNetworkInterface::IsUp | QNetworkInterface::IsRunning | QNetworkInterface::CanBroadcast);
-    for (const QNetworkInterface &interface : QNetworkInterface::allInterfaces()) {
-        if (flags == (interface.flags() &= flags))
-            for(const QNetworkAddressEntry &entry : interface.addressEntries())
-                if(entry.ip().protocol() == QAbstractSocket::IPv4Protocol)
-                    m_broadcastAddresses.append(entry.broadcast());
-    }
-    if(m_broadcastAddresses.empty())
-        m_broadcastAddresses.append(QHostAddress::Any);
-qDebug() << m_broadcastAddresses;
     setPort(port);
 }
 
 void HostFinder::sendMessage(const QByteArray &message)
 {
-    for(const QHostAddress &address : m_broadcastAddresses)
+    for(const QHostAddress &address : Projet7::instance()->broadcastAddresses())
         m_socket.writeDatagram(message, address, port());
 }
 

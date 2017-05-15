@@ -1,4 +1,5 @@
 #include "gameserver.hpp"
+#include "projet7.hpp"
 #include <QFile>
 #include <QJsonDocument>
 
@@ -79,10 +80,13 @@ void GameServer::pushIncomingCommand(QIODevice &device)
 
 void GameServer::readCommand(const QJsonObject &command)
 {
-    ClientItem sender = m_clients[command["client"].toInt()];
+    ClientItem &sender = m_clients[command["client"].toInt()];
     PlayerItem *player = nullptr;
 
     switch (command["commandType"].toInt()) {
+    case UserNameCommand:
+        m_clients.setName(command["client"].toInt(), command["value"].toString());
+        break;
     case PlayersResetCommand:
         break;
     case PlayersInsertCommad: {
@@ -91,7 +95,7 @@ void GameServer::readCommand(const QJsonObject &command)
             for (int i = 0; i < players()->rowCount(); ++i)
                 oldId.append(players()->at(i)->id());
             Game::readCommand(command);
-            PropertyItem::Id playerId;
+            PropertyItem::Id playerId(-1);
             for (int i = 0; i < players()->rowCount(); ++i)
                 if (!oldId.contains(players()->at(i)->id()))
                     playerId = players()->at(i)->id();
@@ -160,7 +164,7 @@ void GameServer::handleLeavingCommands()
 
 void GameServer::openServer()
 {
-    m_server.listen();
+    m_server.listen(QHostAddress::Any, Projet7::portGame);
     emit ipAddressChanged();
     emit portChanged();
 }

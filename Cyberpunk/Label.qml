@@ -7,7 +7,9 @@ T.Label {
     id: control
 
     color: "white"
-    font.family: "Hack"
-    font.bold: true
-    font.capitalization: Font.AllUppercase
+    font.family: smallFont.name
+    FontLoader {
+        id: smallFont
+        source: "Xolonium.ttf"
+    }
 }

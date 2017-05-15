@@ -60,6 +60,19 @@ Item {
             sourceComponent: app.currentGame.type === Game.ServerGame ? serverGame : clientGame
         }
 
+        TextField {
+            Layout.fillWidth: true
+            visible: app.currentGame !== null && app.currentGame.type === Game.ClientGame
+            text: Projet7.userName
+            onAccepted: Projet7.userName = text
+        }
+
+        TextField {
+            Layout.fillWidth: true
+            text: app.currentGame !== null ? app.currentGame.name : ""
+            onAccepted: app.currentGame.name = text
+        }
+
         Label {
             Layout.fillWidth: true
             text: app.currentGame !== null ? "Adresse ip : " + app.currentGame.ipAddress + ":" + app.currentGame.port : ""
@@ -75,6 +88,12 @@ Item {
             Layout.fillWidth: true
             text: qsTr("Open players")
             onClicked: stack.push("qrc:///PlayersView.qml")
+        }
+
+        Button {
+            Layout.fillWidth: true
+            text: qsTr("Roll a die")
+            onClicked: stack.push("qrc:///DieView.qml")
         }
 
         Button {

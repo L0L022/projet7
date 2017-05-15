@@ -30,12 +30,10 @@ ApplicationWindow {
 
     Frame {
         anchors.fill: parent
-
-        StackView {
+        contentItem: StackView {
             id: stack
+            clip: true
             initialItem: mainView
-            anchors.fill: parent
-
             Keys.onBackPressed: {
                 if(depth === 1)
                     stack.clear()
@@ -140,6 +138,7 @@ ApplicationWindow {
                                 Layout.fillWidth: true
                                 editable: true
                                 to: 65535
+                                value: Projet7.portGame
                             }
                         }
 
