@@ -62,10 +62,10 @@ void Projet7::reloadAddresses()
     for (const QNetworkInterface &interface : QNetworkInterface::allInterfaces()) {
         if (flags == (interface.flags() &= flags)) {
             for (const QNetworkAddressEntry &entry : interface.addressEntries()) {
-                if (entry.ip().protocol() == QAbstractSocket::IPv4Protocol) {
+                if (!entry.ip().isNull() && entry.ip().protocol() == QAbstractSocket::IPv4Protocol)
                     m_localhostAddresses.append(entry.ip());
+                if (!entry.broadcast().isNull() && entry.broadcast().protocol() == QAbstractSocket::IPv4Protocol)
                     m_broadcastAddresses.append(entry.broadcast());
-                }
             }
         }
     }
@@ -78,6 +78,9 @@ void Projet7::reloadAddresses()
 
 unsigned int Projet7::die(unsigned int nbFace)
 {
+    if (nbFace < 1)
+        return 0;
+
     if (!m_dis or m_dis->max() != nbFace) {
         delete m_dis;
         m_dis = new std::uniform_int_distribution<unsigned int>(1, nbFace);

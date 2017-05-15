@@ -69,6 +69,7 @@ Item {
 
             SpinBox {
                 id: nbDie
+                from: 1
                 value: 1
                 editable: true
             }
