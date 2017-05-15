@@ -3,18 +3,15 @@
 #include <QDir>
 #include <QDebug>
 #include <QJsonDocument>
-#include <QStandardPaths>
 #include <QNetworkAddressEntry>
 
 Application::Application(QObject *parent)
     : QObject(parent),
       m_currentGame(nullptr),
       m_availableGames(this),
-      m_hostFinder(Projet7::portHostFinder, this),
-      m_fileGameDir(QStandardPaths::writableLocation(QStandardPaths::AppDataLocation))
+      m_hostFinder(Projet7::portHostFinder, this)
 {
     connect(&m_hostFinder, &HostFinder::hostFound, this, &Application::hostFound);
-    QDir("/").mkpath(m_fileGameDir);
 }
 
 Game *Application::currentGame()
@@ -24,7 +21,7 @@ Game *Application::currentGame()
 
 void Application::newFileGame(const QString &gameName)
 {
-    loadFileGame(m_fileGameDir + "/" + gameName + ".json");
+    loadFileGame(Projet7::instance()->filesLocation() + "/" + gameName.simplified() + ".json");
     if (m_currentGame)
         m_currentGame->setName(gameName);
 }
@@ -74,7 +71,7 @@ void Application::refreshFileGames()
         while (i < m_availableGames.rowCount() && m_availableGames.at(i).type() == GameItem::FileGame)
             m_availableGames.removeAt(i);
 
-    QDir dir(m_fileGameDir);
+    QDir dir(Projet7::instance()->filesLocation());
     for (QFileInfo info : dir.entryInfoList({"*.json"})) {
         QFile file;
         file.setFileName(info.absoluteFilePath());

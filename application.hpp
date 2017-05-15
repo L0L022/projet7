@@ -38,7 +38,6 @@ private:
     Game *m_currentGame;
     GameModel m_availableGames;
     HostFinder m_hostFinder;
-    const QString m_fileGameDir;
 };
 
 #endif // APPLICATION_HPP
