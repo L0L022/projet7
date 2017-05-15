@@ -67,12 +67,6 @@ Item {
             onAccepted: Projet7.userName = text
         }
 
-        TextField {
-            Layout.fillWidth: true
-            text: app.currentGame !== null ? app.currentGame.name : ""
-            onAccepted: app.currentGame.name = text
-        }
-
         Label {
             Layout.fillWidth: true
             text: app.currentGame !== null ? "Adresse ip : " + app.currentGame.ipAddress + ":" + app.currentGame.port : ""
