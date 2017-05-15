@@ -30,5 +30,7 @@
         <file>Cyberpunk/Xolonium.ttf</file>
         <file>Cyberpunk/combobox.png</file>
         <file>Cyberpunk/ComboBox.qml</file>
+        <file>Cyberpunk/spinbox.png</file>
+        <file>Cyberpunk/SpinBox.qml</file>
     </qresource>
 </RCC>

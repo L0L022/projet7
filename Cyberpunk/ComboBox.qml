@@ -51,7 +51,7 @@ T.ComboBox {
 
     background: Rectangle {
         implicitWidth: 120
-        implicitHeight: 40
+        implicitHeight: 50
         color: "transparent"
         visible: !control.flat || control.pressed
 

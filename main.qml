@@ -39,11 +39,10 @@ ApplicationWindow {
 
     Frame {
         anchors.fill: parent
-
-        StackView {
+        contentItem: StackView {
             id: stack
+            clip: true
             initialItem: mainView
-            anchors.fill: parent
             Keys.onBackPressed: {
                 if(depth > 1)
                     pop()
