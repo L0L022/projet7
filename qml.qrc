@@ -32,5 +32,10 @@
         <file>Cyberpunk/ComboBox.qml</file>
         <file>Cyberpunk/spinbox.png</file>
         <file>Cyberpunk/SpinBox.qml</file>
+        <file>Cyberpunk/TabButton.png</file>
+        <file>Cyberpunk/TabButton.qml</file>
+        <file>Cyberpunk/TabBar.qml</file>
+        <file>Cyberpunk/ToolBar.qml</file>
+        <file>Cyberpunk/ToolButton.qml</file>
     </qresource>
 </RCC>
