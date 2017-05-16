@@ -12,7 +12,8 @@ class Projet7 : public QObject
     Q_PROPERTY(quint16 portGame MEMBER portGame CONSTANT)
     Q_PROPERTY(quint16 portHostFinder MEMBER portHostFinder CONSTANT)
     Q_PROPERTY(QString userName READ userName WRITE setUserName NOTIFY userNameChanged)
-    Q_PROPERTY(QString filesLocation READ filesLocation CONSTANT)
+    Q_PROPERTY(QString configLocation READ configLocation CONSTANT)
+    Q_PROPERTY(QString gamesLocation READ gamesLocation CONSTANT)
 
     explicit Projet7(QObject *parent = 0);
 
@@ -24,7 +25,8 @@ public:
     QString userName() const;
     void setUserName(const QString &name);
 
-    QString filesLocation() const;
+    QString configLocation() const;
+    QString gamesLocation() const;
 
     const QList<QHostAddress> &localhostAddresses() const;
     const QList<QHostAddress> &broadcastAddresses() const;
@@ -45,7 +47,8 @@ private:
     static Projet7 *m_instance;
 
     QString m_userName;
-    QString m_filesLocation;
+    QString m_configLocation;
+    QString m_gamesLocation;
 
     QList<QHostAddress> m_localhostAddresses;
     QList<QHostAddress> m_broadcastAddresses;

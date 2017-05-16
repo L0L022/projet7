@@ -21,7 +21,7 @@ Game *Application::currentGame()
 
 void Application::newFileGame(const QString &gameName)
 {
-    loadFileGame(Projet7::instance()->filesLocation() + "/" + gameName.simplified() + ".json");
+    loadFileGame(Projet7::instance()->gamesLocation() + "/" + gameName.simplified() + ".json");
     if (m_currentGame)
         m_currentGame->setName(gameName);
 }
@@ -71,7 +71,7 @@ void Application::refreshFileGames()
         while (i < m_availableGames.rowCount() && m_availableGames.at(i).type() == GameItem::FileGame)
             m_availableGames.removeAt(i);
 
-    QDir dir(Projet7::instance()->filesLocation());
+    QDir dir(Projet7::instance()->gamesLocation());
     for (QFileInfo info : dir.entryInfoList({"*.json"})) {
         QFile file;
         file.setFileName(info.absoluteFilePath());
