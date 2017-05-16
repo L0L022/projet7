@@ -1,20 +1,45 @@
 [
     {
-        "name": "Linux",
+        "name": "Racionabilia",
         "id": 0,
-        "description": "La plus puissante des factions !",
+        "description": "La Racionabilia est l’un des plus vieux pays, et son système politique est le même depuis des siècle. Un monarque absolue dirige le pays et seul un héritier mâle peut prendre la succession de son père à la mort de se dernier (loi saline). La religion y est aussi omniprésente. Toute personne ne respectant pas les fêtes saintes, les jours de prières ou étant accusé de blasphème est exécuté en place publique . Les Racionaliens prient un Dieux unique nommé Sigmus, dieux de lumière et de miséricorde, se derniers est accompagné d’anges et de saints et luttent perpétuellement contre les ténèbres représenté par Khorneum et ses fidèles apôtres.\nIl existe trois grandes catégories sociale : l’aristocratie, les personnes riches possédant des terres et des titres de noblesse ; le clergé, les personnes vouant leur vie au culte de Sigmus ; et enfin le tiers-état, c’est à dire tous le reste de la population soit à peut près 97 % des habitants de la Racionabilia. De plus tous le non humains sont assez mal vue et sont souvent accusé de maux dont ils ne sont pas responsable.\nL’économie de se pays est principalement basé sur l’agriculture en effet il s’agit du pays le plus peuplé de tout Framtid, il convient donc d’avoir une agriculture solide afin de pouvoir nourrir toute la population.\nLe niveau technologique de la Racionabilia est assez peu avancé que se soit sur le plan militaire au civil, se retard est dut en grande partie par le rôle omniprésent de la foi.\nLa plupart des combattants de l’armé Racionabalienne sont des civils appelées qui partent à la guerre avec leur propre matérielle. Le manque de professionnalisme de cette armé est compensé par son nombre. Il existe tout de même de guerriers professionnel tel que des chevaliers ou encore des paladins.",
+        "Pc" : "révolte du peuple contre l’oligarchie",
+        "Intelligence" : "",
+        "Instinct" : "",
+        "Combativité" : "",
+        "Relationnel" : "",
+        "Cohésion" : "",
+        "Trésorerie" : "",
+        "Population" : "",
+        "Nombre d'armée" : "",
         "image": "http://cf.juggle-images.com/matte/white/280x280/linux-tux-3-logo-primary.jpg"
     },
     {
-        "name": "Windows",
+        "name": "Sovetskiy",
         "id": 1,
-        "description": "Des sans âmes.",
+        "description": "La Sovetskiy fonctionnait de la même manière que la Racionabalia il y a de sa 200 ans, mais une grande révolution populaire mené par un leader nain nommé Zoltan éclata dans le pays, les révolutionnaires prirent le pouvoir et leur leader devint le nouveau dirigent du pays prônant des idées visant à réduire les inégalités sociales et ethniques, il décida alors de nationaliser toutes le fabriques, usines, et domaines agricoles, les nobles furent arrêtés et emprisonnés, et la religion fut interdite. A la mort de Zoltan un autre nain du nom de Bohrïn prient les rênes du pays et bien vite se ne furent pas que les nobles qui se firent arrêter mais aussi les opposant au partie et tous ceux considérés comme dissident. Les Sovetskiyens vivent toujours sous se régime de terreur dirigé par le même partie révolutionnaire.\nLa plupart des Sovetskiyens sont des artisans, des paysans ou encore des ouvriers tous employé par l’état qui leur versent à tous un salaire égale. Le droit à la propriété privé étant abrogé, ils vivent tous dans des ghettos d’état.\nL’économie de ce pays est principalement basé sur les manufacture et autres travaux manuelles rares sont ceux à pouvoir exercer des métiers de bureaucrate et encore plus rare sont ceux vivant de l’art. Les usines d’états pullulent partout dans le pays.\nL’armé Sovetskiyenne est composé d’une part de professionnelle et d’une part d’appelés, la discipline et le respect de la hiérarchie son très important. Tout soldat étant suspecté de comploter ou de tenter de déserter est exécuté sans être jugé, par contre si un soldat fait preuve de force et d’honneur il sera récompenser par les plus hautes distinctions du partie.",
+        "Pc" : "planté l’économie du pays manufacture/industrie/autonomie",
         "image": "http://portes-fenetres.webmaisons.com/images/fenetre00.gif"
     },
     {
-        "name": "Macaca",
+        "name": "Hitobito",
         "id": 2,
-        "description": "No comment.",
+        "description": "La Hitobito est le pays le plus jeune on le connaît sous sa forme actuel seulement depuis 50 ans. Par le passé se pays était une république démocratique, mais beaucoup de citoyens pensais que le régime était corrompue et ne servait que les intérêts des plus pauvres. Premièrement des manifestations pacifistes firent leurs apparitions au quatre coins du pays, mais ils furent toutes écrasé par le gouvernement, c’est alors qu’un Troll du nom de Var’har Chin fit son apparition, il réunit les manifestants autour de lui et tous ensembles dénoncèrent les dérivent du gouvernement au peuple, leur rang grossi très rapidement et le gouvernement se trouva rapidement débordé. Un jour alors que Var’har Chin et ses compagnons manifestaient, se dernier fut tué les manifestant s’insurgèrent alors et firent chuter le gouvernement après une guerre qui dura 4 ans. Suivant le souhait de Var’har Chin le peuple mit en place un nouveau système politique mêlant anarchisme et démocratie, des personnes toutes égales en droit avec un forum présider par des citoyens du pays tiré au sort. Des statues à l’effigie du libérateur du peuple furent érigé dans tout le pays.\nTous les Hitobotiens sont égaux en droit qu’elle que soit leur race ou leur sexe, et toutes les religions sont tolérés.\nL’économie de Hitobito repose sue la recherche technologique et les recherches sur le Mana, en effet on apprend à l’école à tous les futurs citoyens qu’afin de rendre le monde meilleur il est nécessaire de le faire progresser grâce au savoir.\nL’armée Hitobotienne est principalement une armé défensive, elle comportent très peu de soldat, et tous ceux qui rejoigne l’armé son volontaire, cependant malgré le manque d’hommes elle est équipé du dernier cri en matière d’armement.",
+        "Pc" : "l’étude de la technologie et les savoir est très importante.",
+        "image": "http://www.ukfoodguide.net/images/apple190x190.png"
+    },
+    {
+        "name": "Etats Democratiques Unis (EDU)",
+        "id": 3,
+        "description": "Les E.D.U est sans nul doute la nation la plus puissante sur Framtid que se soit sur le plan militaire ou technologique. Les E.D.U ont était créer a partir de différents pays qui se sont soit ralliés de leur plein grès soit de force formant ainsi un pays avec un système politique particulier, en effet même si il s’agit d’une république démocratique et que les lois sont voté pour l’ensemble du pays, chaque états peut avoir ses propres règles et lois du moment que ses dernières respectent biens le cadre fixé par le gouvernement. Des élections ayant lieux tous les 10 ans visent à changer de président le sénat quand à lui est partiellement renouvelé tous les 15 ans. Mais ses élections ne sont qu’un trompe l’œil car le système politique des États Démocratiques Unies est totalement corrompu par les lobby, les pots de vin et autres arrangements. Le fait qu’il n’y ait que deux parties a chaque élections n’y arrange rien.\nLes E.D.U est une nation relativement permissive chaque individue peut choisir sa religion, et son orientations sexuel, de plus chaque race est égal en droit, mais sa c’est se que disent les livrent d’écoles car, en effet la réalité est bien moins rose.\nD’un point de vue économique les E.D.U sont très puissant et très diversifiés, ils produisent des produits manufacturé, de l’armement, des produits technologique, et possèdent une agriculture plus que satisfaisante. Tout cela leurs permet de mener la danse d’un point de vue économique.\nL’armé des E.D.U est une armée constituée entièrement de professionnels, son budget élevé permet à ses soldats d’être bien équipé. Elle fait partit des armées les plus puissante de Framtid.",
+        "Pc" : "démonter l’armée ou réveler la corruption.",
+        "image": "http://www.ukfoodguide.net/images/apple190x190.png"
+    },
+    {
+        "name": "L'Ordre de Maldar",
+        "id": 4,
+        "description": "L'ordre est la nation la plus unis de tout Framtid. La seule loi est celle du culte, la religion et la seule ligne directrice. Cette nation peut être apparellé à une secte géante regroupant de fervant croyant. C’est ce qui fait ça force, ils sont prêt à se sacrifier pour la cause et ont confiance en leur dirigeant. Leur puissance économique suffit à leur besoin, la succession des dirigeant, et du conclave se fait par le choix divin lors d'épreuves religieuse testant la foi. Très productive, cette nation possède aussi une armée compétente, entrainant les elus depuis leur naissances. L'etat économique de la nation est suffisant a sa survie sans être extraordinaire",
+        "Pc" : "suprimer les dirigeants de la nation et laisser les citoyens sans hierarchie et directive -> anarchie",
         "image": "http://www.ukfoodguide.net/images/apple190x190.png"
     }
 ]
