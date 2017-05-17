@@ -18,7 +18,6 @@
         <file>UniverseView.qml</file>
         <file>CharacterDelegate.qml</file>
         <file>FactionDelegate.qml</file>
-        <file>Univers/characters.json</file>
         <file>Univers/factions.json</file>
         <file>RightsView.qml</file>
         <file>Cyberpunk/fondmask.png</file>
@@ -38,5 +37,9 @@
         <file>Cyberpunk/ComboBox.qml</file>
         <file>Cyberpunk/spinbox.png</file>
         <file>Cyberpunk/SpinBox.qml</file>
+        <file>FactionsView.qml</file>
+        <file>CharactersView.qml</file>
+        <file>Univers/map.png</file>
+        <file>MapView.qml</file>
     </qresource>
 </RCC>

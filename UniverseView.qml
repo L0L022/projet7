@@ -34,7 +34,7 @@ Item {
                     id: repeater
                     delegate: Loader {
                         id: loader
-                        property int modelIndex: index
+                        //property int modelIndex: index
                         active: SwipeView.isCurrentItem || SwipeView.isNextItem || SwipeView.isPreviousItem
                         sourceComponent: swipeitem.delegate
                     }
@@ -63,6 +63,7 @@ Item {
         id: factionDelegate
 
         FactionDelegate {
+            index: modelIndex
             faction: factions[modelIndex]
         }
     }

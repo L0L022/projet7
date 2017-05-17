@@ -6,6 +6,7 @@
 #include <QJsonObject>
 #include <QJsonDocument>
 #include <QDebug>
+#include <QJsonArray>
 
 const quint16 Projet7::portGame = 19856, Projet7::portHostFinder = 19857;
 Projet7 *Projet7::m_instance = nullptr;
@@ -16,12 +17,20 @@ Projet7::Projet7(QObject *parent)
       m_filesLocation(QStandardPaths::writableLocation(QStandardPaths::AppDataLocation)),
       m_localhostAddresses(),
       m_broadcastAddresses(),
+      m_factions(),
       m_gen(),
       m_dis(nullptr)
 {
     QDir("/").mkpath(m_filesLocation);
 
+    QFile file(":/Univers/factions.json");
+    if (file.open(QIODevice::ReadOnly | QIODevice::Text)) {
+        m_factions = QJsonDocument::fromJson(file.readAll()).array().toVariantList();
+    }
+    file.close();
+
     std::random_device rd;
+    qsrand(rd());
     m_gen.seed(rd());
 
     reloadAddresses();
@@ -88,6 +97,21 @@ void Projet7::reloadAddresses()
     if (m_broadcastAddresses.empty())
         m_broadcastAddresses.append(QHostAddress::Broadcast);
     qDebug() << "m_localhostAddresses : " << m_localhostAddresses << " m_broadcastAddresses : " << m_broadcastAddresses;
+}
+
+QVariantList Projet7::factions() const
+{
+    return m_factions;
+}
+
+QVariantMap Projet7::makeCharacteristics(const int faction) const
+{
+    QVariantMap character, fac = m_factions.at(faction).toMap();
+    for (const QString &charac : {"intelligence", "instinct", "combativeness", "relational", "cohesion", "treasury", "population", "military"}) {
+        if (fac.contains(charac))
+            character[charac] = qrand()%fac[charac].toInt();
+    }
+    return character;
 }
 
 unsigned int Projet7::die(unsigned int nbFace)

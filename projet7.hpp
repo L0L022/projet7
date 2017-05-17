@@ -13,6 +13,7 @@ class Projet7 : public QObject
     Q_PROPERTY(quint16 portHostFinder MEMBER portHostFinder CONSTANT)
     Q_PROPERTY(QString userName READ userName WRITE setUserName NOTIFY userNameChanged)
     Q_PROPERTY(QString filesLocation READ filesLocation CONSTANT)
+    Q_PROPERTY(QVariantList factions READ factions CONSTANT)
 
     explicit Projet7(QObject *parent = 0);
 
@@ -30,6 +31,9 @@ public:
     const QList<QHostAddress> &broadcastAddresses() const;
     void reloadAddresses();
 
+    QVariantList factions() const;
+
+    Q_INVOKABLE QVariantMap makeCharacteristics(const int faction) const;
     Q_INVOKABLE unsigned int die(unsigned int nbFace = 6);
 
     void save() const;
@@ -49,6 +53,8 @@ private:
 
     QList<QHostAddress> m_localhostAddresses;
     QList<QHostAddress> m_broadcastAddresses;
+
+    QVariantList m_factions;
 
     std::mt19937 m_gen;
     std::uniform_int_distribution<unsigned int> *m_dis;

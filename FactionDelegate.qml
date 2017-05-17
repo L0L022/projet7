@@ -6,7 +6,6 @@ import Projet7 1.0
 Flickable {
     id: item
     contentHeight: layout.implicitHeight
-    property var faction
 
     GridLayout {
         id: layout
@@ -17,7 +16,7 @@ Flickable {
             Layout.column: 0
             Layout.rowSpan: 2
             Layout.fillHeight: true
-            source: faction.image
+            source: Projet7.factions[modelIndex].image
             fillMode: Image.PreserveAspectFit
         }
 
@@ -28,7 +27,7 @@ Flickable {
             Layout.fillHeight: true
             horizontalAlignment: Text.AlignHCenter
             verticalAlignment: Text.AlignVCenter
-            text: faction.name
+            text: Projet7.factions[modelIndex].name
         }
 
         Label {
@@ -36,8 +35,15 @@ Flickable {
             Layout.column: 0
             Layout.columnSpan: 2
             Layout.fillWidth: true
-            text: faction.description
+            text: Projet7.factions[modelIndex].description
             wrapMode: Text.Wrap
+        }
+        
+        Button {
+            Layout.fillWidth: true
+            //visible: app.currentGame.type === Game.ClientGame
+            text: qsTr("Choose this one")
+            onClicked: stack.push("qrc:///CharactersView.qml", {"faction": modelIndex})
         }
     }
 }

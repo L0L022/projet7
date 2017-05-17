@@ -5,54 +5,32 @@ import Projet7 1.0
 
 Item {
     id: item
-    property var character
-    property var faction
+    property var character: Projet7.makeCharacteristics(faction)
 
-    GridLayout {
+    ColumnLayout {
         anchors.fill: parent
 
-        Image {
-            Layout.row: 0
-            Layout.column: 0
-            Layout.rowSpan: 2
-            Layout.fillWidth: true
-            Layout.fillHeight: true
-            source: character.image
-            fillMode: Image.PreserveAspectFit
-        }
-
-        Label {
-            Layout.row: 0
-            Layout.column: 1
-            text: character.name
-        }
-
-        Label {
-            Layout.row: 1
-            Layout.column: 1
-            text: faction.name
-        }
-
-        Label {
-            Layout.row: 2
-            Layout.column: 0
-            Layout.columnSpan: 2
-            text: character.description
+        Repeater {
+            model: ["intelligence", "instinct", "combativeness", "relational", "cohesion", "treasury", "population"]
+            delegate: Label {
+                Layout.fillWidth: true
+                Layout.leftMargin: 10
+                text: modelData + ": " + character[modelData]
+                font.capitalization: Font.Capitalize
+            }
         }
 
         Button {
-             Layout.row: 3
-             Layout.column: 0
-             Layout.columnSpan: 2
-             //visible: app.currentGame.type === Game.ClientGame
-             text: qsTr("Choose this one")
-             onClicked: {
+            Layout.fillWidth: true
+            //visible: app.currentGame.type === Game.ClientGame
+            text: qsTr("Choose this one")
+            onClicked: {
                  var player = app.currentGame.players().append();
                  player.properties = character;
                  stack.replace(stack.find(function(item, index) {
-                     return item.objectName === "UniverseView";
+                     return item.objectName === "FactionsView";
                  }), Qt.resolvedUrl("qrc:///PlayersView.qml"), {}, StackView.Transition);
-             }
+            }
          }
     }
 }

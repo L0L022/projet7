@@ -74,14 +74,20 @@ Item {
 
         Button {
             Layout.fillWidth: true
-            text: qsTr("Open characters")
-            onClicked: stack.push("qrc:///UniverseView.qml")
+            text: qsTr("Open factions")
+            onClicked: stack.push("qrc:///FactionsView.qml")
         }
 
         Button {
             Layout.fillWidth: true
             text: qsTr("Open players")
             onClicked: stack.push("qrc:///PlayersView.qml")
+        }
+
+        Button {
+            Layout.fillWidth: true
+            text: qsTr("Open map")
+            onClicked: stack.push("qrc:///MapView.qml")
         }
 
         Button {
