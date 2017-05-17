@@ -27,6 +27,7 @@ Item {
             onClicked: {
                  var player = app.currentGame.players().append();
                  player.properties = character;
+                 player.setProperty("name", Projet7.userName);
                  stack.replace(stack.find(function(item, index) {
                      return item.objectName === "FactionsView";
                  }), Qt.resolvedUrl("qrc:///PlayersView.qml"), {}, StackView.Transition);

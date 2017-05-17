@@ -4,7 +4,7 @@ import QtQuick.Layouts 1.3
 import Projet7 1.0
 
 Item {
-    readonly property string title: "Lancé de dé"
+    readonly property string title: qsTr("Rolling dice")
 
     Component {
         id: die
@@ -49,7 +49,7 @@ Item {
 
             Label {
                 Layout.fillWidth: true
-                text: "Nombre de face"
+                text: qsTr("Number of faces")
             }
 
             SpinBox {
@@ -64,7 +64,7 @@ Item {
 
             Label {
                 Layout.fillWidth: true
-                text: "Nombre de dé"
+                text: qsTr("Number of dice")
             }
 
             SpinBox {
@@ -77,7 +77,7 @@ Item {
 
         Button {
             Layout.fillWidth: true
-            text: "Lancer le dé !"
+            text: qsTr("Roll the dice !")
             onClicked: {
                 results.clear()
                 for (var i = 0; i < nbDie.value; ++i)

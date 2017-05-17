@@ -2,7 +2,7 @@
     {
         "name": "Racionabilia",
         "id": 0,
-        "description": "Une description\nUn saut à la ligne",
+        "description": "The Racionabilia is one of the oldest countries, and its political system has been the same for centuries. An absolute monarch directs the country and only a male heir can succeed.",
         "cp" : "The farm economy is the main piliar of the Racionabilia. If its economical empire falls, the player loses.",
         "intelligence" : 4,
         "instinct" : 7,
@@ -16,7 +16,7 @@
     {
         "name": "Sovetskiy",
         "id": 1,
-        "description": "Une description\nUn saut à la ligne",
+        "description": "The Sovetskiy operated in the same way as the Racionabalia 200 years ago, but a great popular revolution led by a leader.\nThe revolutionaries took power and their leader became the new leader of the country advocating ideas to reduce social and ethnic inequalities.",
         "cp" : "The general Ulron is the only one who can manage Soviestkiy armies. If he's killed, the player loses.",
         "intelligence" : 6,
         "instinct" : 5,
@@ -30,7 +30,7 @@
     {
         "name": "E.D.U",
         "id": 2,
-        "description": "Une description\nUn saut à la ligne",
+        "description": "The E.D.U is undoubtedly the most powerful nation on Framtid either military or technological.",
         "cp" : "E.D.U politicians are almost all corrupted and don't represent their people. If bureaucracy corruption is revelead and proved, the player loses.",
         "intelligence" : 7,
         "instinct" : 4,
@@ -44,7 +44,7 @@
     {
         "name": "Hitobito",
         "id": 1,
-        "description": "Une description\nUn saut à la ligne",
+        "description": "The Hitobito is the youngest country it is known in its current form only for 50 years.\nThe people set up a new political system combining anarchism and democracy, people all equal in law with a forum chaired by citizens of the country drawn by lot.",
         "cp" : "Hitobito members are knowed for  their cohesion. If discord settles down, the player loses.",
 		"intelligence" : 8,
         "instinct" : 5,
