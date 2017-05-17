@@ -41,5 +41,6 @@
         <file>Cyberpunk/ToolBar.png</file>
         <file>Cyberpunk/ToolButtonB.png</file>
         <file>Cyberpunk/ToolButtonR.png</file>
+        <file>Cyberpunk/PageIndicator.qml</file>
     </qresource>
 </RCC>
