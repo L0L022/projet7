@@ -16,7 +16,7 @@ Flickable {
         Label {
             Layout.fillWidth: true
             horizontalAlignment: Text.AlignHCenter
-            text: "Joueur associé"
+            text: qsTr("Associated player")
         }
 
         ComboBox {
@@ -25,6 +25,7 @@ Flickable {
             model: app.currentGame.clients()
             textRole: "nameRole"
             onActivated: app.currentGame.clients().setId(index, propertyRole.id)
+            visible: app.currentGame.type === Game.ServerGame
 
             Connections {
                 target: app.currentGame.clients()
@@ -54,7 +55,7 @@ Flickable {
         Label {
             Layout.fillWidth: true
             horizontalAlignment: Text.AlignHCenter
-            text: "Droits de lecture"
+            text: qsTr("Read rights")
         }
 
         RowLayout {
@@ -69,8 +70,9 @@ Flickable {
             }
 
             Button {
-                text: "Ajouter"
+                text: qsTr("Add")
                 onClicked: propertyRole.addReadRight(players.get(readPlayerId.currentIndex)["id"])
+                visible: app.currentGame.type === Game.ServerGame
             }
         }
 
@@ -86,8 +88,9 @@ Flickable {
                 }
 
                 Button {
-                    text: "Supprimer"
+                    text: qsTr("Remove")
                     onClicked: propertyRole.removeReadRight(index)
+                    visible: app.currentGame.type === Game.ServerGame
                 }
             }
         }
@@ -95,7 +98,7 @@ Flickable {
         Label {
             Layout.fillWidth: true
             horizontalAlignment: Text.AlignHCenter
-            text: "Droits d'écriture"
+            text: qsTr("Write rights")
         }
 
         RowLayout {
@@ -110,8 +113,9 @@ Flickable {
             }
 
             Button {
-                text: "Ajouter"
+                text: qsTr("Add")
                 onClicked: propertyRole.addWriteRight(players.get(writePlayerId.currentIndex)["id"])
+                visible: app.currentGame.type === Game.ServerGame
             }
         }
 
@@ -127,8 +131,9 @@ Flickable {
                 }
 
                 Button {
-                    text: "Supprimer"
+                    text: qsTr("Remove")
                     onClicked: propertyRole.removeWriteRight(index)
+                    visible: app.currentGame.type === Game.ServerGame
                 }
             }
         }

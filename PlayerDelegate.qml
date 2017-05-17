@@ -22,8 +22,15 @@ Flickable {
             Layout.fillWidth: true
 
             Repeater {
-                model: ["name", "faction", "image", "description"]
-                delegate: RowLayout {
+                model: ["intelligence", "instinct", "combativeness", "relational", "cohesion", "treasury", "population"]
+                delegate: ColumnLayout {
+                    Label {
+                        Layout.fillWidth: true
+                        text: modelData
+                        font.capitalization: Font.Capitalize
+                        horizontalAlignment: Text.AlignHCenter
+                    }
+
                     PropertyField {
                         Layout.fillWidth: true
                         key: modelData

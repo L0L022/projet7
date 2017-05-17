@@ -5,7 +5,7 @@ import QtQuick.Layouts 1.3
 import Projet7 1.0
 
 Item {
-    readonly property string title: "Joueurs"
+    readonly property string title: qsTr("Players")
 
     ColumnLayout {
         anchors.fill: parent
@@ -37,6 +37,7 @@ Item {
                 id: bar
                 Layout.fillWidth: true
                 clip: true
+                visible: bar.count > 1
 
                 Repeater {
                     model: app.currentGame.players()
@@ -49,7 +50,8 @@ Item {
 
             Button {
                 Layout.fillWidth: parent.flow === GridLayout.TopToBottom
-                text: qsTr("Ajouter un joueur")
+                text: qsTr("Add a player")
+                visible: app.currentGame.type === Game.ServerGame
                 onClicked: {
                     app.currentGame.players().append()
                     bar.currentIndex = view.count - 1
@@ -58,8 +60,12 @@ Item {
 
             Button {
                 Layout.fillWidth: parent.flow === GridLayout.TopToBottom
-                text: qsTr("Supprimer un joueur")
-                onClicked: app.currentGame.players().removeAt(view.currentIndex)
+                text: qsTr("Remove a player")
+                onClicked: {
+                    app.currentGame.players().removeAt(view.currentIndex)
+                    if (bar.currentIndex === -1)
+                        bar.currentIndex = 0
+                }
             }
         }
     }
