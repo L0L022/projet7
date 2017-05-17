@@ -14,14 +14,16 @@ Projet7 *Projet7::m_instance = nullptr;
 Projet7::Projet7(QObject *parent)
     : QObject(parent),
       m_userName(tr("Unnamed client")),
-      m_filesLocation(QStandardPaths::writableLocation(QStandardPaths::AppDataLocation)),
+      m_configLocation(QStandardPaths::writableLocation(QStandardPaths::AppDataLocation)),
+      m_gamesLocation(m_configLocation + "/games"),
       m_localhostAddresses(),
       m_broadcastAddresses(),
       m_factions(),
       m_gen(),
       m_dis(nullptr)
 {
-    QDir("/").mkpath(m_filesLocation);
+    QDir("/").mkpath(m_configLocation);
+    QDir("/").mkpath(m_gamesLocation);
 
     QFile file(":/Univers/factions.json");
     if (file.open(QIODevice::ReadOnly | QIODevice::Text)) {
@@ -51,9 +53,14 @@ Projet7 *Projet7::instance()
     return m_instance;
 }
 
-QString Projet7::filesLocation() const
+QString Projet7::configLocation() const
 {
-    return m_filesLocation;
+    return m_configLocation;
+}
+
+QString Projet7::gamesLocation() const
+{
+    return m_gamesLocation;
 }
 
 QString Projet7::userName() const
@@ -128,7 +135,7 @@ unsigned int Projet7::die(unsigned int nbFace)
 
 void Projet7::save() const
 {
-    QFile file(m_filesLocation + "/config.json");
+    QFile file(m_configLocation + "/config.json");
     if (file.open(QIODevice::WriteOnly | QIODevice::Text)) {
         QJsonObject obj;
         obj["userName"] = m_userName;
@@ -140,7 +147,7 @@ void Projet7::save() const
 
 void Projet7::load()
 {
-    QFile file(m_filesLocation + "/config.json");
+    QFile file(m_configLocation + "/config.json");
     if (file.open(QIODevice::ReadOnly | QIODevice::Text)) {
         QJsonObject obj = QJsonDocument::fromJson(file.readAll()).object();
         if (!obj.isEmpty()) {

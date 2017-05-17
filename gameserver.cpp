@@ -205,8 +205,7 @@ void GameServer::newConnection()
 
 void GameServer::openFromFile()
 {
-    QFile file;
-    file.setFileName(m_fileName);
+    QFile file(m_fileName);
     if (file.exists()) {
         if (file.open(QIODevice::ReadOnly | QIODevice::Text)) {
             QJsonDocument doc = QJsonDocument::fromJson(file.readAll());
@@ -220,8 +219,7 @@ void GameServer::openFromFile()
 
 void GameServer::saveToFile()
 {
-    QFile file;
-    file.setFileName(m_fileName);
+    QFile file(m_fileName);
     if (file.open(QIODevice::WriteOnly | QIODevice::Text)) {
         QJsonObject object = toJson();
         QJsonDocument doc(object);

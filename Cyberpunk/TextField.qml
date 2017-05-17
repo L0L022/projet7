@@ -49,9 +49,6 @@ T.TextField {
         implicitWidth: 200
         implicitHeight: 40
         color: "transparent"
-//        border.width: control.activeFocus ? 2 : 1
-//        color: control.enabled ? Default.backgroundColor : Default.disabledDarkColor
-//        border.color: control.activeFocus ? Default.focusColor : (control.enabled ? Default.disabledLightColor : "transparent")
 
         BorderImage {
             anchors.fill: parent
