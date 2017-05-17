@@ -14,6 +14,8 @@
 #include <QJsonDocument>
 #include <QFile>
 #include <QTextStream>
+#include <QThread>
+#include <QDebug>
 
 #include <iostream>
 using namespace std;
@@ -56,6 +58,13 @@ int main(int argc, char *argv[])
     QQmlApplicationEngine engine;
     engine.rootContext()->setContextProperty("app", &mon_app);
     engine.load(QUrl(QLatin1String("qrc:/main.qml")));
+
+#ifdef Q_OS_ANDROID
+    QObject::connect(&app, &QGuiApplication::applicationStateChanged, [&app](Qt::ApplicationState state) {
+        if (state == Qt::ApplicationSuspended)
+            app.quit();
+    });
+#endif
 
     return app.exec();
 }
