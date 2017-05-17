@@ -20,11 +20,11 @@ ApplicationWindow {
 
         RowLayout {
             anchors.fill: parent
+            anchors.leftMargin: 5
             ToolButton {
               text: qsTr("‹")
               onClicked: stack.pop()
               visible: stack.depth > 1
-
             }
         }
     }

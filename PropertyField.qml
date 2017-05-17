@@ -30,7 +30,7 @@ Item {
             Layout.fillWidth: true
             onAccepted: propertyRole.setProperty(key, text)
             selectByMouse: true
-            color: text === lastPropertyValue ? "green" : "orange"
+            color: text === lastPropertyValue ? "#08FF00" : "#FFE100"
 
             function update() {
                 if (textField.lastPropertyValue !== propertiesRole[key]) {
@@ -43,7 +43,7 @@ Item {
 
         Button {
             text: "↶"
-            font.pointSize: 20
+            font.pointSize: 50
             implicitWidth: height
             implicitHeight: textField.height
             flat: true
