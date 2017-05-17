@@ -54,6 +54,7 @@ Item {
 
             SpinBox {
                 id: nbFace
+                from: 1
                 value: 6
                 editable: true
             }

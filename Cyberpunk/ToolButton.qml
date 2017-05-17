@@ -21,14 +21,23 @@ T.ToolButton {
         elide: Text.ElideRight
         horizontalAlignment: Text.AlignHCenter
         verticalAlignment: Text.AlignVCenter
+        visible: false
     }
 
     background: Rectangle {
-        implicitWidth: 40
-        implicitHeight: 40
+        implicitWidth: 30
+        implicitHeight: 30
+        color: "transparent"
 
-        color: Qt.darker(Default.toolButtonColor, control.enabled && (control.checked || control.highlighted) ? 1.5 : 1.0)
-        opacity: control.down ? 1.0 : control.enabled && (control.checked || control.highlighted) ? 0.5 : 0
-        visible: control.down || (control.enabled && (control.checked || control.highlighted))
+        Image {
+            anchors.fill: parent
+            source: "ToolButtonB.png"
+        }
+
+        Image {
+            anchors.fill: parent
+            source: "ToolButtonR.png"
+            visible: control.down
+        }
     }
 }

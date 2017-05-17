@@ -20,9 +20,8 @@ T.ToolBar {
             anchors.fill: parent
             source: "ToolBar.png"
             border.left: 200; border.top: 0
-            border.right: 171; border.bottom: 0
+            border.right: 126; border.bottom: 0
             horizontalTileMode: BorderImage.Repeat
-            //verticalTileMode: BorderImage.Repeat
         }
     }
 }
