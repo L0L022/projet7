@@ -45,6 +45,7 @@
         <file>Cyberpunk/ToolBar.png</file>
         <file>Cyberpunk/ToolButtonB.png</file>
         <file>Cyberpunk/ToolButtonR.png</file>
+        <file>Cyberpunk/PageIndicator.qml</file>
         <file>FactionsView.qml</file>
         <file>CharactersView.qml</file>
         <file>Univers/map.png</file>
