@@ -13,7 +13,16 @@ T.ToolBar {
     contentHeight: contentItem.implicitHeight || (contentChildren.length === 1 ? contentChildren[0].implicitHeight : 0)
 
     background: Rectangle {
-        implicitHeight: 40
-        color: Default.delegateColor
+        implicitHeight: 48
+        color: "transparent"
+
+        BorderImage {
+            anchors.fill: parent
+            source: "ToolBar.png"
+            border.left: 200; border.top: 0
+            border.right: 171; border.bottom: 0
+            horizontalTileMode: BorderImage.Repeat
+            //verticalTileMode: BorderImage.Repeat
+        }
     }
 }
