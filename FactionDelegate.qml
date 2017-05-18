@@ -23,6 +23,12 @@ Flickable {
             text: Projet7.factions[modelIndex].description
             wrapMode: Text.Wrap
         }
+
+        Label {
+            Layout.fillWidth: true
+            text: qsTr("CP: ") + Projet7.factions[modelIndex].cp
+            wrapMode: Text.Wrap
+        }
         
         Button {
             Layout.fillWidth: true

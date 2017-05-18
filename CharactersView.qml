@@ -9,6 +9,7 @@ Item {
     property int faction
 
     SwipeView {
+        id: view
         anchors.fill: parent
 
         Repeater {
@@ -20,5 +21,13 @@ Item {
                 source: "CharacterDelegate.qml"
             }
         }
+    }
+
+    PageIndicator {
+        count: view.count
+        currentIndex: view.currentIndex
+
+        anchors.bottom: view.bottom
+        anchors.horizontalCenter: parent.horizontalCenter
     }
 }

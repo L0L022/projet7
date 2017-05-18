@@ -37,7 +37,7 @@ Item {
                 id: bar
                 Layout.fillWidth: true
                 clip: true
-                visible: bar.count > 1
+                visible: bar.count > 1 || app.currentGame.type === Game.ServerGame
 
                 Repeater {
                     model: app.currentGame.players()

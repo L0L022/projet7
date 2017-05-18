@@ -9,6 +9,7 @@ Item {
     readonly property string title: qsTr("Factions")
 
     SwipeView {
+        id: view
         anchors.fill: parent
 
         Repeater {
@@ -19,5 +20,13 @@ Item {
                 source: "FactionDelegate.qml"
             }
         }
+    }
+
+    PageIndicator {
+        count: view.count
+        currentIndex: view.currentIndex
+
+        anchors.bottom: view.bottom
+        anchors.horizontalCenter: parent.horizontalCenter
     }
 }
